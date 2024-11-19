@@ -11,18 +11,43 @@ editor: visual
 url <- URLencode("https://datadryad.org/stash/downloads/file_stream/3153128")
 
 # Destination directory and file
-destdir <- "../_raw"
-destfile <- file.path(destdir, "raw_data.xlsx")
+raw_dir <- "../_raw"
+raw_file <- file.path(raw_dir, "raw_data.xlsx")
 
 # Check if the directory exists, create it if not
-if (!dir.exists(destdir)) {
-  dir.create(destdir, recursive = TRUE)  # Create the directory
+if (!dir.exists(raw_dir)) {
+  dir.create(raw_dir, recursive = TRUE)  # Create the directory
 }
 
 # Use download.file to fetch the file
 #download.file(url, destfile, method = "wget")
 #download.file(url, destfile, method = "wget", extra = "--user-agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'")
-download.file(url, destfile, method = "curl", 
+download.file(url, raw_file, method = "curl", 
               extra = "-L --user-agent 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'")
+
+```
+
+## Create TSV
+
+```{r}
+# Load required package
+library(readxl)
+library(openxlsx)
+
+# Read the Excel file
+#ESTA MIERDA ESTA MAL HAY QUE TOCARLO
+xlsx_file <- "../_raw/raw_data.xlsx" 
+data_tsv <- read.xlsx(xlsx_file, sheet = 1)
+
+# Save the data as a TSV file
+clean_dir <- "../data"
+tsv_file <- file.path(clean_dir, "01_dat_load.tsv")
+
+# Check if the directory exists, create it if not
+if (!dir.exists(clean_dir)) {
+  dir.create(clean_dir, recursive = TRUE)  # Create the directory
+}
+#write tsv data
+write.table(data_tsv, file = tsv_file, sep = "\t", row.names = TRUE)
 
 ```
