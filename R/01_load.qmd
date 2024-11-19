@@ -4,23 +4,16 @@ format: html
 editor: visual
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+## Load the data
 
 ```{r}
-1 + 1
+# URL to download the file from
+url <- URLencode("https://datadryad.org/stash/downloads/file_stream/3153128")
+
+# Destination to save the file
+destfile <- "raw_data.xlsx"
+
+# Use download.file to fetch the file
+#download.file(url, destfile, method = "wget")
+download.file(url, destfile, method = "wget", extra = "--user-agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'")
 ```
-
-You can add options to executable code like this
-
-```{r}
-#| echo: false
-2 * 2
-```
-
-The `echo: false` option disables the printing of code (only output is displayed).
