@@ -46,8 +46,9 @@ NA_proportions
 Choose columns with more than half of NA values
 
 ```{r}
-view(NA_proportions |> 
-  filter(na_proportion > 0.35))
+NA_proportions |> 
+  filter(na_proportion > 0.35) |> 
+  view()
 ```
 
 Change dirty columns with multiple values to clean binary columns
