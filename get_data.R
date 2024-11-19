@@ -1,0 +1,9 @@
+# URL to download the file from
+url <- URLencode("https://datadryad.org/stash/downloads/file_stream/3153128")
+
+# Destination to save the file
+destfile <- "raw_data.xlsx"
+
+# Use download.file to fetch the file
+#download.file(url, destfile, method = "wget")
+download.file(url, destfile, method = "wget", extra = "--user-agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'")
