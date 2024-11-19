@@ -17,7 +17,9 @@ library(stringr)
 Load Data
 
 ```{r}
-data <- read_excel("Clinical_Data_of_COVID-19_Infected_Patients.xlsx", sheet = 1)
+data <- read_tsv("../data/01_dat_load.tsv")
+
+
 ```
 
 Change values \[null\] for NAs
