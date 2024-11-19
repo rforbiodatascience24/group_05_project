@@ -10,8 +10,14 @@ editor: visual
 # URL to download the file from
 url <- URLencode("https://datadryad.org/stash/downloads/file_stream/3153128")
 
-# Destination to save the file
-destfile <- "raw_data.xlsx"
+# Destination directory and file
+destdir <- "_raw"
+destfile <- file.path(destdir, "raw_data.xlsx")
+
+# Check if the directory exists, create it if not
+if (!dir.exists(destdir)) {
+  dir.create(destdir, recursive = TRUE)  # Create the directory
+}
 
 # Use download.file to fetch the file
 #download.file(url, destfile, method = "wget")
