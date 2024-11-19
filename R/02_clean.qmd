@@ -10,12 +10,14 @@ editor: visual
 ```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(readxl)
+library(stringr)
+
 ```
 
 Load Data
 
 ```{r}
-data <- read_excel("Project/Clinical_Data_of_COVID-19_Infected_Patients.xlsx", sheet = 1)
+data <- read_excel("Clinical_Data_of_COVID-19_Infected_Patients.xlsx", sheet = 1)
 ```
 
 Change values \[null\] for NAs
@@ -55,49 +57,46 @@ data_clean <- data |>
 ```
 
 ```{r}
-#Create one column for each of the possible illnesess
 data_clean <- data_clean |> 
-  mutate(Hypertension = Basic_diseases,
-         Diabetes = Basic_diseases,
-         CVD = Basic_diseases,
-         Cerebrovascular = Basic_diseases,
-         COPD = Basic_diseases,
-         Inmunodeficiency = Basic_diseases,
-         Malignant_tumor = Basic_diseases,
-         Other = Basic_diseases,
-         Chronic_Kidney = Basic_diseases)
-```
-
-```{r}
-#For each of the created columns, we do a case_when the number of that illness is detected in the observation, the observation gets a value of 1 (has the illness), otherwise gets a 0 (doesn´t have the illness)
-data_clean <- data_clean |> 
-  mutate(Hypertension = case_when(str_detect(Hypertension, "1") ~ 1,
-                                  is.na(Hypertension) ~ NA,
-                                  TRUE ~ 0),
-         Diabetes = case_when(str_detect(Diabetes, "2") ~ 1,
-                              is.na(Hypertension) ~ NA,
-                                  TRUE ~ 0),
-         CVD = case_when(str_detect(CVD, "3") ~ 1,
-                         is.na(Hypertension) ~ NA,
-                                  TRUE ~ 0),
-         Cerebrovascular = case_when(str_detect(Cerebrovascular, "4") ~ 1,
-                                     is.na(Hypertension) ~ NA,
-                                  TRUE ~ 0),
-         COPD = case_when(str_detect(COPD, "5") ~ 1,
-                          is.na(Hypertension) ~ NA,
-                                  TRUE ~ 0),
-         Inmunodeficiency = case_when(str_detect(Inmunodeficiency, "6") ~ 1,
-                                      is.na(Hypertension) ~ NA,
-                                  TRUE ~ 0),
-         Malignant_tumor = case_when(str_detect(Malignant_tumor, "7") ~ 1,
-                                     is.na(Hypertension) ~ NA,
-                                  TRUE ~ 0),
-         Other = case_when(str_detect(Other, "8") ~ 1,
-                           is.na(Hypertension) ~ NA,
-                                  TRUE ~ 0),
-         Chronic_Kidney = case_when(str_detect(Chronic_Kidney, "9") ~ 1,
-                                    is.na(Hypertension) ~ NA,
-                                  TRUE ~ 0)) |> 
-  select(-Basic_diseases)
-
+  #Creates a new row for each number separated by a comma in the basic diseases column. For example if patient 1 have diseases 1,2,3 it will create 3 rows for that patient   with the exact same values in every column except "Basic disease" column, where there will be one row with value 1, other with 2 and other with 3.
+  separate_rows(Basic_diseases, sep = ",") |> 
+  
+  # Now it creates a column Disease with the name that correspond to the number in the   column "Basic Diseases"
+  mutate(
+    Disease = case_when(
+      Basic_diseases == "1" ~ "Hypertension",
+      Basic_diseases == "2" ~ "Diabetes",
+      Basic_diseases == "3" ~ "CVD",
+      Basic_diseases == "4" ~ "Cerebrovascular",
+      Basic_diseases == "5" ~ "COPD",
+      Basic_diseases == "6" ~ "Immunodeficiency",
+      Basic_diseases == "7" ~ "Malignant_tumor",
+      Basic_diseases == "8" ~ "Other",
+      Basic_diseases == "9" ~ "Chronic_Kidney",
+      TRUE ~ "No_Value"),
+    #In case that the value of the column is NA we want an NA value, else a 1
+    Value = ifelse(Basic_diseases == "No_Value", NA, 1)
+  ) |> 
+  
+  #Now we use a pivot wider to transform rows in coulmns
+  pivot_wider(
+    #Creates a column with each of the names in Diseases (one for each disease)
+    names_from = Disease,
+    #Insert the value from the column value, that will be 1 for every row
+    values_from = Value,
+    #Fill the observations that dont have a "Value" with a 0, as this are the observations that dont have the illness
+    values_fill = 0 
+  ) |> 
+  
+  #Now we have more than one row for each "Number", as one row for each number in BasicDisease column was created. Now we want to group those rows so we have only one row per observation
+  group_by(Number) |>
+  #Summarise and select the highest value for the columns between Hypertension and other (Columns created from BasicDisease column). Only one of the rows will have number 1 for the disease (if the observation had that disease) so we summarising we choose the highest value
+  summarise(across(Hypertension : Other, ~ max(.x)),
+        #Summarise eliminates all the columns where is not working, so we need to call summarise on all columns so they stay in the final df. Not apply it on the BasicDisease columns so they are not duplicated
+         across(!c(Hypertension : Other), ~ first(.), .names = "{.col}")) |>
+  ungroup() |> 
+  #If the No value column is NA, all the values for the BasicDiseases created columns get NA value
+  mutate(across(Hypertension : Other, ~ ifelse(is.na(No_Value), NA, .))) |> 
+  #Now that we have used the No_value column, we can drop it 
+  select(-No_Value)
 ```
