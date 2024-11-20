@@ -59,6 +59,43 @@ data_clean <- data |>
 ```
 
 ```{r}
+data_clean2 <- data_clean |> 
+  #este select es solo ara visualizar mejor
+  #select(Number, Basic_diseases) |> 
+  #crea varias filas para el mismo paciente, con un unico numero de Disease en cada uno
+  separate_rows(Basic_diseases, sep = ",") |> 
+  #nos aseguramos que ese valor sea numerico, y si no es numerico se asigna a cero
+  mutate(Basic_diseases = as.numeric(Basic_diseases)) |> 
+  pivot_wider(
+    names_from = Basic_diseases, 
+    values_from = Basic_diseases, 
+    values_fn = ~1, 
+    values_fill = list(Basic_diseases = 0)) |> 
+  rename_with(~paste0("disease_", .))
+
+data_clean2 <- data_clean2 |> 
+  # Filtrar las filas donde disease_NA == 1
+  mutate(across(starts_with("disease_"), 
+                ~if_else(disease_NA == 1, NA, .))) |> 
+  # Eliminar la columna disease_NA
+  select(-disease_NA, -disease_0)
+
+data_clean2 <- data_clean2 |> 
+  rename_with(~ case_when(
+    . == "disease_1" ~ "Hypertension",
+    . == "disease_2" ~ "Diabetes",
+    . == "disease_3" ~ "CVD",
+    . == "disease_4" ~ "Cerebrovascular",
+    . == "disease_5" ~ "COPD",
+    . == "disease_6" ~ "Immunodeficiency",
+    . == "disease_7" ~ "Malignant_tumor",
+    . == "disease_8" ~ "Other",
+    . == "disease_9" ~ "Chronic_Kidney",
+    TRUE ~ .
+  ), starts_with("disease_"))
+```
+
+```{r}
 data_clean <- data_clean |> 
   #Creates a new row for each number separated by a comma in the basic diseases column. For example if patient 1 have diseases 1,2,3 it will create 3 rows for that patient   with the exact same values in every column except "Basic disease" column, where there will be one row with value 1, other with 2 and other with 3.
   separate_rows(Basic_diseases, sep = ",") |> 
