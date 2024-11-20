@@ -50,6 +50,7 @@ data_clean <- data_clean |>
 ```
 
 ```{r}
+#Using the same code as the one used to separate the different diseases, but now for symptoms
 data_clean <- data_clean |> 
   mutate(Whole_body_symptoms = Symptoms,
          Respiratory_symptoms = Symptoms,
