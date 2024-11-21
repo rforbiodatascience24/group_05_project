@@ -59,19 +59,19 @@ NA_prop <- function(data) {
 data_NA_proportion <- NA_prop(data)
 ```
 
+<<<<<<< HEAD
 Filter out columns with > 0.95 of NAs (This columns are meant to split the data and are empty, the only values are notes about the patients)
+=======
+>>>>>>> 44a92413a8604a6374d912d98127f8e28117adf4
 
-```{r}
-Title_columns <- data_NA_proportion |> 
-  filter(na_proportion > 0.95) |>
-  pull(column)
-    
-```
 
+<<<<<<< HEAD
 ```{r}
 data <- data |> 
   select(-all_of(Title_columns))
 ```
+=======
+>>>>>>> 44a92413a8604a6374d912d98127f8e28117adf4
 
 Change dirty columns with multiple values to clean binary columns
 
