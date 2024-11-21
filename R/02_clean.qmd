@@ -177,18 +177,26 @@ process_diseases <- function(data, column, prefix, rename_map) {
       values_from = {{ column }}, 
       values_fn = ~1, 
       values_fill = list(column = 0)
-    )
+    ) |> 
     # Renombrar las columnas con el prefijo especificado
-    #rename_with(~paste0(prefix, .), cols = rename_map[[1]]:rename_map[[length(rename_map)]]) |> 
+    #rename_with(~paste0(prefix, .), cols = length(names(data)):length(names(data))+length(rename_map))
+    rename_with(
+      ~paste0(prefix, .), 
+      cols = tail(names(.), 9)  # Renombrar solo las últimas 9 columnas
+    )  |> 
     # Filtrar valores NA si la columna correspondiente existe
-   # mutate(across(starts_with(prefix), ~if_else(get(paste0(prefix, "NA")) == 1, NA, .))) |> 
+    #mutate(across(starts_with(prefix), ~if_else(get(paste0(prefix, "NA")) == 1, NA, .))) |> 
     # Eliminar las columnas no deseadas
-    #select(-matches(paste0(prefix, "NA")), -matches(paste0(prefix, "0"))) |> 
+    select(-matches(paste0(prefix, "NA")), -matches(paste0(prefix, "0"))) |> 
     # Renombrar columnas según el mapa proporcionado
-    #rename_with(~ case_when(
-    #  . %in% names(rename_map) ~ rename_map[.],
-    #  TRUE ~ .
-    #), starts_with(prefix))
+    rename_with(~ case_when(
+      . %in% names(rename_map) ~ rename_map[.],
+      TRUE ~ .
+    ), starts_with(prefix)) |> 
+        rename_with(
+      ~gsub(paste0("^", prefix), "", .),  # Elimina el prefijo "disease_" si está presente
+      starts_with(prefix)  # Aplica solo a columnas que empiezan con "disease_"
+    ) 
   
   return(data_processed)
 }
