@@ -12,7 +12,7 @@ library(tidyverse)
 library(readxl)
 ```
 
-Load Data
+Load Datas
 
 ```{r}
 data <- read_excel("Project/Clinical_Data_of_COVID-19_Infected_Patients.xlsx", sheet = 1)
@@ -44,6 +44,10 @@ Choose columns with more than half of NA values
 ```{r}
 view(NA_proportions |> 
   filter(na_proportion > 0.35))
+```
+
+```{r}
+nrow(data)
 ```
 
 Change dirty columns with multiple values to clean binary columns
