@@ -36,7 +36,7 @@ Proportions of NA in each column
 ```{r}
 NA_proportions <- data |>
   select(where(anyNA)) |> 
-  summarise(across(everything(), ~ mean(is.na(.)), .names = "{col}")) |> 
+  summarise(across(everything(), ~ mean(is.na(.)))) |> 
   #Pivot longer so we can then filter
   pivot_longer(everything(), values_to = "na_proportion", names_to = "column")
 
