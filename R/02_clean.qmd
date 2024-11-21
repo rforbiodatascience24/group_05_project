@@ -139,3 +139,98 @@ data_clean <- data_clean |>
   #Now that we have used the No_value column, we can drop it 
   select(-No_Value)
 ```
+
+```{r}
+rename_map <- c(
+  "disease_1" = "Hypertension",
+  "disease_2" = "Diabetes",
+  "disease_3" = "CVD",
+  "disease_4" = "Cerebrovascular",
+  "disease_5" = "COPD",
+  "disease_6" = "Immunodeficiency",
+  "disease_7" = "Malignant_tumor",
+  "disease_8" = "Other",
+  "disease_9" = "Chronic_Kidney"
+)
+
+process_diseases <- function(data, column, prefix, rename_map) {
+  data_processed <- data |> 
+    # Crear varias filas para cada valor en la columna separada por comas
+    separate_rows({{ column }}, sep = ",") |> 
+    # Asegurarse de que los valores sean numéricos, asignando 0 si no lo son
+    mutate({{ column }} := as.numeric({{ column }})) |> 
+    # Expandir las filas a columnas con indicadores binarios
+    pivot_wider(
+      names_from = {{ column }}, 
+      values_from = {{ column }}, 
+      values_fn = ~1, 
+      values_fill = list(column = 0)
+    )
+    # Renombrar las columnas con el prefijo especificado
+    #rename_with(~paste0(prefix, .), cols = rename_map[[1]]:rename_map[[length(rename_map)]]) |> 
+    # Filtrar valores NA si la columna correspondiente existe
+   # mutate(across(starts_with(prefix), ~if_else(get(paste0(prefix, "NA")) == 1, NA, .))) |> 
+    # Eliminar las columnas no deseadas
+    #select(-matches(paste0(prefix, "NA")), -matches(paste0(prefix, "0"))) |> 
+    # Renombrar columnas según el mapa proporcionado
+    #rename_with(~ case_when(
+    #  . %in% names(rename_map) ~ rename_map[.],
+    #  TRUE ~ .
+    #), starts_with(prefix))
+  
+  return(data_processed)
+}
+
+data_clean3 <- process_diseases(data_clean, Basic_diseases, "disease_", rename_map)
+  
+```
+
+```{r}
+#ESTO ES LO QUE HA HECHO CHATGPT
+process_diseases <- function(data, column, rename_map) {
+  
+  # Crear los nombres de enfermedades según el número en la columna
+  rename_map_full <- setNames(rename_map, as.character(1:length(rename_map)))
+  
+  data_processed <- data |> 
+    # Separa las filas por la columna de enfermedades
+    separate_rows({{ column }}, sep = ",") |> 
+    
+    # Crea una nueva columna con los nombres de las enfermedades
+    mutate(
+      Disease = case_when(
+        as.character({{ column }}) %in% names(rename_map_full) ~ rename_map_full[as.character({{ column }})],
+        TRUE ~ "No_Value"
+      ),
+      # Si el valor de Disease es No_Value, lo marcamos como NA, sino, lo dejamos como 1
+      Value = ifelse(Disease == "No_Value", NA, 1)
+    ) |> 
+    
+    # Usamos pivot_wider para transformar las filas en columnas
+    pivot_wider(
+      names_from = Disease,
+      values_from = Value,
+      values_fill = 0
+    ) |> 
+    
+    # Agrupar por número (se asume que existe una columna 'Number')
+    group_by(Number) |> 
+    # Resumir seleccionando el valor máximo para cada enfermedad
+    summarise(across(all_of(rename_map), ~ max(.x, na.rm = TRUE)),
+              # También necesitamos mantener las demás columnas sin cambios
+              across(!all_of(rename_map), ~ first(.), .names = "{.col}")) |> 
+    ungroup() |> 
+    # Si la columna "No_Value" tiene NA, entonces poner NA en todas las columnas de enfermedades
+    mutate(across(all_of(rename_map), ~ ifelse(is.na(No_Value), NA, .))) |> 
+    # Eliminar la columna No_Value
+    select(-No_Value)
+  
+  return(data_processed)
+}
+
+# Ejemplo de uso
+nombres <- c("Hypertension", "Diabetes", "CVD", "Cerebrovascular", "COPD", 
+             "Immunodeficiency", "Malignant_tumor", "Other", "Chronic_Kidney")
+
+data_clean2 <- process_diseases(data_clean, "Basic_diseases", nombres)
+```
