@@ -47,14 +47,6 @@ data <- NA_values_replace(data = data,
 Proportions of NA in each column
 
 ```{r}
-<<<<<<< HEAD
-=======
-NA_proportions <- data |>
-  select(where(anyNA)) |> 
-  summarise(across(everything(), ~ mean(is.na(.)))) |> 
-  #Pivot longer so we can then filter
-  pivot_longer(everything(), values_to = "na_proportion", names_to = "column")
->>>>>>> 90827921f0e384d012f8780c882397396f0af878
 
 #The function takes the data as only argument and return the proportion of NA values of each column in the data 
 NA_prop <- function(data) {
@@ -67,7 +59,7 @@ NA_prop <- function(data) {
 data_NA_proportion <- NA_prop(data)
 ```
 
-Filter out columns with \> 0.95 of NAs (This columns are meant to split the data and are empty, the only values are notes about the patients)
+Filter out columns with > 0.95 of NAs (This columns are meant to split the data and are empty, the only values are notes about the patients)
 
 ```{r}
 Title_columns <- data_NA_proportion |> 
@@ -77,13 +69,8 @@ Title_columns <- data_NA_proportion |>
 ```
 
 ```{r}
-<<<<<<< HEAD
 data <- data |> 
   select(-all_of(Title_columns))
-=======
-NA_proportions |> 
-  filter(na_proportion > 0.35)
->>>>>>> 90827921f0e384d012f8780c882397396f0af878
 ```
 
 Change dirty columns with multiple values to clean binary columns
