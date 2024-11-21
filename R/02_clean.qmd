@@ -16,7 +16,7 @@ library(stringr)
 
 Load Data
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 data <- read_tsv("../data/01_dat_load.tsv")
 
 
@@ -27,28 +27,40 @@ Change values \[null\] for NAs
 ```{r}
 
 #Notice that na_if function has to work with the same type of values at the time. For example in this df we have both character and numeric values, so we have to do it in 2 times
-data <- data |> 
-  mutate(across(where(is.character), ~ na_if(. , "[null]")))
+
+
+#The function takes the data (data) and the vector of all the values that we want to be considered as NAs (na_vector). This na_vector should be specified as 
+# c("null", "-"...)
+NA_values_replace <- function(data, na_vector){
+  data |> 
+    mutate(across(where(is.character), ~ case_when 
+          (. %in% na_vector ~ NA,
+          TRUE ~ .
+          )))
+}
+
+data <- NA_values_replace(data = data, 
+                          na_vector = c("[null]", "/", "-"))
+
 ```
 
 Proportions of NA in each column
 
 ```{r}
-NA_proportions <- data |>
-  select(where(anyNA)) |> 
-  summarise(across(everything(), ~ mean(is.na(.)))) |> 
-  #Pivot longer so we can then filter
-  pivot_longer(everything(), values_to = "na_proportion", names_to = "column")
 
-NA_proportions
+#The function takes the data as only argument and return the proportion of NA values of each column in the data 
+NA_prop <- function(data) {
+  data |> 
+    select(where(anyNA)) |> 
+    summarise(across(everything(), ~ mean(is.na(.)), .names = "{col}")) |> 
+    pivot_longer(everything(), values_to = "na_proportion", names_to = "column")
+}
+
+data_NA_proportion <- NA_prop(data)
 ```
 
-Choose columns with more than half of NA values
 
-```{r}
-NA_proportions |> 
-  filter(na_proportion > 0.35)
-```
+
 
 Change dirty columns with multiple values to clean binary columns
 
