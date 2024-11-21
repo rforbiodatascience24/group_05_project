@@ -47,6 +47,14 @@ data <- NA_values_replace(data = data,
 Proportions of NA in each column
 
 ```{r}
+<<<<<<< HEAD
+=======
+NA_proportions <- data |>
+  select(where(anyNA)) |> 
+  summarise(across(everything(), ~ mean(is.na(.)))) |> 
+  #Pivot longer so we can then filter
+  pivot_longer(everything(), values_to = "na_proportion", names_to = "column")
+>>>>>>> 90827921f0e384d012f8780c882397396f0af878
 
 #The function takes the data as only argument and return the proportion of NA values of each column in the data 
 NA_prop <- function(data) {
@@ -69,8 +77,13 @@ Title_columns <- data_NA_proportion |>
 ```
 
 ```{r}
+<<<<<<< HEAD
 data <- data |> 
   select(-all_of(Title_columns))
+=======
+NA_proportions |> 
+  filter(na_proportion > 0.35)
+>>>>>>> 90827921f0e384d012f8780c882397396f0af878
 ```
 
 Change dirty columns with multiple values to clean binary columns
@@ -79,6 +92,43 @@ Change dirty columns with multiple values to clean binary columns
 #Change name to a shorter one for sintax conveniance
 data_clean <- data |> 
   rename(Basic_diseases = `Basic diseases (1 hypertension, 2 diabetes, 3 cardiovascular diseases, 4 cerebrovascular diseases, 5 COPD, 6 immunodeficiency (such as AIDS, hormone, immunosuppressant use history), 7 malignant tumor, 8 other 9 chronic kidney disease`)
+```
+
+```{r}
+data_clean2 <- data_clean |> 
+  #este select es solo ara visualizar mejor
+  #select(Number, Basic_diseases) |> 
+  #crea varias filas para el mismo paciente, con un unico numero de Disease en cada uno
+  separate_rows(Basic_diseases, sep = ",") |> 
+  #nos aseguramos que ese valor sea numerico, y si no es numerico se asigna a cero
+  mutate(Basic_diseases = as.numeric(Basic_diseases)) |> 
+  pivot_wider(
+    names_from = Basic_diseases, 
+    values_from = Basic_diseases, 
+    values_fn = ~1, 
+    values_fill = list(Basic_diseases = 0)) |> 
+  rename_with(~paste0("disease_", .))
+
+data_clean2 <- data_clean2 |> 
+  # Filtrar las filas donde disease_NA == 1
+  mutate(across(starts_with("disease_"), 
+                ~if_else(disease_NA == 1, NA, .))) |> 
+  # Eliminar la columna disease_NA
+  select(-disease_NA, -disease_0)
+
+data_clean2 <- data_clean2 |> 
+  rename_with(~ case_when(
+    . == "disease_1" ~ "Hypertension",
+    . == "disease_2" ~ "Diabetes",
+    . == "disease_3" ~ "CVD",
+    . == "disease_4" ~ "Cerebrovascular",
+    . == "disease_5" ~ "COPD",
+    . == "disease_6" ~ "Immunodeficiency",
+    . == "disease_7" ~ "Malignant_tumor",
+    . == "disease_8" ~ "Other",
+    . == "disease_9" ~ "Chronic_Kidney",
+    TRUE ~ .
+  ), starts_with("disease_"))
 ```
 
 ```{r}

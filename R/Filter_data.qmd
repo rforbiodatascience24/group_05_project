@@ -1,0 +1,89 @@
+---
+title: "Filter_Data"
+author: "Xavi Chapatte"
+format: html
+editor: visual
+---
+
+```{r}
+#Remove empty columns that were introduced as separators. 
+data_clean <- data_clean |> 
+  select(-"Pulmonary CT condition",
+         -"D1 blood routine upon admission",
+         -"D7 blood routine",
+         -"Liver enzyme D1",
+         -"Coagulation index D1",
+         -"Inflammatory indicator D1",
+         -"Blood gas analysis",
+         -"Virus nucleic acid test CT value")
+```
+
+```{r}
+#Relocate columns Age range and Age over 65 to the first columns of the dataset.
+data_clean <- data_clean |> 
+  relocate("Age ranges[years]", "Age over 65(1,YES; 2, NO)", .after = "Number")
+```
+
+```{r}
+#Rename some columns
+data_clean <- data_clean |> 
+  rename(
+    "Age range" = "Age ranges[years]",
+    "Age over 65" = "Age over 65(1,YES; 2, NO)",
+    "Fever days" = "Fever days (D1-D7)[days]",
+    "Affected lung lobes 1" = "Number of affected lung lobes 1",
+    "Affected lung lobes 2" = "Number of affected lung lobes 2",
+    "Imaging Improvement > 25% (after 1 week)" = "Does the imaging improve by more than 25% after one week (1 yes 2 no)",
+    "APACHE Score (ICU Admission)" = "APACHEII score (admission to ICU)",
+    "Usage days" = "Usage days[days]",
+    "Azvudine" = "Azvudine (1 is 0)",
+    "Hormones" = "Hormones (1 Yes 0 No)",
+    "Hormone usage days" = "Hormone usage days[days]",
+    "Anticoagulant days" = "Anticoagulant days[days]",
+    "Death" = "Death (1 Yes 2 No)")
+```
+
+```{r}
+#Change name to a shorter one for sintax conveniance
+data_clean <- data_clean |> 
+  rename(Symptoms = "Symptoms (1. Whole body, 2. Respiratory, 3. Nervous, 4. Cardiovascular, 5. Gastrointestinal, 6. Other)")
+```
+
+```{r}
+#Using the same code as the one used to separate the different diseases, but now for symptoms
+data_clean <- data_clean |> 
+  mutate(Whole_body_symptoms = Symptoms,
+         Respiratory_symptoms = Symptoms,
+         Nervous_symptoms = Symptoms,
+         Cardiovascular_symptoms = Symptoms,
+         Gastrointestinal_symptoms = Symptoms,
+         Other_symptoms = Symptoms)
+```
+
+```{r}
+data_clean <- data_clean |> 
+  mutate(Whole_body_symptoms = case_when(str_detect(Whole_body_symptoms, "1") ~ 1,
+                                  is.na(Whole_body_symptoms) ~ NA,
+                                  TRUE ~ 0),
+         Respiratory_symptoms = case_when(str_detect(Respiratory_symptoms, "2") ~ 1,
+                              is.na(Whole_body_symptoms) ~ NA,
+                                  TRUE ~ 0),
+         Nervous_symptoms = case_when(str_detect(Nervous_symptoms, "3") ~ 1,
+                         is.na(Whole_body_symptoms) ~ NA,
+                                  TRUE ~ 0),
+         Cardiovascular_symptoms = case_when(str_detect(Cardiovascular_symptoms, "4") ~ 1,
+                                     is.na(Whole_body_symptoms) ~ NA,
+                                  TRUE ~ 0),
+         Gastrointestinal_symptoms = case_when(str_detect(Gastrointestinal_symptoms, "5") ~ 1,
+                          is.na(Whole_body_symptoms) ~ NA,
+                                  TRUE ~ 0),
+         Other_symptoms = case_when(str_detect(Other_symptoms, "6") ~ 1,
+                                      is.na(Whole_body_symptoms) ~ NA,
+                                  TRUE ~ 0)) |> 
+  select(-Symptoms)
+```
+
+```{r}
+data_clean <- data_clean |> 
+  relocate(Whole_body_symptoms, Respiratory_symptoms, Nervous_symptoms, Cardiovascular_symptoms, Gastrointestinal_symptoms, Other_symptoms, .after = "Charlson index[score]")
+```
