@@ -154,19 +154,24 @@ data_clean <- data_clean |>
 
 ```{r}
 rename_map <- c(
-  "disease_1" = "Hypertension",
-  "disease_2" = "Diabetes",
-  "disease_3" = "CVD",
-  "disease_4" = "Cerebrovascular",
-  "disease_5" = "COPD",
-  "disease_6" = "Immunodeficiency",
-  "disease_7" = "Malignant_tumor",
-  "disease_8" = "Other",
-  "disease_9" = "Chronic_Kidney"
+  "1" = "Hypertension",
+  "2" = "Diabetes",
+  "3" = "CVD",
+  "4" = "Cerebrovascular",
+  "5" = "COPD",
+  "6" = "Immunodeficiency",
+  "7" = "Malignant_tumor",
+  "8" = "Other",
+  "9" = "Chronic_Kidney"
 )
 
-process_diseases <- function(data, column, prefix, rename_map) {
+process_diseases <- function(data, column, rename_map) {
+  column_sym <- ensym(column)
+  
   data_processed <- data |> 
+    mutate(
+      !!column_sym := str_replace_all(!!column_sym,  "([^a-zA-Z()]*).*", "\\1")
+    ) |>  
     # Crear varias filas para cada valor en la columna separada por comas
     separate_rows({{ column }}, sep = ",") |> 
     # Asegurarse de que los valores sean numéricos, asignando 0 si no lo son
@@ -174,35 +179,35 @@ process_diseases <- function(data, column, prefix, rename_map) {
     # Expandir las filas a columnas con indicadores binarios
     pivot_wider(
       names_from = {{ column }}, 
+      names_prefix = "temp_prefix_",
       values_from = {{ column }}, 
       values_fn = ~1, 
-      values_fill = list(column = 0)
+      values_fill = 0
     ) |> 
-    # Renombrar las columnas con el prefijo especificado
-    #rename_with(~paste0(prefix, .), cols = length(names(data)):length(names(data))+length(rename_map))
-    rename_with(
-      ~paste0(prefix, .), 
-      cols = tail(names(.), 9)  # Renombrar solo las últimas 9 columnas
-    )  |> 
     # Filtrar valores NA si la columna correspondiente existe
-    #mutate(across(starts_with(prefix), ~if_else(get(paste0(prefix, "NA")) == 1, NA, .))) |> 
+    mutate(across(starts_with("temp_prefix_"), ~if_else(temp_prefix_NA== 1, NA, .))) |> 
     # Eliminar las columnas no deseadas
-    select(-matches(paste0(prefix, "NA")), -matches(paste0(prefix, "0"))) |> 
+    select(-"temp_prefix_NA", -"temp_prefix_0") |> 
+    rename_with(
+      ~gsub(paste0("^", "temp_prefix_"), "", .),  # Elimina el prefijo "disease_" si está presente
+      starts_with("temp_prefix_")  # Aplica solo a columnas que empiezan con "disease_"
+    ) |> 
     # Renombrar columnas según el mapa proporcionado
     rename_with(~ case_when(
-      . %in% names(rename_map) ~ rename_map[.],
+     . %in% names(rename_map) ~ rename_map[.],
       TRUE ~ .
-    ), starts_with(prefix)) |> 
-        rename_with(
-      ~gsub(paste0("^", prefix), "", .),  # Elimina el prefijo "disease_" si está presente
-      starts_with(prefix)  # Aplica solo a columnas que empiezan con "disease_"
-    ) 
+    ), everything())
   
   return(data_processed)
 }
 
-data_clean3 <- process_diseases(data_clean, Basic_diseases, "disease_", rename_map)
+data_clean3 <- process_diseases(data_clean, Basic_diseases, rename_map)
   
+```
+
+```{r}
+data_clean3 <- data_clean |>
+  mutate(Basic_diseases = str_replace_all(Basic_diseases, "([^a-zA-Z]*).*", "\\1"))
 ```
 
 ```{r}
