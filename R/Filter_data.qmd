@@ -24,10 +24,12 @@ data_clean <- data_clean |>
   relocate("Age ranges[years]", "Age over 65(1,YES; 2, NO)", .after = "Number")
 ```
 
+Rename some columns
+
 ```{r}
-#Rename some columns
 data_clean <- data_clean |> 
   rename(
+    "Basic_diseases" = "Basic diseases (1 hypertension, 2 diabetes, 3 cardiovascular diseases, 4 cerebrovascular diseases, 5 COPD, 6 immunodeficiency (such as AIDS, hormone, immunosuppressant use history), 7 malignant tumor, 8 other 9 chronic kidney disease",
     "Age range" = "Age ranges[years]",
     "Age over 65" = "Age over 65(1,YES; 2, NO)",
     "Fever days" = "Fever days (D1-D7)[days]",
