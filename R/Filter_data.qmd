@@ -87,3 +87,9 @@ data_clean <- data_clean |>
 data_clean <- data_clean |> 
   relocate(Whole_body_symptoms, Respiratory_symptoms, Nervous_symptoms, Cardiovascular_symptoms, Gastrointestinal_symptoms, Other_symptoms, .after = "Charlson index[score]")
 ```
+
+```{r}
+#Change the Death column to binary results
+data_clean <- data_clean |> 
+  mutate(Death = ifelse(Death == 2, 0, Death))
+```
