@@ -67,7 +67,14 @@ data <- data |>
          -"Coagulation index D1",
          -"Inflammatory indicator D1",
          -"Blood gas analysis",
-         -"Virus nucleic acid test CT value")
+         -"Virus nucleic acid test CT value",
+         -"D3 time division (3 light, 3 medium, 3 heavy, and 4 critical)",
+         -"Antiviral drugs (1 nema 0 no)", 
+         -"Hormones", 
+         -"PCT greater than 0.5",
+         -"PCT greater than 2", 
+         -"PCT greater than 10", 
+         -"Azvudine")
 ```
 
 Relocate columns Age range and Age over 65 to the first columns of the dataset.
@@ -96,7 +103,11 @@ data <- data |>
     "Hormone usage days" = "Hormone usage days[days]",
     "Anticoagulant days" = "Anticoagulant days[days]",
     "Death" = "Death (1 Yes 2 No)",
-    "Symptoms" = "Symptoms (1. Whole body, 2. Respiratory, 3. Nervous, 4. Cardiovascular, 5. Gastrointestinal, 6. Other)")
+    "Symptoms" = "Symptoms (1. Whole body, 2. Respiratory, 3. Nervous, 4. Cardiovascular, 5. Gastrointestinal, 6. Other)",
+    "Antiviral Drug" = "Antiviral drugs (1 nema, 2 azides, 3 others)",
+    "Administration method" = "Administration method (1 oral and 2 nasal feeding)",
+    "Hormones" = "Hormones (1 methylprednisolone, 2 dexamethasone, 3 others)"
+    )
 ```
 
 Create function to change dirty columns with multiple values to clean binary columns
@@ -170,8 +181,6 @@ data_clean3 <- process_dirty_cols(data_clean3, Symptoms, rename_map)
 
 ```{r}
 data_final <- data_clean3 |> 
-  select(-`D3 time division (3 light, 3 medium, 3 heavy, and 4 critical)`, -`Antiviral drugs (1 nema 0 no)`, -`Hormones`, -`PCT greater than 0.5`, -`PCT greater than 2`, -`PCT greater than 10`, -`Azvudine`)|> 
-  rename("Antiviral Drug" = "Antiviral drugs (1 nema, 2 azides, 3 others)") |> 
   #mutate("NRL[%]" = round(as.numeric("NRL[%]"), 2)) |> 
   mutate(`Antiviral Drug` = case_when(
     `Antiviral Drug` == 0 ~ "None",
@@ -180,21 +189,15 @@ data_final <- data_clean3 |>
     `Antiviral Drug` == 3 ~ "Other",
     TRUE ~ NA_character_
   )) |> 
-  rename("Administration method" = "Administration method (1 oral and 2 nasal feeding)") |> 
     mutate(`Administration method` = case_when(
     `Administration method` == 1 ~ "Oral feeding",
     `Administration method` == 2 ~ "Nasal Feeding",
     TRUE ~ NA_character_
-  )) |> 
-  rename("Hormones" = "Hormones (1 methylprednisolone, 2 dexamethasone, 3 others)") |>
+  )) |>
     mutate(`Hormones` = case_when( #CUIDADO CON ESTOOOO
     `Hormones` == 1 ~ "Methylprednisolone",
     `Hormones` == 2 ~ "Dexamethasone",
     `Hormones` == 3 ~ "Other",
     TRUE ~ NA_character_
   ))
-  
-  
-  
-  
 ```
