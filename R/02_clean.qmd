@@ -98,7 +98,7 @@ data <- data |>
     "Fever days" = "Fever days (D1-D7)[days]",
     "Affected lung lobes 1" = "Number of affected lung lobes 1",
     "Affected lung lobes 2" = "Number of affected lung lobes 2",
-    "Imaging Improvement > 25% (after 1 week)" = "Does the imaging improve by more than 25% after one week (1 yes 2 no)",
+    "Imaging Improvement>25% (after 1 week)" = "Does the imaging improve by more than 25% after one week (1 yes 2 no)",
     "APACHE Score (ICU Admission)" = "APACHEII score (admission to ICU)",
     "Usage days" = "Usage days[days]",
     "Hormone usage days" = "Hormone usage days[days]",
@@ -116,8 +116,9 @@ data <- data |>
  = "D1 oxygen therapy mode (1. Mask 2. High flow oxygen therapy 3. Non invasive 4. Invasive 5. ECMO)",
  "Antibiotics" = "Antibiotics (1 Yes 2 No)",
  "Immunotherapy" = "Immunotherapy (1 Tor 2 Bar)",
- "Medication days" = "Medication- D1[days]"
-    )
+ "Medication days" = "Medication- D1[days]",
+ "Negative conversion" = "Negative conversion(1, Yes; 0,No)"
+ )
 ```
 
 Create function to change dirty columns with multiple values to clean binary columns
@@ -169,6 +170,16 @@ process_dirty_cols <- function(data, column, rename_map) {
 }
 ```
 
+
+Remove the spaces between characters on the names of the columns
+```{r}
+data <- data |> 
+  #rename_with renames the colnames, use gsub to substitute " " with "_" in all 
+  #the columns (.)
+  rename_with(~ gsub(" ", "_", .))
+```
+
+
 Change the dirty columns
 
 ```{r}
@@ -184,7 +195,7 @@ rename_map <- c(
   "8" = "Other_disease",
   "9" = "Chronic_Kidney_disease"
 )
-data_clean3 <- process_dirty_cols(data, Basic_diseases, rename_map)
+data <- process_dirty_cols(data, Basic_diseases, rename_map)
 
 #Symptoms column
 rename_map <- c(
@@ -195,7 +206,7 @@ rename_map <- c(
   "5" = "Gastrointestinal_symptoms",
   "6" = "Other_symptoms"
 )
-data_clean3 <- process_dirty_cols(data_clean3, Symptoms, rename_map)
+data <- process_dirty_cols(data, Symptoms, rename_map)
 
 #D1_oxygen_therapy_mode
 rename_map <- c(
@@ -205,22 +216,22 @@ rename_map <- c(
   "4" = "Invasive_Oxygen_therapy",
   "5" = "ECMO"
 )
-data_clean3 <- process_dirty_cols(data_clean3, D1_oxygen_therapy_mode, rename_map)
+data <- process_dirty_cols(data, D1_oxygen_therapy_mode, rename_map)
 ```
 
 ```{r}
-data_final <- data_clean3 |> 
+data <- data |> 
   mutate(`NRL[%]` = round(as.numeric(`NRL[%]`), 2)) |>
-  mutate(`Antiviral Drug` = case_when(
-    `Antiviral Drug` == 0 ~ "None",
-    `Antiviral Drug` == 1 ~ "Paxlovid",
-    `Antiviral Drug` == 2 ~ "Azduvine",
-    `Antiviral Drug` == 3 ~ "Other",
+  mutate(`Antiviral_Drug` = case_when(
+    `Antiviral_Drug` == 0 ~ "None",
+    `Antiviral_Drug` == 1 ~ "Paxlovid",
+    `Antiviral_Drug` == 2 ~ "Azduvine",
+    `Antiviral_Drug` == 3 ~ "Other",
     TRUE ~ NA_character_
   )) |> 
-    mutate(`Administration method` = case_when(
-    `Administration method` == 1 ~ "Oral feeding",
-    `Administration method` == 2 ~ "Nasal Feeding",
+    mutate(`Administration_method` = case_when(
+    `Administration_method` == 1 ~ "Oral feeding",
+    `Administration_method` == 2 ~ "Nasal Feeding",
     TRUE ~ NA_character_
   )) |>
     mutate(`Hormones` = case_when( #CUIDADO CON ESTOOOO
@@ -233,10 +244,10 @@ data_final <- data_clean3 |>
     `Death` == 1 ~ "1",
     `Death` == 2 ~ "0",
     TRUE ~ NA_character_
-  )) |> mutate(`ICU hospitalization days` = as.numeric(gsub("[^0-9\\.]", "", `ICU hospitalization days`))) |> 
-  mutate(`Prone position ventilation` = case_when(
-    `Prone position ventilation` == 1 ~ "yes",
-    `Prone position ventilation` == 0 ~ "no",
+  )) |> mutate(`ICU_hospitalization_days` = as.numeric(gsub("[^0-9\\.]", "", `ICU_hospitalization_days`))) |> 
+  mutate(`Prone_position_ventilation` = case_when(
+    `Prone_position_ventilation` == 1 ~ "yes",
+    `Prone_position_ventilation` == 0 ~ "no",
     TRUE ~ NA_character_
   )) |> 
   mutate(`Antibiotics` = case_when(
@@ -250,19 +261,23 @@ data_final <- data_clean3 |>
     `Immunotherapy` == 0 ~ "None",
     TRUE ~ NA_character_
   )) |> 
-  mutate(`Hormone dosage[mg]` = as.numeric(gsub("[^0-9\\.]", "", `Hormone dosage[mg]`))) |> 
-  mutate(`Imaging Improvement > 25% (after 1 week)` = case_when(
-    `Imaging Improvement > 25% (after 1 week)` == 1 ~ "yes",
-    `Imaging Improvement > 25% (after 1 week)` == 2 ~ "no",
+  mutate(`Hormone_dosage[mg]` = as.numeric(gsub("[^0-9\\.]", "", `Hormone_dosage[mg]`))) |> 
+  mutate(`Imaging_Improvement>25%_(after_1_week)` = case_when(
+    `Imaging_Improvement>25%_(after_1_week)` == 1 ~ "yes",
+    `Imaging_Improvement>25%_(after_1_week)` == 2 ~ "no",
     TRUE ~ NA_character_
-  )) |> mutate(`Age range` = case_when(
-    str_detect(`Age range`, "^[0-5][0-9]-") ~ "<60",
-    str_detect(`Age range`, "^6") ~ "60-70",
-    str_detect(`Age range`, "^7") ~ "70-80",
-    str_detect(`Age range`, "^8") ~ "80-90",
-    str_detect(`Age range`, "^9") ~ ">90",
-    str_detect(`Age range`, "^100") ~ ">90"
-  )) |> mutate(`Age range` = fct_relevel(`Age range`, "<60", "60-70", "70-80", "80-90", ">90"))
+  )) |> mutate(`Age_range` = case_when(
+    str_detect(`Age_range`, "^[0-5][0-9]-") ~ "<60",
+    str_detect(`Age_range`, "^6") ~ "60-70",
+    str_detect(`Age_range`, "^7") ~ "70-80",
+    str_detect(`Age_range`, "^8") ~ "80-90",
+    str_detect(`Age_range`, "^9") ~ ">90",
+    str_detect(`Age_range`, "^100") ~ ">90"
+  )) |> mutate(`Age_range` = fct_relevel(`Age_range`, "<60", "60-70", "70-80", "80-90", ">90")) |> mutate(`Negative_conversion` = case_when(
+    `Negative_conversion` == 1 ~ "yes",
+    `Negative_conversion` == 0 ~ "no",
+    TRUE ~ NA_character_
+  ))
 ```
 
 
