@@ -125,7 +125,7 @@ ggplot(data = data,
 #Plot Hospitalization time vs Age range
 ggplot(data = data, 
              mapping = aes(x = `Age_range`,
-                           y = `Hospitalization time[days]`))+
+                           y = `Hospitalization_days`))+
   geom_boxplot(fill = "skyblue", color = "black")+
   labs(
     title = "Hospitalization time vs age group",
@@ -140,7 +140,7 @@ ggplot(data = data,
 P1.a <- ggplot(data = data |> 
                  filter(!is.na(`Affected_lung_lobes_1`)),
              mapping = aes(x = `Affected_lung_lobes_1`,
-                           y = `Hospitalization time[days]`))+
+                           y = `Hospitalization_days`))+
   geom_boxplot(fill = "skyblue", color = "black")+
   theme_minimal()+
   labs(
@@ -151,7 +151,7 @@ P1.a <- ggplot(data = data |>
 P1.b <- ggplot(data = data |> 
                  filter(!is.na(`Affected_lung_lobes_2`)),
              mapping = aes(x = `Affected_lung_lobes_2`,
-                           y = `Hospitalization time[days]`))+
+                           y = `Hospitalization_days`))+
   geom_boxplot(fill = "red", color = "black")+
   theme_minimal()+
   labs(
