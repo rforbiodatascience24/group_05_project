@@ -57,6 +57,8 @@ NA_prop <- function(data) {
 data_NA_proportion <- NA_prop(data)
 ```
 
+Filter out columns with > 0.95 of NAs (This columns are meant to split the data and are empty, the only values are notes about the patients)
+
 Remove empty columns that were introduced as separators. 
 ```{r}
 data <- data |> 
@@ -71,6 +73,8 @@ data <- data |>
 ```
 
 Relocate columns Age range and Age over 65 to the first columns of the dataset.
+
+
 
 ```{r}
 data <- data |> 
