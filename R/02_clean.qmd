@@ -167,3 +167,34 @@ rename_map <- c(
 )
 data_clean3 <- process_dirty_cols(data_clean3, Symptoms, rename_map)
 ```
+
+```{r}
+data_final <- data_clean3 |> 
+  select(-`D3 time division (3 light, 3 medium, 3 heavy, and 4 critical)`, -`Antiviral drugs (1 nema 0 no)`, -`Hormones`, -`PCT greater than 0.5`, -`PCT greater than 2`, -`PCT greater than 10`, -`Azvudine`)|> 
+  rename("Antiviral Drug" = "Antiviral drugs (1 nema, 2 azides, 3 others)") |> 
+  #mutate("NRL[%]" = round(as.numeric("NRL[%]"), 2)) |> 
+  mutate(`Antiviral Drug` = case_when(
+    `Antiviral Drug` == 0 ~ "None",
+    `Antiviral Drug` == 1 ~ "Paxlovid",
+    `Antiviral Drug` == 2 ~ "Azduvine",
+    `Antiviral Drug` == 3 ~ "Other",
+    TRUE ~ NA_character_
+  )) |> 
+  rename("Administration method" = "Administration method (1 oral and 2 nasal feeding)") |> 
+    mutate(`Administration method` = case_when(
+    `Administration method` == 1 ~ "Oral feeding",
+    `Administration method` == 2 ~ "Nasal Feeding",
+    TRUE ~ NA_character_
+  )) |> 
+  rename("Hormones" = "Hormones (1 methylprednisolone, 2 dexamethasone, 3 others)") |>
+    mutate(`Hormones` = case_when( #CUIDADO CON ESTOOOO
+    `Hormones` == 1 ~ "Methylprednisolone",
+    `Hormones` == 2 ~ "Dexamethasone",
+    `Hormones` == 3 ~ "Other",
+    TRUE ~ NA_character_
+  ))
+  
+  
+  
+  
+```
