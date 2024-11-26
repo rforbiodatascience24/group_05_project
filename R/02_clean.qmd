@@ -70,11 +70,12 @@ data <- data |>
          -"Virus nucleic acid test CT value",
          -"D3 time division (3 light, 3 medium, 3 heavy, and 4 critical)",
          -"Antiviral drugs (1 nema 0 no)", 
-         -"Hormones", 
+         -"Hormones (1 Yes 0 No)", 
          -"PCT greater than 0.5",
          -"PCT greater than 2", 
          -"PCT greater than 10", 
-         -"Azvudine")
+         -"Azvudine (1 is 0)",
+         -"D3 time division (3 light, 3 medium, 3 heavy, and 4 critical)")
 ```
 
 Relocate columns Age range and Age over 65 to the first columns of the dataset.
@@ -98,15 +99,21 @@ data <- data |>
     "Imaging Improvement > 25% (after 1 week)" = "Does the imaging improve by more than 25% after one week (1 yes 2 no)",
     "APACHE Score (ICU Admission)" = "APACHEII score (admission to ICU)",
     "Usage days" = "Usage days[days]",
-    "Azvudine" = "Azvudine (1 is 0)",
-    "Hormones" = "Hormones (1 Yes 0 No)",
     "Hormone usage days" = "Hormone usage days[days]",
     "Anticoagulant days" = "Anticoagulant days[days]",
     "Death" = "Death (1 Yes 2 No)",
     "Symptoms" = "Symptoms (1. Whole body, 2. Respiratory, 3. Nervous, 4. Cardiovascular, 5. Gastrointestinal, 6. Other)",
     "Antiviral Drug" = "Antiviral drugs (1 nema, 2 azides, 3 others)",
     "Administration method" = "Administration method (1 oral and 2 nasal feeding)",
-    "Hormones" = "Hormones (1 methylprednisolone, 2 dexamethasone, 3 others)"
+    "Hormones" = "Hormones (1 methylprednisolone, 2 dexamethasone, 3 others)",
+    "Hospitalization days" = "Hospitalization time[days]",
+    "ICU hospitalization days" = "ICU hospitalization time[days]",
+    "Prone position ventilation" = "Prone position ventilation (1 yes 0 no)",
+    "Mechanical ventilation days" = "Mechanical ventilation time (days)",
+    "D1_oxygen_therapy_mode"
+ = "D1 oxygen therapy mode (1. Mask 2. High flow oxygen therapy 3. Non invasive 4. Invasive 5. ECMO)"
+
+
     )
 ```
 
@@ -121,7 +128,7 @@ process_dirty_cols <- function(data, column, rename_map) {
       !!column_sym := str_replace_all(!!column_sym,  "([^a-zA-Z()]*).*", "\\1")
     ) |>  
     # Crear varias filas para cada valor en la columna separada por comas
-    separate_rows({{ column }}, sep = ",") |> 
+    separate_rows({{ column }}, sep = "[,+]") |> 
     # Asegurarse de que los valores sean numéricos, asignando 0 si no lo son
     mutate({{ column }} := as.numeric({{ column }})) |> 
     # Expandir las filas a columnas con indicadores binarios
@@ -155,15 +162,15 @@ Change the dirty columns
 ```{r}
 #Basic_disease column
 rename_map <- c(
-  "1" = "Hypertension",
-  "2" = "Diabetes",
-  "3" = "CVD",
-  "4" = "Cerebrovascular",
-  "5" = "COPD",
-  "6" = "Immunodeficiency",
-  "7" = "Malignant_tumor",
-  "8" = "Other",
-  "9" = "Chronic_Kidney"
+  "1" = "Hypertension_disease",
+  "2" = "Diabetes_disease",
+  "3" = "CVD_disease",
+  "4" = "Cerebrovascular_disease",
+  "5" = "COPD_disease",
+  "6" = "Immunodeficiency_disease",
+  "7" = "Malignant_tumor_disease",
+  "8" = "Other_disease",
+  "9" = "Chronic_Kidney_disease"
 )
 data_clean3 <- process_dirty_cols(data, Basic_diseases, rename_map)
 
@@ -177,11 +184,21 @@ rename_map <- c(
   "6" = "Other_symptoms"
 )
 data_clean3 <- process_dirty_cols(data_clean3, Symptoms, rename_map)
+
+#D1_oxygen_therapy_mode
+rename_map <- c(
+  "1" = "Mask_Oxygen_therapy",
+  "2" = "NonInvasive_Oxygen_therapy",
+  "3" = "HighFlow_Oxygen_therapy",
+  "4" = "Invasive_Oxygen_therapy",
+  "5" = "ECMO"
+)
+data_clean3 <- process_dirty_cols(data_clean3, D1_oxygen_therapy_mode, rename_map)
 ```
 
 ```{r}
 data_final <- data_clean3 |> 
-  #mutate("NRL[%]" = round(as.numeric("NRL[%]"), 2)) |> 
+  mutate(`NRL[%]` = round(as.numeric(`NRL[%]`), 2)) |>
   mutate(`Antiviral Drug` = case_when(
     `Antiviral Drug` == 0 ~ "None",
     `Antiviral Drug` == 1 ~ "Paxlovid",
@@ -199,5 +216,23 @@ data_final <- data_clean3 |>
     `Hormones` == 2 ~ "Dexamethasone",
     `Hormones` == 3 ~ "Other",
     TRUE ~ NA_character_
+  )) |> 
+    mutate(`Death` = case_when( #CUIDADO CON ESTOOOO
+    `Death` == 1 ~ "1",
+    `Death` == 2 ~ "0",
+    TRUE ~ NA_character_
+  )) |> mutate(`ICU hospitalization days` = as.numeric(gsub("[^0-9\\.]", "", `ICU hospitalization days`))) |> 
+  mutate(`Prone position ventilation` = case_when( #CUIDADO CON ESTOOOO
+    `Prone position ventilation` == 1 ~ "yes",
+    `Prone position ventilation` == 0 ~ "no",
+    TRUE ~ NA_character_
   ))
+  
+  
+  
+```
+
+```{r}
+data_final |>  mutate(`ICU hospitalization time[days]` = as.numeric(gsub("[^0-9\\.]", "", `ICU hospitalization time[days]`))) |> 
+  select("ICU hospitalization time[days]")
 ```
