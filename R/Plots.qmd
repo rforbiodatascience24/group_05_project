@@ -163,3 +163,103 @@ P1.a + P1.b +
   plot_annotation(
     title = "Hospitalization time by affected lung lobes")
 ```
+
+## Onset
+
+### Prepare data
+
+```{r}
+#Group by onset and calculate how many dead and alive people are in each group (also percentage)
+Onset <- data |> 
+  group_by(onset, Death) |> 
+  summarise(Count = n(),
+            Avg_Hospitalization_days = round(mean(Hospitalization_days, 
+                                                  na.rm = TRUE), 1)) |> 
+  ungroup() |> 
+  group_by(onset) |> 
+  mutate(Percentage = round(Count/sum(Count) * 100, 1)) |> 
+  ungroup()
+
+
+```
+
+### Outcome per Onset
+
+```{r}
+ggplot(data = Onset,
+       mapping = aes(x = onset ,
+                     y = Count,
+                     fill = Death))+
+  geom_bar(stat = "identity", position = "dodge", width = 0.6)+
+  scale_fill_manual(labels = c("0" = "Alive",
+                               "1" = "Dead"),
+                    values = c("0" = "lightblue",
+                               "1" = "lightcoral"))+
+  labs(title = "Mortality per Onset",
+       x = "Onset",
+       fill = "Outcome")+
+  theme_minimal()+
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"),
+        legend.title = element_text(face = "bold"))
+```
+
+### Outcome Percentage per Onset
+
+```{r}
+ggplot(data = Onset,
+       mapping = aes(x = onset ,
+                     y = Percentage,
+                     fill = Death))+
+  geom_bar(stat = "identity", position = "dodge", width = 0.6)+
+  scale_fill_manual(labels = c("0" = "Alive",
+                               "1" = "Dead"),
+                    values = c("0" = "lightblue",
+                               "1" = "lightcoral"))+
+  labs(title = "Mortality per Onset",
+       x = "Onset",
+       fill = "Outcome")+
+  theme_minimal()+
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"),
+        legend.title = element_text(face = "bold"))
+```
+
+### Onset Vs Hospitalization time (Barplot)
+
+```{r}
+ggplot(data = Onset,
+       mapping = aes(x = onset ,
+                     y = Avg_Hospitalization_days,
+                     fill = onset))+
+  geom_bar(stat = "identity", position = "dodge", width = 0.6)+
+  scale_fill_manual(labels = c("0" = "Alive",
+                               "1" = "Dead"),
+                    values = c("0" = "lightblue",
+                               "1" = "lightcoral"))+
+  labs(title = "Mortality per Onset",
+       x = "Onset",
+       fill = "Outcome")+
+  theme_minimal()+
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"),
+        legend.title = element_text(face = "bold"))
+```
+
+### Onset Vs Charlson Index
+
+```{r}
+ggplot(data = data,
+       mapping = aes(x = onset,
+                     y = `Charlson_index[score]`,
+                     fill = onset))+
+  geom_boxplot()+
+  scale_fill_manual(
+    values = c("Early" = "tomato", "Late" = "skyblue"))+
+  labs(
+    title = "Onset Vs Charlson Index",
+    x = "Onset",
+    y = "Charlson Index"
+  )+
+  theme_minimal()+
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  )
+```
