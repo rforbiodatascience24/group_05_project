@@ -145,7 +145,8 @@ P5
 
 ```{r}
 #Plot Hospitalization time vs Affected lung lobes
-P1.a <- ggplot(data = data_clean,
+P1.a <- ggplot(data = data_clean |> 
+                 filter(!is.na(`Affected lung lobes 1`)),
              mapping = aes(x = `Affected lung lobes 1`,
                            y = `Hospitalization time[days]`))+
   geom_boxplot(fill = "skyblue", color = "black")+
@@ -155,7 +156,8 @@ P1.a <- ggplot(data = data_clean,
     x = "Affected lung lobes",
     y = "Hospitalization time"
   )
-P1.b <- ggplot(data = data_clean,
+P1.b <- ggplot(data = data_clean |> 
+                 filter(!is.na(`Affected lung lobes 2`)),
              mapping = aes(x = `Affected lung lobes 2`,
                            y = `Hospitalization time[days]`))+
   geom_boxplot(fill = "red", color = "black")+
