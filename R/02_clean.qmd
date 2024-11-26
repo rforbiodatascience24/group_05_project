@@ -75,7 +75,9 @@ data <- data |>
          -"PCT greater than 2", 
          -"PCT greater than 10", 
          -"Azvudine (1 is 0)",
-         -"D3 time division (3 light, 3 medium, 3 heavy, and 4 critical)")
+         -"D3 time division (3 light, 3 medium, 3 heavy, and 4 critical)",
+         -"Immunotherapy (1 Yes 2 No)",
+         -"Use or D1- initial positive longer than 5d")
 ```
 
 Relocate columns Age range and Age over 65 to the first columns of the dataset.
@@ -111,9 +113,10 @@ data <- data |>
     "Prone position ventilation" = "Prone position ventilation (1 yes 0 no)",
     "Mechanical ventilation days" = "Mechanical ventilation time (days)",
     "D1_oxygen_therapy_mode"
- = "D1 oxygen therapy mode (1. Mask 2. High flow oxygen therapy 3. Non invasive 4. Invasive 5. ECMO)"
-
-
+ = "D1 oxygen therapy mode (1. Mask 2. High flow oxygen therapy 3. Non invasive 4. Invasive 5. ECMO)",
+ "Antiobiotics" = "Antiobiotics (1 Yes 2 No)",
+ "Immunotherapy" = "Immunotherapy (1 Tor 2 Bar)",
+ "Medication days" = "Medication- D1[days]"
     )
 ```
 
@@ -217,16 +220,41 @@ data_final <- data_clean3 |>
     `Hormones` == 3 ~ "Other",
     TRUE ~ NA_character_
   )) |> 
-    mutate(`Death` = case_when( #CUIDADO CON ESTOOOO
+    mutate(`Death` = case_when( 
     `Death` == 1 ~ "1",
     `Death` == 2 ~ "0",
     TRUE ~ NA_character_
   )) |> mutate(`ICU hospitalization days` = as.numeric(gsub("[^0-9\\.]", "", `ICU hospitalization days`))) |> 
-  mutate(`Prone position ventilation` = case_when( #CUIDADO CON ESTOOOO
+  mutate(`Prone position ventilation` = case_when(
     `Prone position ventilation` == 1 ~ "yes",
     `Prone position ventilation` == 0 ~ "no",
     TRUE ~ NA_character_
-  ))
+  )) |> 
+  mutate(`Antibiotics` = case_when(
+    `Antibiotics` == 1 ~ "yes",
+    `Antibiotics` == 2 ~ "no",
+    TRUE ~ NA_character_
+  )) |>
+  mutate(`Immunotherapy` = case_when(
+    `Immunotherapy` == 1 ~ "Tocilizumab",
+    `Immunotherapy` == 2 ~ "Baricitinib",
+    `Immunotherapy` == 0 ~ "None",
+    TRUE ~ NA_character_
+  )) |> mutate(`Hormone dosage[mg]` = as.numeric(gsub("[^0-9\\.]", "", `Hormone dosage[mg]`))) |> mutate(`ImmunotheDoes the imaging improve by more than 25% after one week (1 yes 2 no)
+` = case_when(
+    `Does the imaging improve by more than 25% after one week (1 yes 2 no)
+` == 1 ~ "yes",
+    `Does the imaging improve by more than 25% after one week (1 yes 2 no)
+` == 0 ~ "no",
+    TRUE ~ NA_character_
+  )) |> mutate(Age_ranges[years] = case_when(
+    str_detect(Age_ranges[years], "^[0-5][0-9]-") ~ "<60",
+    str_detect(Age_ranges[years], "^6") ~ "60-70",
+    str_detect(Age_ranges[years], "^7") ~ "70-80",
+    str_detect(Age_ranges[years], "^8") ~ "80-90",
+    str_detect(Age_ranges[years], "^9") ~ ">90",
+    str_detect(Age_ranges[years], "^100") ~ ">90"
+  )) |> mutate(`Age ranges` = fct_relevel(`Age ranges`, "<60", "60-70", "70-80", "80-90", ">90"))
   
   
   
