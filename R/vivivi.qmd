@@ -1,0 +1,11 @@
+---
+title: "vivivi"
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+#draft docu for vis data
+# learning 
+```
