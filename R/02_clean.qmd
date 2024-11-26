@@ -11,10 +11,10 @@ editor: visual
 library(tidyverse)
 library(readxl)
 library(stringr)
-
+library(cowplot)
 ```
 
-Load Data
+### Load Data
 
 ```{r, warning=FALSE, message=FALSE}
 data <- read_tsv("../data/01_dat_load.tsv")
@@ -22,7 +22,18 @@ data <- read_tsv("../data/01_dat_load.tsv")
 
 ```
 
-Change values \[null\] for NAs
+### Eliminate Spaces
+
+Lot of the columns of our data frame have names separated by spaces " ", than can bring problems when calling them after. To avoid that, we are going to replace all the spaces in the colnames with "\_"
+
+```{r}
+data <- data |> 
+  #rename_with renames the colnames, use gsub to substitute " " with "_" in all 
+  #the columns (.)
+  rename_with(~ gsub(" ", "_", .))
+```
+
+### Manage nulls
 
 ```{r}
 
@@ -59,63 +70,23 @@ NA_prop <- function(data) {
 data_NA_proportion <- NA_prop(data)
 ```
 
-<<<<<<< HEAD
-Filter out columns with > 0.95 of NAs (This columns are meant to split the data and are empty, the only values are notes about the patients)
-=======
->>>>>>> 44a92413a8604a6374d912d98127f8e28117adf4
+Remove title columns (All columns that have \> 0.95 of NA proportion)
 
-
-<<<<<<< HEAD
 ```{r}
+Title_columns <- data_NA_proportion |> 
+  filter(na_proportion > 0.95) |> 
+  pull(column)
+
 data <- data |> 
   select(-all_of(Title_columns))
 ```
-=======
->>>>>>> 44a92413a8604a6374d912d98127f8e28117adf4
 
-Change dirty columns with multiple values to clean binary columns
+### Tidy columns
 
 ```{r}
 #Change name to a shorter one for sintax conveniance
 data_clean <- data |> 
-  rename(Basic_diseases = `Basic diseases (1 hypertension, 2 diabetes, 3 cardiovascular diseases, 4 cerebrovascular diseases, 5 COPD, 6 immunodeficiency (such as AIDS, hormone, immunosuppressant use history), 7 malignant tumor, 8 other 9 chronic kidney disease`)
-```
-
-```{r}
-data_clean2 <- data_clean |> 
-  #este select es solo ara visualizar mejor
-  #select(Number, Basic_diseases) |> 
-  #crea varias filas para el mismo paciente, con un unico numero de Disease en cada uno
-  separate_rows(Basic_diseases, sep = ",") |> 
-  #nos aseguramos que ese valor sea numerico, y si no es numerico se asigna a cero
-  mutate(Basic_diseases = as.numeric(Basic_diseases)) |> 
-  pivot_wider(
-    names_from = Basic_diseases, 
-    values_from = Basic_diseases, 
-    values_fn = ~1, 
-    values_fill = list(Basic_diseases = 0)) |> 
-  rename_with(~paste0("disease_", .))
-
-data_clean2 <- data_clean2 |> 
-  # Filtrar las filas donde disease_NA == 1
-  mutate(across(starts_with("disease_"), 
-                ~if_else(disease_NA == 1, NA, .))) |> 
-  # Eliminar la columna disease_NA
-  select(-disease_NA, -disease_0)
-
-data_clean2 <- data_clean2 |> 
-  rename_with(~ case_when(
-    . == "disease_1" ~ "Hypertension",
-    . == "disease_2" ~ "Diabetes",
-    . == "disease_3" ~ "CVD",
-    . == "disease_4" ~ "Cerebrovascular",
-    . == "disease_5" ~ "COPD",
-    . == "disease_6" ~ "Immunodeficiency",
-    . == "disease_7" ~ "Malignant_tumor",
-    . == "disease_8" ~ "Other",
-    . == "disease_9" ~ "Chronic_Kidney",
-    TRUE ~ .
-  ), starts_with("disease_"))
+  rename(Basic_diseases = `Basic_diseases_(1_hypertension,_2_diabetes,_3_cardiovascular_diseases,_4_cerebrovascular_diseases,_5_COPD,_6_immunodeficiency_(such_as_AIDS,_hormone,_immunosuppressant_use_history),_7_malignant_tumor,_8_other_9_chronic_kidney_disease`)
 ```
 
 ```{r}
@@ -161,4 +132,142 @@ data_clean <- data_clean |>
   mutate(across(Hypertension : Other, ~ ifelse(is.na(No_Value), NA, .))) |> 
   #Now that we have used the No_value column, we can drop it 
   select(-No_Value)
+```
+
+### REDUCE AGE GROUPS
+
+```{r}
+View(data |> 
+  count(`Age_ranges[years]`))
+```
+
+We will use case_when with str_detect to reduce the amount of age_ranges groups we have. We will stay with a group of \<60 years, \>90 years and groups of 10 years in between
+
+```{r}
+data_clean <- data_clean |> 
+  mutate(`Age_ranges[years]` = case_when(
+    str_detect(`Age_ranges[years]`, "^[0-5][0-9]-") ~ "<60",
+    str_detect(`Age_ranges[years]`, "^6") ~ "60-70",
+    str_detect(`Age_ranges[years]`, "^7") ~ "70-80",
+    str_detect(`Age_ranges[years]`, "^8") ~ "80-90",
+    str_detect(`Age_ranges[years]`, "^9") ~ ">90",
+    str_detect(`Age_ranges[years]`, "^100") ~ ">90"
+  ))
+```
+
+### Mortality column to binary
+
+```{r}
+data_clean <- data_clean |> 
+  mutate(`Death_(1_Yes_2_No)` = case_when(
+    `Death_(1_Yes_2_No)` == "2" ~ "0",
+    TRUE ~ "1"
+  )) |> 
+  rename(Death = `Death_(1_Yes_2_No)`)
+```
+
+### Visualize Mortality rate per age group
+
+#### Prepare dataset
+
+```{r}
+mortality_summary <- data_clean |> 
+  group_by(`Age_ranges[years]`, Death) |> 
+  summarise(Count = n()) |>
+  mutate(`Age_ranges[years]` = factor(`Age_ranges[years]`, levels = c("<60", "60-70", "70-80","80-90", ">90"))) |> 
+  mutate(Percentage = round((Count/ sum(Count)) * 100, digits = 1)) |> 
+  ungroup()
+```
+
+#### Total death per age_group barplot
+
+```{r}
+
+
+ggplot(mortality_summary, 
+       mapping = aes( x= `Age_ranges[years]`, y = Count, fill = Death))+
+  geom_bar(stat = "identity", position = "dodge")+
+  scale_fill_manual(
+    values = c("0" = "blue", "1" = "red"),
+    labels = c("0" = "Survived", "1" = "Dead")
+  )+
+  labs(
+    title = "Mortality per age group",
+    fill = "Outcome",
+    x = "Age Groups"
+  )+
+  theme_minimal()+
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  )
+
+
+
+
+```
+
+#### Death rate per age_group barplot
+
+```{r}
+ggplot(mortality_summary, 
+       mapping = aes( x= `Age_ranges[years]`, y = Percentage, fill = Death))+
+  geom_bar(stat = "identity", position = "dodge")+
+  scale_fill_manual(
+    values = c("0" = "blue", "1" = "red"),
+    labels = c("0" = "Survived", "1" = "Dead")
+  )+
+  labs(
+    title = "Mortality Rate per age group",
+    fill = "Outcome",
+    x = "Age Groups",
+    y = "%"
+  )+
+  theme_minimal()+
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  )
+```
+
+### Hospitalization time Vs Outcome
+
+```{r}
+ggplot(data = data_clean,
+       mapping = aes(x = Death,
+                     y = `Hospitalization_time[days]`,
+                     fill = Death))+
+  geom_boxplot()+
+  scale_fill_manual(
+    labels = c("0" = "Survive", "1" = "Died"),
+    values = c("0" = "blue", "1" = "red"))+
+  labs(
+    title = "Death Vs Hospitalization Time Boxplot",
+    x = "Outcome",
+    y = "Hospitalization Time"
+  )+
+  theme_minimal()+
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  )
+  
+
+  
+```
+
+```{r}
+ggplot(data = data_clean,
+       mapping = aes(x = `Hospitalization_time[days]`,
+                     fill = Death))+
+  geom_density(alpha = 0.5)+
+  scale_fill_manual(
+    labels = c("0" = "Survive", "1" = "Died"),
+    values = c("0" = "blue", "1" = "red"))+
+  labs(
+    title = "Death Vs Hospitalization Time Boxplot",
+    x = "Hospitalization Time",
+    y = "Density"
+  )+
+  theme_minimal()+
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  )
 ```
