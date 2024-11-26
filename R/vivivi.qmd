@@ -7,5 +7,5 @@ editor: visual
 ```{r}
 library(tidyverse)
 #draft docu for vis data
-## sfhkwejfhwkehf
+# learning 
 ```
