@@ -76,7 +76,7 @@ data <- data |>
          -"PCT greater than 10", 
          -"Azvudine (1 is 0)",
          -"D3 time division (3 light, 3 medium, 3 heavy, and 4 critical)",
-         -"Immunotherapy (1 Yes 2 No)",
+         -"Immunotherapy (1 Yes 0 No)",
          -"Use or D1- initial positive longer than 5d")
 ```
 
@@ -114,7 +114,7 @@ data <- data |>
     "Mechanical ventilation days" = "Mechanical ventilation time (days)",
     "D1_oxygen_therapy_mode"
  = "D1 oxygen therapy mode (1. Mask 2. High flow oxygen therapy 3. Non invasive 4. Invasive 5. ECMO)",
- "Antiobiotics" = "Antiobiotics (1 Yes 2 No)",
+ "Antibiotics" = "Antibiotics (1 Yes 2 No)",
  "Immunotherapy" = "Immunotherapy (1 Tor 2 Bar)",
  "Medication days" = "Medication- D1[days]"
     )
@@ -128,9 +128,9 @@ process_dirty_cols <- function(data, column, rename_map) {
   
   data_processed <- data |> 
     mutate(
-      !!column_sym := str_replace_all(!!column_sym,  "([^a-zA-Z()]*).*", "\\1")
+      !!column_sym := str_replace_all(!!column_sym, "([^a-zA-Z()]*).*", "\\1")
     ) |>  
-    # Crear varias filas para cada valor en la columna separada por comas
+    # Crear varias filas para cada valor en la columna separada por comas o signos +
     separate_rows({{ column }}, sep = "[,+]") |> 
     # Asegurarse de que los valores sean numéricos, asignando 0 si no lo son
     mutate({{ column }} := as.numeric({{ column }})) |> 
@@ -141,18 +141,27 @@ process_dirty_cols <- function(data, column, rename_map) {
       values_from = {{ column }}, 
       values_fn = ~1, 
       values_fill = 0
-    ) |> 
-    # Filtrar valores NA si la columna correspondiente existe
-    mutate(across(starts_with("temp_prefix_"), ~if_else(temp_prefix_NA== 1, NA, .))) |> 
-    # Eliminar las columnas no deseadas
-    select(-any_of(c("temp_prefix_NA", "temp_prefix_0"))) |> 
+    )
+  
+  # Si la columna 'temp_prefix_NA' existe, filtrar sus valores
+  if ("temp_prefix_NA" %in% names(data_processed)) {
+    data_processed <- data_processed |> 
+      mutate(across(starts_with("temp_prefix_"), ~if_else(temp_prefix_NA == 1, NA, .))) |> 
+      select(-any_of(c("temp_prefix_NA", "temp_prefix_0")))
+  } else {
+    # Si no existe, simplemente eliminamos la columna 'temp_prefix_0' (si está presente)
+    data_processed <- data_processed |> 
+      select(-any_of(c("temp_prefix_0")))
+  }
+  
+  # Renombrar columnas según el mapa proporcionado
+  data_processed <- data_processed |> 
     rename_with(
-      ~gsub(paste0("^", "temp_prefix_"), "", .),  # Elimina el prefijo "disease_" si está presente
-      starts_with("temp_prefix_")  # Aplica solo a columnas que empiezan con "disease_"
+      ~gsub(paste0("^", "temp_prefix_"), "", .),  # Elimina el prefijo "temp_prefix_" si está presente
+      starts_with("temp_prefix_")
     ) |> 
-    # Renombrar columnas según el mapa proporcionado
     rename_with(~ case_when(
-     . %in% names(rename_map) ~ rename_map[.],
+      . %in% names(rename_map) ~ rename_map[.],
       TRUE ~ .
     ), everything())
   
@@ -240,27 +249,20 @@ data_final <- data_clean3 |>
     `Immunotherapy` == 2 ~ "Baricitinib",
     `Immunotherapy` == 0 ~ "None",
     TRUE ~ NA_character_
-  )) |> mutate(`Hormone dosage[mg]` = as.numeric(gsub("[^0-9\\.]", "", `Hormone dosage[mg]`))) |> mutate(`ImmunotheDoes the imaging improve by more than 25% after one week (1 yes 2 no)
-` = case_when(
-    `Does the imaging improve by more than 25% after one week (1 yes 2 no)
-` == 1 ~ "yes",
-    `Does the imaging improve by more than 25% after one week (1 yes 2 no)
-` == 0 ~ "no",
+  )) |> 
+  mutate(`Hormone dosage[mg]` = as.numeric(gsub("[^0-9\\.]", "", `Hormone dosage[mg]`))) |> 
+  mutate(`Imaging Improvement > 25% (after 1 week)` = case_when(
+    `Imaging Improvement > 25% (after 1 week)` == 1 ~ "yes",
+    `Imaging Improvement > 25% (after 1 week)` == 2 ~ "no",
     TRUE ~ NA_character_
-  )) |> mutate(Age_ranges[years] = case_when(
-    str_detect(Age_ranges[years], "^[0-5][0-9]-") ~ "<60",
-    str_detect(Age_ranges[years], "^6") ~ "60-70",
-    str_detect(Age_ranges[years], "^7") ~ "70-80",
-    str_detect(Age_ranges[years], "^8") ~ "80-90",
-    str_detect(Age_ranges[years], "^9") ~ ">90",
-    str_detect(Age_ranges[years], "^100") ~ ">90"
-  )) |> mutate(`Age ranges` = fct_relevel(`Age ranges`, "<60", "60-70", "70-80", "80-90", ">90"))
-  
-  
-  
+  )) |> mutate(`Age range` = case_when(
+    str_detect(`Age range`, "^[0-5][0-9]-") ~ "<60",
+    str_detect(`Age range`, "^6") ~ "60-70",
+    str_detect(`Age range`, "^7") ~ "70-80",
+    str_detect(`Age range`, "^8") ~ "80-90",
+    str_detect(`Age range`, "^9") ~ ">90",
+    str_detect(`Age range`, "^100") ~ ">90"
+  )) |> mutate(`Age range` = fct_relevel(`Age range`, "<60", "60-70", "70-80", "80-90", ">90"))
 ```
 
-```{r}
-data_final |>  mutate(`ICU hospitalization time[days]` = as.numeric(gsub("[^0-9\\.]", "", `ICU hospitalization time[days]`))) |> 
-  select("ICU hospitalization time[days]")
-```
+
