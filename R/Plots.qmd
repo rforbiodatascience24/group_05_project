@@ -102,3 +102,61 @@ ggplot(data = data_clean,
     plot.title = element_text(hjust = 0.5, face = "bold")
   )
 ```
+
+```{r}
+#Plot Charlson index vs age range
+ggplot(data = data_clean,
+             mapping = aes(x = `Age_range`,
+                           y = `Charlson index[score]`))+
+  geom_boxplot(fill = "skyblue", color = "black")+
+  labs(
+     title = "Charlson Index by Age Range",
+      x = "Age Range",
+      y = "Charlson Index Score",
+  )+
+  theme_minimal()
+```
+
+```{r}
+#Plot Hospitalization time vs Age range
+ggplot(data = data_clean, 
+             mapping = aes(x = `Age_range`,
+                           y = `Hospitalization time[days]`))+
+  geom_boxplot(fill = "skyblue", color = "black")+
+  labs(
+    title = "Hospitalization time vs age group",
+    x = "Age group",
+    y = "Hospitalization days"
+  )+
+  theme_minimal()
+```
+
+```{r}
+#Plot Hospitalization time vs Affected lung lobes
+P1.a <- ggplot(data = data_clean |> 
+                 filter(!is.na(`Affected lung lobes 1`)),
+             mapping = aes(x = `Affected lung lobes 1`,
+                           y = `Hospitalization time[days]`))+
+  geom_boxplot(fill = "skyblue", color = "black")+
+  theme_minimal()+
+  labs(
+    title = "Affected lung lobes 1",
+    x = "Affected lung lobes",
+    y = "Hospitalization time"
+  )
+P1.b <- ggplot(data = data_clean |> 
+                 filter(!is.na(`Affected lung lobes 2`)),
+             mapping = aes(x = `Affected lung lobes 2`,
+                           y = `Hospitalization time[days]`))+
+  geom_boxplot(fill = "red", color = "black")+
+  theme_minimal()+
+  labs(
+    title = "Affected lung lobes 2",
+    x = "Affected lung lobes",
+    y = "Hospitalization time"
+  )
+library("patchwork")
+P1.a + P1.b + 
+  plot_annotation(
+    title = "Hospitalization time by affected lung lobes")
+```
