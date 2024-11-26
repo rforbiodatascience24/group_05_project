@@ -29,6 +29,7 @@ Rename some columns
 ```{r}
 data_clean <- data_clean |> 
   rename(
+    "Age_range" = "Age ranges[years]",
     "Age over 65" = "Age over 65(1,YES; 2, NO)",
     "Fever days" = "Fever days (D1-D7)[days]",
     "Affected lung lobes 1" = "Number of affected lung lobes 1",
@@ -173,4 +174,8 @@ P1 <- P1.a + P1.b +
     title = "Hospitalization time by affected lung lobes")
 
 P1
+```
+
+```{r}
+print(P5)
 ```
