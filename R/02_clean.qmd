@@ -1,6 +1,6 @@
 ---
 title: "Project"
-author: "Miguel Blanco"
+author: "Miguel Blanco, Xavi Chapatte, Luis Martín"
 format: html
 editor: visual
 ---
@@ -18,8 +18,6 @@ library(cowplot)
 
 ```{r, warning=FALSE, message=FALSE}
 data <- read_tsv("../data/01_dat_load.tsv")
-
-
 ```
 
 ### Eliminate Spaces
@@ -70,204 +68,234 @@ NA_prop <- function(data) {
 data_NA_proportion <- NA_prop(data)
 ```
 
-Remove title columns (All columns that have \> 0.95 of NA proportion)
-
 ```{r}
-Title_columns <- data_NA_proportion |> 
-  filter(na_proportion > 0.95) |> 
-  pull(column)
 
 data <- data |> 
-  select(-all_of(Title_columns))
+  select(-"Pulmonary CT condition",
+         -"D1 blood routine upon admission",
+         -"D7 blood routine",
+         -"Liver enzyme D1",
+         -"Coagulation index D1",
+         -"Inflammatory indicator D1",
+         -"Blood gas analysis",
+         -"Virus nucleic acid test CT value",
+         -"D3 time division (3 light, 3 medium, 3 heavy, and 4 critical)",
+         -"Antiviral drugs (1 nema 0 no)", 
+         -"Hormones (1 Yes 0 No)", 
+         -"PCT greater than 0.5",
+         -"PCT greater than 2", 
+         -"PCT greater than 10", 
+         -"Azvudine (1 is 0)",
+         -"D3 time division (3 light, 3 medium, 3 heavy, and 4 critical)",
+         -"Immunotherapy (1 Yes 0 No)",
+         -"Use or D1- initial positive longer than 5d")
 ```
+
 
 ### Tidy columns
 
+
 ```{r}
-#Change name to a shorter one for sintax conveniance
-data_clean <- data |> 
-  rename(Basic_diseases = `Basic_diseases_(1_hypertension,_2_diabetes,_3_cardiovascular_diseases,_4_cerebrovascular_diseases,_5_COPD,_6_immunodeficiency_(such_as_AIDS,_hormone,_immunosuppressant_use_history),_7_malignant_tumor,_8_other_9_chronic_kidney_disease`)
+data <- data |> 
+  relocate("Age ranges[years]", "Age over 65(1,YES; 2, NO)", .after = "Number")
+```
+
+Rename some columns
+
+```{r}
+data <- data |> 
+  rename(
+    "Basic_diseases" = "Basic diseases (1 hypertension, 2 diabetes, 3 cardiovascular diseases, 4 cerebrovascular diseases, 5 COPD, 6 immunodeficiency (such as AIDS, hormone, immunosuppressant use history), 7 malignant tumor, 8 other 9 chronic kidney disease",
+    "Age range" = "Age ranges[years]",
+    "Age over 65" = "Age over 65(1,YES; 2, NO)",
+    "Fever days" = "Fever days (D1-D7)[days]",
+    "Affected lung lobes 1" = "Number of affected lung lobes 1",
+    "Affected lung lobes 2" = "Number of affected lung lobes 2",
+    "Imaging Improvement>25% (after 1 week)" = "Does the imaging improve by more than 25% after one week (1 yes 2 no)",
+    "APACHE Score (ICU Admission)" = "APACHEII score (admission to ICU)",
+    "Usage days" = "Usage days[days]",
+    "Hormone usage days" = "Hormone usage days[days]",
+    "Anticoagulant days" = "Anticoagulant days[days]",
+    "Death" = "Death (1 Yes 2 No)",
+    "Symptoms" = "Symptoms (1. Whole body, 2. Respiratory, 3. Nervous, 4. Cardiovascular, 5. Gastrointestinal, 6. Other)",
+    "Antiviral Drug" = "Antiviral drugs (1 nema, 2 azides, 3 others)",
+    "Administration method" = "Administration method (1 oral and 2 nasal feeding)",
+    "Hormones" = "Hormones (1 methylprednisolone, 2 dexamethasone, 3 others)",
+    "Hospitalization days" = "Hospitalization time[days]",
+    "ICU hospitalization days" = "ICU hospitalization time[days]",
+    "Prone position ventilation" = "Prone position ventilation (1 yes 0 no)",
+    "Mechanical ventilation days" = "Mechanical ventilation time (days)",
+    "D1_oxygen_therapy_mode"
+ = "D1 oxygen therapy mode (1. Mask 2. High flow oxygen therapy 3. Non invasive 4. Invasive 5. ECMO)",
+ "Antibiotics" = "Antibiotics (1 Yes 2 No)",
+ "Immunotherapy" = "Immunotherapy (1 Tor 2 Bar)",
+ "Medication days" = "Medication- D1[days]",
+ "Negative conversion" = "Negative conversion(1, Yes; 0,No)"
+ )
+
+```
+
+Create function to change dirty columns with multiple values to clean binary columns
+
+```{r}
+process_dirty_cols <- function(data, column, rename_map) {
+  column_sym <- ensym(column)
+  
+  data_processed <- data |> 
+    mutate(
+      !!column_sym := str_replace_all(!!column_sym, "([^a-zA-Z()]*).*", "\\1")
+    ) |>  
+    # Crear varias filas para cada valor en la columna separada por comas o signos +
+    separate_rows({{ column }}, sep = "[,+]") |> 
+    # Asegurarse de que los valores sean numéricos, asignando 0 si no lo son
+    mutate({{ column }} := as.numeric({{ column }})) |> 
+    # Expandir las filas a columnas con indicadores binarios
+    pivot_wider(
+      names_from = {{ column }}, 
+      names_prefix = "temp_prefix_",
+      values_from = {{ column }}, 
+      values_fn = ~1, 
+      values_fill = 0
+    )
+  
+  # Si la columna 'temp_prefix_NA' existe, filtrar sus valores
+  if ("temp_prefix_NA" %in% names(data_processed)) {
+    data_processed <- data_processed |> 
+      mutate(across(starts_with("temp_prefix_"), ~if_else(temp_prefix_NA == 1, NA, .))) |> 
+      select(-any_of(c("temp_prefix_NA", "temp_prefix_0")))
+  } else {
+    # Si no existe, simplemente eliminamos la columna 'temp_prefix_0' (si está presente)
+    data_processed <- data_processed |> 
+      select(-any_of(c("temp_prefix_0")))
+  }
+  
+  # Renombrar columnas según el mapa proporcionado
+  data_processed <- data_processed |> 
+    rename_with(
+      ~gsub(paste0("^", "temp_prefix_"), "", .),  # Elimina el prefijo "temp_prefix_" si está presente
+      starts_with("temp_prefix_")
+    ) |> 
+    rename_with(~ case_when(
+      . %in% names(rename_map) ~ rename_map[.],
+      TRUE ~ .
+    ), everything())
+  
+  return(data_processed)
+}
+```
+
+
+
+
+
+Remove the spaces between characters on the names of the columns
+```{r}
+data <- data |> 
+  #rename_with renames the colnames, use gsub to substitute " " with "_" in all 
+  #the columns (.)
+  rename_with(~ gsub(" ", "_", .))
+```
+
+
+Change the dirty columns
+
+```{r}
+#Basic_disease column
+rename_map <- c(
+  "1" = "Hypertension_disease",
+  "2" = "Diabetes_disease",
+  "3" = "CVD_disease",
+  "4" = "Cerebrovascular_disease",
+  "5" = "COPD_disease",
+  "6" = "Immunodeficiency_disease",
+  "7" = "Malignant_tumor_disease",
+  "8" = "Other_disease",
+  "9" = "Chronic_Kidney_disease"
+)
+data <- process_dirty_cols(data, Basic_diseases, rename_map)
+
+#Symptoms column
+rename_map <- c(
+  "1" = "Whole_body_symptoms",
+  "2" = "Respiratory_symptoms",
+  "3" = "Nervous_symptoms",
+  "4" = "Cardiovascular_symptoms",
+  "5" = "Gastrointestinal_symptoms",
+  "6" = "Other_symptoms"
+)
+data <- process_dirty_cols(data, Symptoms, rename_map)
+
+#D1_oxygen_therapy_mode
+rename_map <- c(
+  "1" = "Mask_Oxygen_therapy",
+  "2" = "NonInvasive_Oxygen_therapy",
+  "3" = "HighFlow_Oxygen_therapy",
+  "4" = "Invasive_Oxygen_therapy",
+  "5" = "ECMO"
+)
+data <- process_dirty_cols(data, D1_oxygen_therapy_mode, rename_map)
 ```
 
 ```{r}
-data_clean <- data_clean |> 
-  #Creates a new row for each number separated by a comma in the basic diseases column. For example if patient 1 have diseases 1,2,3 it will create 3 rows for that patient   with the exact same values in every column except "Basic disease" column, where there will be one row with value 1, other with 2 and other with 3.
-  separate_rows(Basic_diseases, sep = ",") |> 
-  
-  # Now it creates a column Disease with the name that correspond to the number in the   column "Basic Diseases"
-  mutate(
-    Disease = case_when(
-      Basic_diseases == "1" ~ "Hypertension",
-      Basic_diseases == "2" ~ "Diabetes",
-      Basic_diseases == "3" ~ "CVD",
-      Basic_diseases == "4" ~ "Cerebrovascular",
-      Basic_diseases == "5" ~ "COPD",
-      Basic_diseases == "6" ~ "Immunodeficiency",
-      Basic_diseases == "7" ~ "Malignant_tumor",
-      Basic_diseases == "8" ~ "Other",
-      Basic_diseases == "9" ~ "Chronic_Kidney",
-      TRUE ~ "No_Value"),
-    #In case that the value of the column is NA we want an NA value, else a 1
-    Value = ifelse(Basic_diseases == "No_Value", NA, 1)
-  ) |> 
-  
-  #Now we use a pivot wider to transform rows in coulmns
-  pivot_wider(
-    #Creates a column with each of the names in Diseases (one for each disease)
-    names_from = Disease,
-    #Insert the value from the column value, that will be 1 for every row
-    values_from = Value,
-    #Fill the observations that dont have a "Value" with a 0, as this are the observations that dont have the illness
-    values_fill = 0 
-  ) |> 
-  
-  #Now we have more than one row for each "Number", as one row for each number in BasicDisease column was created. Now we want to group those rows so we have only one row per observation
-  group_by(Number) |>
-  #Summarise and select the highest value for the columns between Hypertension and other (Columns created from BasicDisease column). Only one of the rows will have number 1 for the disease (if the observation had that disease) so we summarising we choose the highest value
-  summarise(across(Hypertension : Other, ~ max(.x)),
-        #Summarise eliminates all the columns where is not working, so we need to call summarise on all columns so they stay in the final df. Not apply it on the BasicDisease columns so they are not duplicated
-         across(!c(Hypertension : Other), ~ first(.), .names = "{.col}")) |>
-  ungroup() |> 
-  #If the No value column is NA, all the values for the BasicDiseases created columns get NA value
-  mutate(across(Hypertension : Other, ~ ifelse(is.na(No_Value), NA, .))) |> 
-  #Now that we have used the No_value column, we can drop it 
-  select(-No_Value)
-```
-
-### REDUCE AGE GROUPS
-
-```{r}
-View(data |> 
-  count(`Age_ranges[years]`))
-```
-
-We will use case_when with str_detect to reduce the amount of age_ranges groups we have. We will stay with a group of \<60 years, \>90 years and groups of 10 years in between
-
-```{r}
-data_clean <- data_clean |> 
-  mutate(`Age_ranges[years]` = case_when(
-    str_detect(`Age_ranges[years]`, "^[0-5][0-9]-") ~ "<60",
-    str_detect(`Age_ranges[years]`, "^6") ~ "60-70",
-    str_detect(`Age_ranges[years]`, "^7") ~ "70-80",
-    str_detect(`Age_ranges[years]`, "^8") ~ "80-90",
-    str_detect(`Age_ranges[years]`, "^9") ~ ">90",
-    str_detect(`Age_ranges[years]`, "^100") ~ ">90"
+data <- data |> 
+  mutate(`NRL[%]` = round(as.numeric(`NRL[%]`), 2)) |>
+  mutate(`Antiviral_Drug` = case_when(
+    `Antiviral_Drug` == 0 ~ "None",
+    `Antiviral_Drug` == 1 ~ "Paxlovid",
+    `Antiviral_Drug` == 2 ~ "Azduvine",
+    `Antiviral_Drug` == 3 ~ "Other",
+    TRUE ~ NA_character_
+  )) |> 
+    mutate(`Administration_method` = case_when(
+    `Administration_method` == 1 ~ "Oral feeding",
+    `Administration_method` == 2 ~ "Nasal Feeding",
+    TRUE ~ NA_character_
+  )) |>
+    mutate(`Hormones` = case_when( #CUIDADO CON ESTOOOO
+    `Hormones` == 1 ~ "Methylprednisolone",
+    `Hormones` == 2 ~ "Dexamethasone",
+    `Hormones` == 3 ~ "Other",
+    TRUE ~ NA_character_
+  )) |> 
+    mutate(`Death` = case_when( 
+    `Death` == 1 ~ "1",
+    `Death` == 2 ~ "0",
+    TRUE ~ NA_character_
+  )) |> mutate(`ICU_hospitalization_days` = as.numeric(gsub("[^0-9\\.]", "", `ICU_hospitalization_days`))) |> 
+  mutate(`Prone_position_ventilation` = case_when(
+    `Prone_position_ventilation` == 1 ~ "yes",
+    `Prone_position_ventilation` == 0 ~ "no",
+    TRUE ~ NA_character_
+  )) |> 
+  mutate(`Antibiotics` = case_when(
+    `Antibiotics` == 1 ~ "yes",
+    `Antibiotics` == 2 ~ "no",
+    TRUE ~ NA_character_
+  )) |>
+  mutate(`Immunotherapy` = case_when(
+    `Immunotherapy` == 1 ~ "Tocilizumab",
+    `Immunotherapy` == 2 ~ "Baricitinib",
+    `Immunotherapy` == 0 ~ "None",
+    TRUE ~ NA_character_
+  )) |> 
+  mutate(`Hormone_dosage[mg]` = as.numeric(gsub("[^0-9\\.]", "", `Hormone_dosage[mg]`))) |> 
+  mutate(`Imaging_Improvement>25%_(after_1_week)` = case_when(
+    `Imaging_Improvement>25%_(after_1_week)` == 1 ~ "yes",
+    `Imaging_Improvement>25%_(after_1_week)` == 2 ~ "no",
+    TRUE ~ NA_character_
+  )) |> mutate(`Age_range` = case_when(
+    str_detect(`Age_range`, "^[0-5][0-9]-") ~ "<60",
+    str_detect(`Age_range`, "^6") ~ "60-70",
+    str_detect(`Age_range`, "^7") ~ "70-80",
+    str_detect(`Age_range`, "^8") ~ "80-90",
+    str_detect(`Age_range`, "^9") ~ ">90",
+    str_detect(`Age_range`, "^100") ~ ">90"
+  )) |> mutate(`Age_range` = fct_relevel(`Age_range`, "<60", "60-70", "70-80", "80-90", ">90")) |> mutate(`Negative_conversion` = case_when(
+    `Negative_conversion` == 1 ~ "yes",
+    `Negative_conversion` == 0 ~ "no",
+    TRUE ~ NA_character_
   ))
 ```
 
-### Mortality column to binary
-
-```{r}
-data_clean <- data_clean |> 
-  mutate(`Death_(1_Yes_2_No)` = case_when(
-    `Death_(1_Yes_2_No)` == "2" ~ "0",
-    TRUE ~ "1"
-  )) |> 
-  rename(Death = `Death_(1_Yes_2_No)`)
-```
-
-### Visualize Mortality rate per age group
-
-#### Prepare dataset
-
-```{r}
-mortality_summary <- data_clean |> 
-  group_by(`Age_ranges[years]`, Death) |> 
-  summarise(Count = n()) |>
-  mutate(`Age_ranges[years]` = factor(`Age_ranges[years]`, levels = c("<60", "60-70", "70-80","80-90", ">90"))) |> 
-  mutate(Percentage = round((Count/ sum(Count)) * 100, digits = 1)) |> 
-  ungroup()
-```
-
-#### Total death per age_group barplot
-
-```{r}
 
 
-ggplot(mortality_summary, 
-       mapping = aes( x= `Age_ranges[years]`, y = Count, fill = Death))+
-  geom_bar(stat = "identity", position = "dodge")+
-  scale_fill_manual(
-    values = c("0" = "blue", "1" = "red"),
-    labels = c("0" = "Survived", "1" = "Dead")
-  )+
-  labs(
-    title = "Mortality per age group",
-    fill = "Outcome",
-    x = "Age Groups"
-  )+
-  theme_minimal()+
-  theme(
-    plot.title = element_text(hjust = 0.5, face = "bold")
-  )
-
-
-
-
-```
-
-#### Death rate per age_group barplot
-
-```{r}
-ggplot(mortality_summary, 
-       mapping = aes( x= `Age_ranges[years]`, y = Percentage, fill = Death))+
-  geom_bar(stat = "identity", position = "dodge")+
-  scale_fill_manual(
-    values = c("0" = "blue", "1" = "red"),
-    labels = c("0" = "Survived", "1" = "Dead")
-  )+
-  labs(
-    title = "Mortality Rate per age group",
-    fill = "Outcome",
-    x = "Age Groups",
-    y = "%"
-  )+
-  theme_minimal()+
-  theme(
-    plot.title = element_text(hjust = 0.5, face = "bold")
-  )
-```
-
-### Hospitalization time Vs Outcome
-
-```{r}
-ggplot(data = data_clean,
-       mapping = aes(x = Death,
-                     y = `Hospitalization_time[days]`,
-                     fill = Death))+
-  geom_boxplot()+
-  scale_fill_manual(
-    labels = c("0" = "Survive", "1" = "Died"),
-    values = c("0" = "blue", "1" = "red"))+
-  labs(
-    title = "Death Vs Hospitalization Time Boxplot",
-    x = "Outcome",
-    y = "Hospitalization Time"
-  )+
-  theme_minimal()+
-  theme(
-    plot.title = element_text(hjust = 0.5, face = "bold")
-  )
-  
-
-  
-```
-
-```{r}
-ggplot(data = data_clean,
-       mapping = aes(x = `Hospitalization_time[days]`,
-                     fill = Death))+
-  geom_density(alpha = 0.5)+
-  scale_fill_manual(
-    labels = c("0" = "Survive", "1" = "Died"),
-    values = c("0" = "blue", "1" = "red"))+
-  labs(
-    title = "Death Vs Hospitalization Time Boxplot",
-    x = "Hospitalization Time",
-    y = "Density"
-  )+
-  theme_minimal()+
-  theme(
-    plot.title = element_text(hjust = 0.5, face = "bold")
-  )
-```
