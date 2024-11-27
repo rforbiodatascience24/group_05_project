@@ -6,10 +6,27 @@ editor: visual
 
 ### Create Early/Late onset group based on D1 Fever
 
+
 ```{r}
 data <- data |> 
   mutate(onset = case_when(
     `Disease_onset_D1_highest_body_temperature[℃]` > 37.5 ~ "Early",
     TRUE ~ "Late"
   ))
+```
+
+### Sum of Basic_Diseases
+
+```{r}
+data <- data |> 
+  mutate(Comorbidities_sum = rowSums(select(data, Hypertension_disease : Other_disease)))
+
+
+```{r}
+data <- data |> 
+  mutate(onset = case_when(
+    `Disease_onset_D1_highest_body_temperature[℃]` > 37.5 ~ "Early",
+    TRUE ~ "Late"
+  ))
+
 ```
