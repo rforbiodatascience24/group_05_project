@@ -1,0 +1,75 @@
+---
+title: "vivivi"
+format: html
+editor: visual
+---
+
+## Visualizations
+
+## Symptoms Heatmap per Outcome
+
+```{r}
+symptom_columns <- c(
+  "Whole_body_symptoms", "Respiratory_symptoms", "Cardiovascular_symptoms",
+  "Nervous_symptoms", "Gastrointestinal_symptoms", "Immunodeficiency",
+  "Other", "Hypertension", "Diabetes", "CVD", "COPD",
+  "Cerebrovascular", "Chronic_Kidney", "Malignant_tumor"
+)
+
+datavivi <- data_final |>
+  rename(
+    Outcome = "Death"
+    )
+
+symptoms_long <- datavivi |>
+  mutate(
+    Outcome = case_when(
+      Outcome == 2 ~ "Survived",
+      Outcome == 1 ~ "Deceased"
+    )
+  ) |>
+  select(all_of(symptom_columns), Outcome) |>
+  pivot_longer(
+    cols = all_of(symptom_columns),
+    names_to = "Symptom",
+    values_to = "Presence"
+  )
+  
+symptom_summary <- symptoms_long |>
+  group_by(Outcome, Symptom) |>
+  summarize(Frequency = sum(Presence, na.rm = TRUE), .groups = "drop")
+
+ggplot(symptom_summary,
+       mapping = aes(x = Outcome, y = Symptom, fill = Frequency)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "blue", mid = "white", high = "red", midpoint = 35) +
+  labs(title = "Symptom Heatmap per Outcome",
+       x = "Outcome",
+       y = "Symptom",
+       fill = "Frequency") +
+  theme_minimal()
+```
+
+### Pathogenic Results for every Specimen Location
+
+```{r}
+# Will rename columns such that the spaces do not cause hindrance
+datavivi <- data_final |>
+  rename(
+    specimen_loc = "Specimen collection location",
+    pathogen_cult = "Pathogenic culture results"
+  )
+
+pathogenic_summ <- datavivi |>
+  group_by(specimen_loc, pathogen_cult) |>
+  summarize(count = n(), .groups ="drop")
+
+ggplot(pathogenic_summ,
+       mapping = aes(specimen_loc, y = count, fill = pathogen_cult)) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(title = "Pathogenic Results per Specimen Location",
+       x = "Specimen Location",
+       y = "Count",
+       fill = "Pathogen Culture")
+
+```
