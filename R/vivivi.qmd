@@ -24,27 +24,17 @@ library(broom)
 data <- data|>
   rename(
     Outcome = 'Death',
-    CT_D1_days_1 = `CT1-D1[days]`,
-    CT_D1_days_2 = `CT2-D1[days]`
   ) |>
   mutate(
     Outcome = case_when(
       Outcome == 0 ~ 'Survived',
-      Outcome == 1 ~'Deceased'),
-    `Charlson_index[score]` = as.numeric(`Charlson_index[score]`),
-    CTSS_score_1 = as.numeric(CTSS_score_1),
-    CTSS_score_2 = as.numeric(CTSS_score_2),
-    CT_D1_days_1 = as.numeric(CT_D1_days_1),
-    CT_D1_days_2 = as.numeric(CT_D1_days_2),
-    Affected_lung_lobes_1 = as.numeric(Affected_lung_lobes_1),
-    Affected_lung_lobes_2 = as.numeric(Affected_lung_lobes_2),
+      Outcome == 1 ~'Deceased')
   )
 ```
 
 ## Antiviral Drug Visualizations
 
 ```{r}
-
 # Demographical Visualizations
 data |>
   group_by(Outcome, Antiviral_Drug) |>
@@ -101,7 +91,7 @@ oxygen_therp <- data |>
     values_to = "Severity_Score") |>
   filter(Therapy_Used == 1) |>
   filter(!is.na(Severity_Score)) |>
-  select(Age_range, Outcome, Oxygen_Therapy, Severity_Measure, Severity_Score)  
+  select(Age_range, Outcome, Oxygen_Therapy, Severity_Measure, Severity_Score, Number)  
 
 ```
 
@@ -524,11 +514,8 @@ ggplot(heatmap_data, aes(x = CT_Scan, y = Metric, fill = Value)) +
 
 ```{r}
 
-tabledat <- datavivi |>
+tabledat <- data |>
   mutate(
-    Outcome = case_when(
-      Outcome == 0 ~ "Survived",
-      Outcome == 1 ~ "Deceased"),
       Hypertension_disease = factor(Hypertension_disease, labels = c("No", "Yes")),
     Diabetes_disease = factor(Diabetes_disease, labels = c("No", "Yes")),
     CVD_disease = factor(CVD_disease, labels = c("No", "Yes")),
