@@ -263,3 +263,36 @@ ggplot(data = data,
     plot.title = element_text(hjust = 0.5, face = "bold")
   )
 ```
+
+
+## Sum of Comorbidities Vs Charlson Index scatterplot
+
+```{r}
+ggplot(data, 
+       mapping = aes(x = Comorbidities_sum, y = `Charlson_index[score]`))+
+  geom_point()+
+  geom_smooth(method = "lm")
+```
+
+### NLR and outcome boxplot
+
+```{r}
+ggplot(data = data,
+       mapping = aes(x = Death,
+                     y = `NRL[%]`,
+                     fill = Death))+
+  geom_boxplot()+
+  scale_fill_manual(
+    labels = c("0" = "Alive", "1" = "Dead"),
+    values = c("0" = "tomato", "1" = "skyblue"))+
+  labs(
+    title = "NRL Vs Outcome",
+    x = "Outcome",
+    y = "NRL (%)"
+  )+
+  theme_minimal()+
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  )
+```
+
