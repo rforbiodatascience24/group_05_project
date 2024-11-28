@@ -5,14 +5,12 @@ format: html
 editor: visual
 ---
 
-<<<<<<< HEAD
 ```{r}
 library(purrr)
 library(broom)
 ```
 
-=======
->>>>>>> e54cdf020d1381674afd3e365403e2dacca83c8d
+
 ## PCA
 
 ### Select numeric columns and normalize
@@ -52,7 +50,7 @@ pca_result <- prcomp(numeric_scaled_data)
 explained_variance <- data.frame(
   PC = paste0("PC", 1:length(pca_result$sdev)),
   Variance = (pca_result$sdev^2) / sum(pca_result$sdev^2))
-<<<<<<< HEAD
+
 
 ```
 
@@ -107,6 +105,4 @@ results_tidy <- results |>
 significant_variables <- results_tidy |> 
   filter(q.value < 0.05)
   
-=======
->>>>>>> e54cdf020d1381674afd3e365403e2dacca83c8d
 ```
