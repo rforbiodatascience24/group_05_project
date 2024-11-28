@@ -4,8 +4,13 @@ format: html
 editor: visual
 ---
 
-### Create Early/Late onset group based on D1 Fever
+## Load clean data
 
+```{r}
+data <- read_tsv(file = "../data/02_dat_clean.tsv")
+```
+
+### Create Early/Late onset group based on D1 Fever
 
 ```{r}
 data <- data |> 
@@ -20,13 +25,19 @@ data <- data |>
 ```{r}
 data <- data |> 
   mutate(Comorbidities_sum = rowSums(select(data, Hypertension_disease : Other_disease)))
+```
 
+### Save files
 
 ```{r}
-data <- data |> 
-  mutate(onset = case_when(
-    `Disease_onset_D1_highest_body_temperature[℃]` > 37.5 ~ "Early",
-    TRUE ~ "Late"
-  ))
+# Save the data as a TSV file
+clean_dir <- "../data"
+tsv_file <- file.path(clean_dir, "03_data_augmented.tsv")
 
+# Check if the directory exists, create it if not
+if (!dir.exists(clean_dir)) {
+  dir.create(clean_dir, recursive = TRUE) 
+}
+#write tsv data
+write.table(data, file = tsv_file, sep = "\t", row.names = FALSE)
 ```
