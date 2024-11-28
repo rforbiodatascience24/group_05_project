@@ -5,13 +5,17 @@ format: html
 editor: visual
 ---
 
+```{r}
+library("patchwork")
+```
+
 #### Total death per age_group barplot
 
 ```{r}
-mortality_summary <- data_clean |> 
-  group_by(`Age_ranges[years]`, Death) |> 
+mortality_summary <- data |> 
+  group_by(`Age_range`, Death) |> 
   summarise(Count = n()) |>
-  mutate(`Age_ranges[years]` = factor(`Age_ranges[years]`, levels = c("<60", "60-70", "70-80","80-90", ">90"))) |> 
+  mutate(`Age_range` = factor(`Age_range`, levels = c("<60", "60-70", "70-80","80-90", ">90"))) |> 
   mutate(Percentage = round((Count/ sum(Count)) * 100, digits = 1)) |> 
   ungroup()
 ```
@@ -20,7 +24,7 @@ mortality_summary <- data_clean |>
 
 ```{r}
 ggplot(mortality_summary, 
-       mapping = aes( x= `Age_ranges[years]`, y = Count, fill = Death))+
+       mapping = aes( x= `Age_range`, y = Count, fill = Death))+
   geom_bar(stat = "identity", position = "dodge")+
   scale_fill_manual(
     values = c("0" = "blue", "1" = "red"),
@@ -42,7 +46,7 @@ ggplot(mortality_summary,
 
 ```{r}
 ggplot(mortality_summary, 
-       mapping = aes( x= `Age_ranges[years]`, y = Percentage, fill = Death))+
+       mapping = aes( x= `Age_range`, y = Percentage, fill = Death))+
   geom_bar(stat = "identity", position = "dodge")+
   scale_fill_manual(
     values = c("0" = "blue", "1" = "red"),
@@ -63,9 +67,9 @@ ggplot(mortality_summary,
 ### Hospitalization time per Outcome (Boxplot)
 
 ```{r}
-ggplot(data = data_clean,
+ggplot(data = data,
        mapping = aes(x = Death,
-                     y = `Hospitalization_time[days]`,
+                     y = `Hospitalization_days`,
                      fill = Death))+
   geom_boxplot()+
   scale_fill_manual(
@@ -85,8 +89,8 @@ ggplot(data = data_clean,
 ### Hospitalization time per Outcome (Density plot)
 
 ```{r}
-ggplot(data = data_clean,
-       mapping = aes(x = `Hospitalization_time[days]`,
+ggplot(data = data,
+       mapping = aes(x = `Hospitalization_days`,
                      fill = Death))+
   geom_density(alpha = 0.5)+
   scale_fill_manual(
@@ -105,9 +109,9 @@ ggplot(data = data_clean,
 
 ```{r}
 #Plot Charlson index vs age range
-ggplot(data = data_clean,
+ggplot(data = data,
              mapping = aes(x = `Age_range`,
-                           y = `Charlson index[score]`))+
+                           y = `Charlson_index[score]`))+
   geom_boxplot(fill = "skyblue", color = "black")+
   labs(
      title = "Charlson Index by Age Range",
@@ -119,9 +123,9 @@ ggplot(data = data_clean,
 
 ```{r}
 #Plot Hospitalization time vs Age range
-ggplot(data = data_clean, 
+ggplot(data = data, 
              mapping = aes(x = `Age_range`,
-                           y = `Hospitalization time[days]`))+
+                           y = `Hospitalization_days`))+
   geom_boxplot(fill = "skyblue", color = "black")+
   labs(
     title = "Hospitalization time vs age group",
@@ -133,30 +137,162 @@ ggplot(data = data_clean,
 
 ```{r}
 #Plot Hospitalization time vs Affected lung lobes
-P1.a <- ggplot(data = data_clean |> 
-                 filter(!is.na(`Affected lung lobes 1`)),
-             mapping = aes(x = `Affected lung lobes 1`,
-                           y = `Hospitalization time[days]`))+
+P1.a <- ggplot(data = data |> 
+                 filter(!is.na(`Affected_lung_lobes_1`)),
+             mapping = aes(x = `Affected_lung_lobes_1`,
+                           y = `Hospitalization_days`))+
   geom_boxplot(fill = "skyblue", color = "black")+
   theme_minimal()+
   labs(
-    title = "Affected lung lobes 1",
+    title = "Affected_lung_lobes_1",
     x = "Affected lung lobes",
     y = "Hospitalization time"
   )
-P1.b <- ggplot(data = data_clean |> 
-                 filter(!is.na(`Affected lung lobes 2`)),
-             mapping = aes(x = `Affected lung lobes 2`,
-                           y = `Hospitalization time[days]`))+
+P1.b <- ggplot(data = data |> 
+                 filter(!is.na(`Affected_lung_lobes_2`)),
+             mapping = aes(x = `Affected_lung_lobes_2`,
+                           y = `Hospitalization_days`))+
   geom_boxplot(fill = "red", color = "black")+
   theme_minimal()+
   labs(
-    title = "Affected lung lobes 2",
+    title = "Affected_lung_lobes_2",
     x = "Affected lung lobes",
     y = "Hospitalization time"
   )
-library("patchwork")
 P1.a + P1.b + 
   plot_annotation(
     title = "Hospitalization time by affected lung lobes")
 ```
+
+## Onset
+
+### Prepare data
+
+```{r}
+#Group by onset and calculate how many dead and alive people are in each group (also percentage)
+Onset <- data |> 
+  group_by(onset, Death) |> 
+  summarise(Count = n(),
+            Avg_Hospitalization_days = round(mean(Hospitalization_days, 
+                                                  na.rm = TRUE), 1)) |> 
+  ungroup() |> 
+  group_by(onset) |> 
+  mutate(Percentage = round(Count/sum(Count) * 100, 1)) |> 
+  ungroup()
+
+
+```
+
+### Outcome per Onset
+
+```{r}
+ggplot(data = Onset,
+       mapping = aes(x = onset ,
+                     y = Count,
+                     fill = Death))+
+  geom_bar(stat = "identity", position = "dodge", width = 0.6)+
+  scale_fill_manual(labels = c("0" = "Alive",
+                               "1" = "Dead"),
+                    values = c("0" = "lightblue",
+                               "1" = "lightcoral"))+
+  labs(title = "Mortality per Onset",
+       x = "Onset",
+       fill = "Outcome")+
+  theme_minimal()+
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"),
+        legend.title = element_text(face = "bold"))
+```
+
+### Outcome Percentage per Onset
+
+```{r}
+ggplot(data = Onset,
+       mapping = aes(x = onset ,
+                     y = Percentage,
+                     fill = Death))+
+  geom_bar(stat = "identity", position = "dodge", width = 0.6)+
+  scale_fill_manual(labels = c("0" = "Alive",
+                               "1" = "Dead"),
+                    values = c("0" = "lightblue",
+                               "1" = "lightcoral"))+
+  labs(title = "Mortality per Onset",
+       x = "Onset",
+       fill = "Outcome")+
+  theme_minimal()+
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"),
+        legend.title = element_text(face = "bold"))
+```
+
+### Onset Vs Hospitalization time (Barplot)
+
+```{r}
+ggplot(data = Onset,
+       mapping = aes(x = onset ,
+                     y = Avg_Hospitalization_days,
+                     fill = onset))+
+  geom_bar(stat = "identity", position = "dodge", width = 0.6)+
+  scale_fill_manual(labels = c("0" = "Alive",
+                               "1" = "Dead"),
+                    values = c("0" = "lightblue",
+                               "1" = "lightcoral"))+
+  labs(title = "Mortality per Onset",
+       x = "Onset",
+       fill = "Outcome")+
+  theme_minimal()+
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"),
+        legend.title = element_text(face = "bold"))
+```
+
+### Onset Vs Charlson Index
+
+```{r}
+ggplot(data = data,
+       mapping = aes(x = onset,
+                     y = `Charlson_index[score]`,
+                     fill = onset))+
+  geom_boxplot()+
+  scale_fill_manual(
+    values = c("Early" = "tomato", "Late" = "skyblue"))+
+  labs(
+    title = "Onset Vs Charlson Index",
+    x = "Onset",
+    y = "Charlson Index"
+  )+
+  theme_minimal()+
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  )
+```
+
+
+## Sum of Comorbidities Vs Charlson Index scatterplot
+
+```{r}
+ggplot(data, 
+       mapping = aes(x = Comorbidities_sum, y = `Charlson_index[score]`))+
+  geom_point()+
+  geom_smooth(method = "lm")
+```
+
+### NLR and outcome boxplot
+
+```{r}
+ggplot(data = data,
+       mapping = aes(x = Death,
+                     y = `NRL[%]`,
+                     fill = Death))+
+  geom_boxplot()+
+  scale_fill_manual(
+    labels = c("0" = "Alive", "1" = "Dead"),
+    values = c("0" = "tomato", "1" = "skyblue"))+
+  labs(
+    title = "NRL Vs Outcome",
+    x = "Outcome",
+    y = "NRL (%)"
+  )+
+  theme_minimal()+
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  )
+```
+

@@ -11,16 +11,27 @@ editor: visual
 library(tidyverse)
 library(readxl)
 library(stringr)
-
+library(cowplot)
 ```
 
-Load Data
+### Load Data
 
 ```{r, warning=FALSE, message=FALSE}
 data <- read_tsv("../data/01_dat_load.tsv")
 ```
 
-Change values \[null\] for NAs
+### Eliminate Spaces
+
+Lot of the columns of our data frame have names separated by spaces " ", than can bring problems when calling them after. To avoid that, we are going to replace all the spaces in the colnames with "\_"
+
+```{r}
+data <- data |> 
+  #rename_with renames the colnames, use gsub to substitute " " with "_" in all 
+  #the columns (.)
+  rename_with(~ gsub(" ", "_", .))
+```
+
+### Manage nulls
 
 ```{r}
 
@@ -57,10 +68,8 @@ NA_prop <- function(data) {
 data_NA_proportion <- NA_prop(data)
 ```
 
-Filter out columns with > 0.95 of NAs (This columns are meant to split the data and are empty, the only values are notes about the patients)
-
-Remove empty columns that were introduced as separators. 
 ```{r}
+
 data <- data |> 
   select(-"Pulmonary CT condition",
          -"D1 blood routine upon admission",
@@ -83,8 +92,8 @@ data <- data |>
          -"Age over 65(1,YES; 2, NO)")
 ```
 
-Relocate columns Age range and Age over 65 to the first columns of the dataset.
 
+### Tidy columns
 
 
 ```{r}
@@ -123,6 +132,7 @@ data <- data |>
  "Medication days" = "Medication- D1[days]",
  "Negative conversion" = "Negative conversion(1, Yes; 0,No)"
  )
+
 ```
 
 Create function to change dirty columns with multiple values to clean binary columns
@@ -173,6 +183,9 @@ process_dirty_cols <- function(data, column, rename_map) {
   return(data_processed)
 }
 ```
+
+
+
 
 
 Remove the spaces between characters on the names of the columns
@@ -358,6 +371,7 @@ if (!dir.exists(clean_dir)) {
 #write tsv data
 write.table(data, file = tsv_file, sep = "\t", row.names = FALSE)
 ```
+
 
 
 
