@@ -247,6 +247,10 @@ CT1.b
 
 ggplot(data = data |> 
         group_by(Death) |> 
+        mutate(
+    CTSS_score_1 = as.numeric(as.character(CTSS_score_1)),
+    CTSS_score_2 = as.numeric(as.character(CTSS_score_2))
+  ) |> 
         summarize(mean_CTSS_1 = mean(CTSS_score_1, na.rm = TRUE)),
        mapping = aes(x = Death, 
                      y = mean_CTSS_1,
@@ -262,6 +266,10 @@ ggplot(data = data |>
 
 ggplot(data = data |> 
         group_by(Death) |> 
+        mutate(
+    CTSS_score_1 = as.numeric(as.character(CTSS_score_1)),
+    CTSS_score_2 = as.numeric(as.character(CTSS_score_2))
+  ) |> 
         summarize(mean_CTSS_2 = mean(CTSS_score_2, na.rm = TRUE)),
        mapping = aes(x = Death, 
                      y = mean_CTSS_2,
