@@ -4,23 +4,56 @@ format: html
 editor: visual
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+## Load augmented data
 
 ```{r}
-1 + 1
+library(table1)
+data <- read_tsv(file = "../data/03_data_augmented.tsv")
 ```
-
-You can add options to executable code like this
 
 ```{r}
-#| echo: false
-2 * 2
-```
+tabledat <- data |>
+  mutate(
+      Hypertension_disease = factor(Hypertension_disease, labels = c("No", "Yes")),
+    Diabetes_disease = factor(Diabetes_disease, labels = c("No", "Yes")),
+    CVD_disease = factor(CVD_disease, labels = c("No", "Yes")),
+    COPD_disease = factor(COPD_disease, labels = c("No", "Yes")),
+    Cerebrovascular_disease = factor(Cerebrovascular_disease, labels = c("No", "Yes")),
+    Chronic_Kidney_disease = factor(Chronic_Kidney_disease, labels = c("No", "Yes")),
+    Malignant_tumor_disease = factor(Malignant_tumor_disease, labels = c("No", "Yes")),
+    Immunodeficiency_disease = factor(Immunodeficiency_disease, labels = c("No", "Yes")),
+    Other_disease = factor(Other_disease, labels = c("No", "Yes")),
+    Whole_body_symptoms = factor(Whole_body_symptoms, labels = c("No", "Yes")),
+    Respiratory_symptoms = factor(Respiratory_symptoms, labels = c("No", "Yes")),
+    Cardiovascular_symptoms = factor(Cardiovascular_symptoms, labels = c("No", "Yes")),
+    Other_symptoms = factor(Other_symptoms, labels = c("No", "Yes")),
+    Nervous_symptoms = factor(Nervous_symptoms, labels = c("No", "Yes")),
+    Gastrointestinal_symptoms = factor(Gastrointestinal_symptoms, labels = c("No", "Yes"))
+  )
 
-The `echo: false` option disables the printing of code (only output is displayed).
+label(tabledat[["Hypertension_disease"]]) <- "Hypertension"
+label(tabledat[["Diabetes_disease"]]) <- "Diabetes"
+label(tabledat[["CVD_disease"]]) <- "Cardiovascular Disease (CVD)"
+label(tabledat[["COPD_disease"]]) <- "Chronic Obstructive Pulmonary Disease (COPD)"
+label(tabledat[["Cerebrovascular_disease"]]) <- "Cerebrovascular Disease"
+label(tabledat[["Chronic_Kidney_disease"]]) <- "Chronic Kidney Disease"
+label(tabledat[["Malignant_tumor_disease"]]) <- "Malignant Tumor"
+label(tabledat[["Immunodeficiency_disease"]]) <- "Immunodeficiency"
+label(tabledat[["Other_disease"]]) <- "Other Disease"
+label(tabledat[["Whole_body_symptoms"]]) <- "Whole Body Symptoms"
+label(tabledat[["Respiratory_symptoms"]]) <- "Respiratory Symptoms"
+label(tabledat[["Cardiovascular_symptoms"]]) <- "Cardiovascular Symptoms"
+label(tabledat[["Other_symptoms"]]) <- "Other Symptoms"
+label(tabledat[["Nervous_symptoms"]]) <- "Nervous Symptoms"
+label(tabledat[["Gastrointestinal_symptoms"]]) <- "Gastrointestinal Symptoms"
+label(tabledat[["Age_range"]]) <- "Age Group (Years)"
+label(tabledat[["Hospitalization_days"]]) <- "Hospitalization Time (Days)"
+label(tabledat[["ICU_hospitalization_days"]]) <- "ICU Hospitalization Time (Days)"
+label(tabledat[["Fever_days"]]) <- "Fever Duration (Days)"
+
+table1(
+  x = ~ Age_range + Hospitalization_days + ICU_hospitalization_days +
+      Fever_days +  Hypertension_disease + Diabetes_disease + CVD_disease + COPD_disease + Cerebrovascular_disease + Chronic_Kidney_disease + Malignant_tumor_disease + Immunodeficiency_disease + Other_disease + Whole_body_symptoms + Respiratory_symptoms + Cardiovascular_symptoms + Other_symptoms + Nervous_symptoms + Gastrointestinal_symptoms| Outcome,
+  data = tabledat
+)
+```
