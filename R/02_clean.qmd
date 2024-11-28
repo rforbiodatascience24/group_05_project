@@ -79,9 +79,7 @@ data <- data |>
          -"Age over 65(1,YES; 2, NO)")
 ```
 
-
 ### Tidy columns
-
 
 ```{r}
 data <- data |> 
@@ -125,7 +123,7 @@ data <- data |>
 
 ### Eliminate Spaces
 
-Lot of the columns of our data frame have names separated by spaces " ", than can bring problems when calling them after. To avoid that, we are going to replace all the spaces in the colnames with "_"
+Lot of the columns of our data frame have names separated by spaces " ", than can bring problems when calling them after. To avoid that, we are going to replace all the spaces in the colnames with "\_"
 
 ```{r}
 data <- data |> 
@@ -207,7 +205,6 @@ data <- data |>
   mutate(`NRL[%]` = round(as.numeric(`NRL[%]`), 2)) |> 
   mutate(`Bleeding_events` = as.numeric(gsub("[^0-9,\\.]", "", `Bleeding_events`)))
 ```
-
 
 Change the dirty columns
 
@@ -368,5 +365,3 @@ if (!dir.exists(clean_dir)) {
 #write tsv data
 write.table(data, file = tsv_file, sep = "\t", row.names = FALSE)
 ```
-
-

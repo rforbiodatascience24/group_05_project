@@ -264,7 +264,6 @@ ggplot(data = data,
   )
 ```
 
-
 ## Sum of Comorbidities Vs Charlson Index scatterplot
 
 ```{r}
@@ -295,4 +294,3 @@ ggplot(data = data,
     plot.title = element_text(hjust = 0.5, face = "bold")
   )
 ```
-
