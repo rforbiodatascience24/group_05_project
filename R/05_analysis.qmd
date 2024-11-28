@@ -5,6 +5,11 @@ format: html
 editor: visual
 ---
 
+```{r}
+library(purrr)
+library(broom)
+```
+
 ## PCA
 
 ### Select numeric columns and normalize
@@ -43,7 +48,7 @@ pca_result <- prcomp(numeric_scaled_data)
 ```{r}
 explained_variance <- data.frame(
   PC = paste0("PC", 1:length(pca_result$sdev)),
-  Variance = (pca_result$sdev^2) / sum(pca_result$sdev^2)
+  Variance = (pca_result$sdev^2) / sum(pca_result$sdev^2))
 
 ```
 
@@ -60,14 +65,42 @@ data_numeric <- data |>
 ```
 
 ```{r}
-data_pivot <- data |> 
-  pivot_longer(
-    cols = -Death,
-    names_to = "variable",
-    values_to = "values"
+data_numeric_NAs <- NA_prop(data_numeric)
+
+numeric_column_to_drop <- data_numeric_NAs |> 
+  filter(na_proportion > 0.35) |> 
+  pull(column)
+
+data_numeric <- data_numeric |> 
+  select(-any_of(numeric_column_to_drop))
+
+data_numeric <- as.data.frame(scale(data_numeric))
+```
+
+```{r}
+results <- data_numeric |> 
+  select(-Death) |>  
+  pivot_longer(cols = everything(), names_to = "variable", values_to = "value") |> 
+  group_by(variable) |> 
+  summarise(
+    model = list(glm(Death ~ value, data = data, family = binomial))
   )
 ```
 
 ```{r}
-NA_prop(data_numeric)
+results_tidy <- results |> 
+  mutate(
+    model_summary = map(model, ~ tidy(.x, conf.int = TRUE))
+  ) |> 
+  unnest(model_summary) |>
+  #Get only the slope, not the intercept
+  filter(term == "value") |> 
+  select(variable, p.value, estimate, conf.low, conf.high) |> 
+  mutate(q.value = p.adjust(p.value, method = "BH"))
+```
+
+```{r}
+significant_variables <- results_tidy |> 
+  filter(q.value < 0.05)
+  
 ```
