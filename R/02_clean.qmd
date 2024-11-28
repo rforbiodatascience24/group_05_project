@@ -20,17 +20,6 @@ library(cowplot)
 data <- read_tsv("../data/01_dat_load.tsv")
 ```
 
-### Eliminate Spaces
-
-Lot of the columns of our data frame have names separated by spaces " ", than can bring problems when calling them after. To avoid that, we are going to replace all the spaces in the colnames with "\_"
-
-```{r}
-data <- data |> 
-  #rename_with renames the colnames, use gsub to substitute " " with "_" in all 
-  #the columns (.)
-  rename_with(~ gsub(" ", "_", .))
-```
-
 ### Manage nulls
 
 ```{r}
@@ -50,7 +39,6 @@ NA_values_replace <- function(data, na_vector){
 
 data <- NA_values_replace(data = data, 
                           na_vector = c("[null]", "/", "-"))
-
 ```
 
 Proportions of NA in each column
@@ -69,7 +57,6 @@ data_NA_proportion <- NA_prop(data)
 ```
 
 ```{r}
-
 data <- data |> 
   select(-"Pulmonary CT condition",
          -"D1 blood routine upon admission",
@@ -130,9 +117,21 @@ data <- data |>
  "Antibiotics" = "Antibiotics (1 Yes 2 No)",
  "Immunotherapy" = "Immunotherapy (1 Tor 2 Bar)",
  "Medication days" = "Medication- D1[days]",
- "Negative conversion" = "Negative conversion(1, Yes; 0,No)"
+ "Negative conversion" = "Negative conversion(1, Yes; 0,No)",
+ "Bleeding events" = "Bleeding events (0 none, 1 digestive tract, 2 respiratory tract, 3 skin, 4 others)"
  )
 
+```
+
+### Eliminate Spaces
+
+Lot of the columns of our data frame have names separated by spaces " ", than can bring problems when calling them after. To avoid that, we are going to replace all the spaces in the colnames with "_"
+
+```{r}
+data <- data |> 
+  #rename_with renames the colnames, use gsub to substitute " " with "_" in all 
+  #the columns (.)
+  rename_with(~ gsub(" ", "_", .))
 ```
 
 Create function to change dirty columns with multiple values to clean binary columns
@@ -184,18 +183,6 @@ process_dirty_cols <- function(data, column, rename_map) {
 }
 ```
 
-
-
-
-
-Remove the spaces between characters on the names of the columns
-```{r}
-data <- data |> 
-  #rename_with renames the colnames, use gsub to substitute " " with "_" in all 
-  #the columns (.)
-  rename_with(~ gsub(" ", "_", .))
-```
-
 Change the ages ranges from 5-years to 10-years
 
 ```{r}
@@ -217,7 +204,8 @@ Eliminate comments written after numerical values and round large decimal values
 data <- data |>  
   mutate(`ICU_hospitalization_days` = as.numeric(gsub("[^0-9\\.]", "", `ICU_hospitalization_days`))) |> 
   mutate(`Hormone_dosage[mg]` = as.numeric(gsub("[^0-9\\.]", "", `Hormone_dosage[mg]`))) |> 
-  mutate(`NRL[%]` = round(as.numeric(`NRL[%]`), 2))
+  mutate(`NRL[%]` = round(as.numeric(`NRL[%]`), 2)) |> 
+  mutate(`Bleeding_events` = as.numeric(gsub("[^0-9,\\.]", "", `Bleeding_events`)))
 ```
 
 
@@ -258,6 +246,15 @@ rename_map <- c(
   "5" = "ECMO"
 )
 data <- process_dirty_cols(data, D1_oxygen_therapy_mode, rename_map)
+
+#Bleeding_events
+rename_map <- c(
+  "0" = "Bleeding_event_none",
+  "1" = "Digestive_track",
+  "2" = "Bleeding_event_Respiratory_track",
+  "3" = "Bleeding_event_Skin",
+  "4" = "Bleeding_event_Other")
+data <- process_dirty_cols(data, Bleeding_events, rename_map)
 ```
 
 Change numeric values for words values
@@ -371,7 +368,5 @@ if (!dir.exists(clean_dir)) {
 #write tsv data
 write.table(data, file = tsv_file, sep = "\t", row.names = FALSE)
 ```
-
-
 
 
