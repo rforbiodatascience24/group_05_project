@@ -1,0 +1,54 @@
+---
+title: "PCA"
+author: "DGC"
+format: html
+editor: visual
+---
+
+```{r}
+data_PCA <- data |>
+  select("Viral_persistence_time[days]", "Antiviral_Drug", "Medication_days", "Hormones", "Hormone_usage_days", "Immunotherapy", "Antibiotics", "Anticoagulation", "Anticoagulant_days", "Mechanical_ventilation_days", "Vasoactive_drugs", "Mask_Oxygen_therapy", "NonInvasive_Oxygen_therapy", "Invasive_Oxygen_therapy", "HighFlow_Oxygen_therapy", "ECMO", "Death") 
+
+```
+
+```{r}
+data_PCA_mutate <- data_PCA |>
+  mutate(`Antiviral_Drug` = case_when(
+    `Antiviral_Drug` == "None" ~ 0,
+    `Antiviral_Drug` == "Paxlovid" ~ 1,
+    `Antiviral_Drug` == "Azduvine" ~ 2,
+    TRUE ~ NA 
+    )) |>
+  mutate(`Hormones` = case_when(
+    `Hormones` == "Methylprednisolone" ~ 1,
+    `Hormones` == "Dexamethasone" ~ 2,
+    `Hormones` == "Other" ~ 3,
+    TRUE ~ NA
+  ))  |>
+    mutate(`Immunotherapy` = case_when(
+    `Immunotherapy` == "Tocilizumab" ~ 1,
+    `Immunotherapy` == "Baricitinib" ~ 2,
+    `Immunotherapy` == "None" ~ 0,
+    TRUE ~ NA
+  ))  |>
+  mutate(`Hormone_usage_days` = case_when(
+   `Hormone_usage_days` == "long treatment" ~ 20,
+   TRUE ~ as.numeric(`Hormone_usage_days`)
+  ))
+```
+
+```{r}
+pca_fit <- data_PCA_mutate |>
+  select(where(is.numeric)) |> # retain only numeric columns
+  scale() |> # scale data
+  prcomp() # do PCA
+```
+
+```{r}
+pca_fit <- data_PCA_mutate |>
+  select(where(is.numeric)) |> # retain only numeric columns
+  scale() |> # scale data
+  as.data.frame() |> # convert scaled matrix back to data frame
+  prcomp() # do PCA
+
+```
