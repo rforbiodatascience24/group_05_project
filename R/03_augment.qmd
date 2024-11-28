@@ -13,6 +13,10 @@ data <- read_tsv(file = "../data/02_dat_clean.tsv")
 Change the ages ranges from 5-years to 10-years
 
 ```{r}
+
+data <- data |> 
+  mutate(Age_mean = Age_range)
+
 data <- data |> 
     mutate(`Age_range` = case_when(
     str_detect(`Age_range`, "^[0-5][0-9]-") ~ "<60",
@@ -198,6 +202,44 @@ data <- data |>
 ```{r}
 data <- data |> 
   mutate(Comorbidities_sum = rowSums(select(data, Hypertension_disease : Other_disease)))
+```
+
+### Age mean column
+
+```{r}
+data <- data |> 
+  mutate(Age_mean = case_when(
+    str_detect(Age_mean, "^20") ~ "22.5",
+    str_detect(Age_mean, "^25") ~ "27.5",
+    str_detect(Age_mean, "^30") ~ "32.5",
+    str_detect(Age_mean, "^35") ~ "37.5",
+    str_detect(Age_mean, "^40") ~ "42.5",
+    str_detect(Age_mean, "^45") ~ "47.5",
+    str_detect(Age_mean, "^50") ~ "52.5",
+    str_detect(Age_mean, "^55") ~ "57.5",
+    str_detect(Age_mean, "^60") ~ "62.5",
+    str_detect(Age_mean, "^65") ~ "67.5",
+    str_detect(Age_mean, "^70") ~ "72.5",
+    str_detect(Age_mean, "^75") ~ "77.5",
+    str_detect(Age_mean, "^80") ~ "82.5",
+    str_detect(Age_mean, "^85") ~ "87.5",
+    str_detect(Age_mean, "^90") ~ "92.5",
+    str_detect(Age_mean, "^95") ~ "97.5",
+    str_detect(Age_mean, "^100") ~ "102.5"
+  )) |> 
+  relocate(Age_mean, .after = Age_range)
+
+```
+
+### ICU ADMISSION (BINARY)
+
+```{r}
+data <- data |> 
+  mutate(ICU_admission = case_when(
+    ICU_hospitalization_days == 0 ~ "0",
+    TRUE ~ "1"
+  )) |> 
+  relocate(ICU_admission, .after = ICU_hospitalization_days)
 ```
 
 ### Save files
