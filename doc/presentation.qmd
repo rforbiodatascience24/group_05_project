@@ -1,24 +1,24 @@
 ---
-title: "presentation"
+title: "COVID-19 Clinical Data"
 format: revealjs
 editor: visual
 ---
 
-## Quarto
+# COVID-19 Clinical Data
 
-Quarto enables you to weave together content and executable code into a finished presentation. To learn more about Quarto presentations see <https://quarto.org/docs/presentations/>.
+First point
+Second point
+Third point
 
-## Bullets
 
-When you click the **Render** button a document will be generated that includes:
+# Slide title 2
 
--   Content authored with markdown
--   Output from executable code
-
-## Code
-
-When you click the **Render** button a presentation will be generated that includes both content and the output of embedded code. You can embed code like this:
-
-```{r}
-1 + 1
+---
+gráfico prueba
+ 
+ ```{r, echo=FALSE, results='asis'}
+library (grid)
+ 
+img <- png::readPNG("../R/prueba.png")
+grid::grid.raster(img)
 ```
