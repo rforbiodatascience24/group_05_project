@@ -1,9 +1,14 @@
 ---
 title: "Clinical data of COVID-19 infected patients"
-format: revealjs
+format: 
+  revealjs:
+    transition: none # Global default
 editor: visual
 subtite: "A case of study for critically ill patients"
+css: styles.css
 ---
+
+# Introduction {background-image=background.avif}
 
 ## Introduction
 
@@ -17,13 +22,90 @@ subtite: "A case of study for critically ill patients"
 
 ### Paxlovid and drugs
 
-gráfico prueba
-
 ```{r, echo=FALSE, results='asis'}
 library (grid)
 
 img <- png::readPNG("../R/prueba.png")
 grid::grid.raster(img)
 ```
+
+
+# Dataset
+
+## Dataset
+Quick overview
+
+# Our hypothesis {.transition-fade}
+
+## Our Hypothesis {.transition-fade}
+
+::: {.incremental} 
+
+- What factors we think might the related to the outcome?
+- What factors are statistically related to the outcome?
+- Is there a difference on the use of Paxlovid?
+
+:::
+
+## Our Hypothesis
+
+::: {.nonincremental}
+
+- What factors we think might the related to the outcome?
+
+:::
+
+## Our Hypothesis
+
+::: {.nonincremental}
+
+- What factors we think might the related to the outcome?
+  - age
+  - symptoms
+  - time in UCI
+  - other disease
+  - extra correlations
+
+:::
+
+## What factors we think might the related to the outcome?
+age, simptons time in UCI, other disease
+
+## What factors are statistically related to the outcome?
+
+```{r}
+library(tidyverse)
+#library(knitr)
+
+load("../results/significant_variables.RData")
+significant_variables_direct_corr <- significant_variables |> 
+  arrange(desc(estimate))
+
+significant_variables_inverse_corr <- significant_variables |> 
+  arrange(estimate)
+
+#kable(significant_variables_direct_corr, caption = "Tabla de Estimaciones")
+head(significant_variables_direct_corr, n=10)
+#head(significant_variables_inverse_corr)
+```
+
+## What factors are statistically related to the outcome?
+
+```{r}
+library(tidyverse)
+library(knitr)
+
+#kable(significant_variables_direct_corr, caption = "Tabla de Estimaciones")
+head(significant_variables_inverse_corr, n=10)
+#head(significant_variables_inverse_corr)
+```
+
+## What factors are statistically related to the outcome?
+Variables with direct correlation
+
+## What factors are statistically related to the outcome?
+Variables with inverse correlation
+
+
 
 
