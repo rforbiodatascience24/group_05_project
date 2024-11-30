@@ -1,24 +1,29 @@
 ---
-title: "COVID-19 Clinical Data"
+title: "Clinical data of COVID-19 infected patients"
 format: revealjs
 editor: visual
+subtite: "A case of study for critically ill patients"
 ---
 
-# COVID-19 Clinical Data
+## Introduction
 
-First point
-Second point
-Third point
+### Covid19
 
+## Introduction
 
-# Slide title 2
+### Mortality
 
----
+## Introduction
+
+### Paxlovid and drugs
+
 gráfico prueba
- 
- ```{r, echo=FALSE, results='asis'}
+
+```{r, echo=FALSE, results='asis'}
 library (grid)
- 
+
 img <- png::readPNG("../R/prueba.png")
 grid::grid.raster(img)
 ```
+
+

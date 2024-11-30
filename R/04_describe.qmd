@@ -118,10 +118,15 @@ tabledat <- tabledat |>
 ### Age group, Hospitalization time and ICU hospitalization days by outcome
 
 ```{r}
-table1(
+table1_describe_01 <- table1(
   x = ~ Age_range + Hospitalization_days + ICU_hospitalization_days | Outcome,
   data = tabledat
 )
+
+# Guardar el objeto como imagen PNG
+png("table1_describe_01.png", width = 800, height = 600) # Ajusta tamaño según lo necesites
+print(table1_describe_01) # Dibuja la tabla en el dispositivo gráfico
+dev.off() # Cierra el dispositivo gráfico
 ```
 
 ### Diseases by outcome
