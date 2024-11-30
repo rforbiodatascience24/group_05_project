@@ -30,6 +30,7 @@
     }
   </style>
   <link rel="stylesheet" href="presentation_files/libs/revealjs/dist/theme/quarto.css">
+  <link rel="stylesheet" href="styles.css">
   <link href="presentation_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="presentation_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="presentation_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -331,25 +332,124 @@
 </div>
 
 </section>
-<section id="introduction" class="slide level2">
-<h2>Introduction</h2>
-<h3 id="covid19">Covid19</h3>
+<section>
+<section id="introduction" class="title-slide slide level1 center" data-background-image="background.avif">
+<h1>Introduction</h1>
+
 </section>
 <section id="introduction-1" class="slide level2">
 <h2>Introduction</h2>
-<h3 id="mortality">Mortality</h3>
+<h3 id="covid19">Covid19</h3>
 </section>
 <section id="introduction-2" class="slide level2">
 <h2>Introduction</h2>
+<h3 id="mortality">Mortality</h3>
+</section>
+<section id="introduction-3" class="slide level2">
+<h2>Introduction</h2>
 <h3 id="paxlovid-and-drugs">Paxlovid and drugs</h3>
-<p>gráfico prueba</p>
 
-<img data-src="presentation_files/figure-revealjs/unnamed-chunk-1-1.png" width="960" class="r-stretch"><div class="quarto-auto-generated-content">
+<img data-src="presentation_files/figure-revealjs/unnamed-chunk-1-1.png" width="960" class="r-stretch"></section></section>
+<section id="describe-dataset" class="title-slide slide level1 center">
+<h1>describe dataset</h1>
+
+</section>
+
+<section>
+<section id="our-hypothesis" class="title-slide slide level1 transition-fade center">
+<h1>Our hypothesis</h1>
+
+</section>
+<section id="our-hypothesis-1" class="slide level2 transition-fade">
+<h2>Our Hypothesis</h2>
+<div>
+<ul>
+<li class="fragment">What factors we think might the related to the outcome?</li>
+<li class="fragment">What factors are statistically related to the outcome?</li>
+<li class="fragment">Is there a difference on the use of Paxlovid?</li>
+</ul>
+</div>
+</section>
+<section id="our-hypothesis-2" class="slide level2">
+<h2>Our Hypothesis</h2>
+<div>
+<ul>
+<li>What factors we think might the related to the outcome?</li>
+</ul>
+</div>
+</section>
+<section id="our-hypothesis-3" class="slide level2">
+<h2>Our Hypothesis</h2>
+<div>
+<ul>
+<li>What factors we think might the related to the outcome?
+<ul>
+<li>age</li>
+<li>symptoms</li>
+<li>time in UCI</li>
+<li>other disease</li>
+<li>extra correlations</li>
+</ul></li>
+</ul>
+</div>
+</section>
+<section id="what-factors-we-think-might-the-related-to-the-outcome" class="slide level2">
+<h2>What factors we think might the related to the outcome?</h2>
+<p>age, simptons time in UCI, other disease</p>
+</section>
+<section id="what-factors-are-statistically-related-to-the-outcome" class="slide level2">
+<h2>What factors are statistically related to the outcome?</h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 6
+   variable                        p.value estimate conf.low conf.high  q.value
+   &lt;chr&gt;                             &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+ 1 PT[sec]                        2.19e- 4    1.80     0.920      2.83 1.67e- 3
+ 2 Vasoactive_drugs               4.49e-14    1.64     1.23       2.09 4.45e-12
+ 3 D3_anticoagulant_dosage_(ml)/d 1.19e- 3    1.19     0.514      1.95 6.95e- 3
+ 4 Mechanical_ventilation_days    2.41e- 5    1.15     0.664      1.74 3.41e- 4
+ 5 D-Dimer[ng/mL]                 4.37e- 4    0.946    0.480      1.55 2.88e- 3
+ 6 Affected_lung_lobes_2          1.14e- 2    0.919    0.315      1.77 3.14e- 2
+ 7 CK[U/L]                        7.51e- 3    0.914    0.347      1.69 2.78e- 2
+ 8 PCT[ng/mL]                     1.14e- 2    0.893    0.324      1.71 3.14e- 2
+ 9 Fever_days                     1.32e- 4    0.884    0.453      1.37 1.19e- 3
+10 ICU_admission                  7.20e- 7    0.870    0.533      1.22 2.37e- 5</code></pre>
+</div>
+</div>
+</section>
+<section id="what-factors-are-statistically-related-to-the-outcome-1" class="slide level2">
+<h2>What factors are statistically related to the outcome?</h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 6
+   variable                          p.value estimate conf.low conf.high q.value
+   &lt;chr&gt;                               &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+ 1 D7_lymphocyte_count[10^9/L]       1.60e-4   -2.99    -4.66    -1.55   1.32e-3
+ 2 D7plt[10^9/L]                     2.31e-8   -1.59    -2.19    -1.07   1.15e-6
+ 3 BE_D1[mmol/L]                     1.36e-2   -1.23    -2.27    -0.298  3.65e-2
+ 4 CT_D1_days_2                      6.37e-6   -1.22    -1.84    -0.747  1.58e-4
+ 5 Oxygenation_index_D1[mmHg]        9.08e-5   -1.03    -1.58    -0.543  8.99e-4
+ 6 Mask_Oxygen_therapy               8.05e-6   -0.784   -1.14    -0.448  1.59e-4
+ 7 Usage_days                        6.12e-3   -0.741   -1.32    -0.257  2.55e-2
+ 8 D1_eosinophil_count[10^9/L]       1.12e-2   -0.682   -1.30    -0.233  3.14e-2
+ 9 D1plt[10^9/L]                     9.37e-3   -0.442   -0.787   -0.117  2.90e-2
+10 Use_or_D1_initial_positive_time[… 1.92e-2   -0.397   -0.742   -0.0731 4.76e-2</code></pre>
+</div>
+</div>
+</section>
+<section id="what-factors-are-statistically-related-to-the-outcome-2" class="slide level2">
+<h2>What factors are statistically related to the outcome?</h2>
+<p>Variables with direct correlation</p>
+</section>
+<section id="what-factors-are-statistically-related-to-the-outcome-3" class="slide level2">
+<h2>What factors are statistically related to the outcome?</h2>
+<p>Variables with inverse correlation</p>
+<div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
 </div>
 </div>
-</section>
+</section></section>
     </div>
   </div>
 
