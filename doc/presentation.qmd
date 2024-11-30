@@ -9,6 +9,7 @@ css: styles.css
 ---
 
 # Introduction {background-image=background.avif}
+(igual aqui habria que poner los nombres o algo supongo)
 
 ## Introduction
 
@@ -29,38 +30,49 @@ img <- png::readPNG("../R/prueba.png")
 grid::grid.raster(img)
 ```
 
+esta foto está aqui solo para que tengamos el codigo de como poner fotos
 
 # Dataset
 
 ## Dataset
 Quick overview
+fail, no se como exportar las table 1 para ponerlos aqui
 
-# Our hypothesis {.transition-fade}
+```{r, echo=FALSE, results='asis'}
+library (grid)
 
-## Our Hypothesis {.transition-fade}
+img <- png::readPNG("../results/table1_describe_01.png")
+grid::grid.raster(img)
+```
+
+
+# Analysis {.transition-fade}
+
+## Analysis {.transition-fade}
+
 
 ::: {.incremental} 
 
-- What factors we think might the related to the outcome?
-- What factors are statistically related to the outcome?
-- Is there a difference on the use of Paxlovid?
+- Initial exploration: What factors we think might be related to the outcome?
+- Statistical exploration: What factors are statistically related to the outcome?
+- Paxlovid exploration: Can we get the same result as the main paper with this data?
 
 :::
 
-## Our Hypothesis
+## Analysis - Initial exploration
 
 ::: {.nonincremental}
 
-- What factors we think might the related to the outcome?
+- Initial exploration: What factors we think might be related to the outcome?
 
 :::
 
-## Our Hypothesis
+## Analysis - Initial exploration
 
 ::: {.nonincremental}
 
-- What factors we think might the related to the outcome?
-  - age
+- Initial exploration: What factors we think might be related to the outcome?
+  - Age
   - symptoms
   - time in UCI
   - other disease
@@ -68,10 +80,11 @@ Quick overview
 
 :::
 
-## What factors we think might the related to the outcome?
-age, simptons time in UCI, other disease
+## Analysis - Initial exploration
+What factors we think might be related to the outcome?
 
-## What factors are statistically related to the outcome?
+## Analysis - Statistical exploration
+What factors are statistically related to the outcome?
 
 ```{r}
 library(tidyverse)
@@ -89,7 +102,8 @@ head(significant_variables_direct_corr, n=10)
 #head(significant_variables_inverse_corr)
 ```
 
-## What factors are statistically related to the outcome?
+## Analysis - Statistical exploration
+What factors are statistically related to the outcome?
 
 ```{r}
 library(tidyverse)
@@ -100,12 +114,16 @@ head(significant_variables_inverse_corr, n=10)
 #head(significant_variables_inverse_corr)
 ```
 
-## What factors are statistically related to the outcome?
+## Analysis - Statistical exploration
 Variables with direct correlation
 
-## What factors are statistically related to the outcome?
+## Analysis - Statistical exploration
 Variables with inverse correlation
 
+por aqui tendria pensado poner lo del analisis quitando a la gente con sangradosss, y que nos de pie a explicar todo el tema de la trombosis y tal
 
+
+## Analysis - Paxoliv exploration
+results about paxlovid?
 
 
