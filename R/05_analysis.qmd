@@ -8,6 +8,7 @@ editor: visual
 ```{r}
 library(purrr)
 library(broom)
+library(ggrepel)
 ```
 
 # Load Data
@@ -37,7 +38,7 @@ pca_data <- data |>
 
 ```{r}
 pca_data <- pca_data |> 
-  select(-Number, -`Age_over_65(1,YES;_2,_NO)`, -Age_range, -ECMO) |> 
+  select(-Number, -Age_over_65, -Age_range, -ECMO) |> 
   mutate(across(where(is.character), ~ as.numeric(.)))
 
 numeric_scaled_data <- pca_data |> 
@@ -115,6 +116,25 @@ significant_variables <- results_tidy |>
 
 ### Abreviate variables for plotting
 
+```{r}
+significant_variables <- significant_variables |> 
+  mutate(variable = case_when(
+    variable == "D3_anticoagulant_dosage_(ml)/d" ~ "D3_anti",
+    variable == "Mechanical_ventilation_days" ~ "MVD",
+    variable == "Affected_lung_lobes_2" ~ "ALL_2",
+    variable == "D7_neutrophil_count[10^9/L]" ~ "D7_Neu",
+    variable == "D3_time_division_(3_light,_3_medium,_3_heavy,_and_4_critical)" ~ "D3_TD",
+    variable == "Disease_onset_D1_highest_body_temperature[℃]" ~ "D1_Temp",
+    variable == "D1_anticoagulant_dosage_(ml)/d" ~ "D1_anti",
+    variable == "D1_Neutrophil_count[10^9/L]" ~ "D1_Neu",
+    variable == "D1_eosinophil_count[10^9/L]" ~ "D1_Eos",
+    variable == "Use_or_D1_initial_positive_time[days]" ~ "D1_IPT",
+    variable == "Oxygenation_index_D1[mmHg]" ~ "D1_OxI",
+    variable == "D7_lymphocyte_count[10^9/L]" ~ "D7_Lymp",
+    TRUE ~ variable
+  ))
+```
+
 ### D
 
 ```{r}
@@ -124,8 +144,70 @@ ggplot(significant_variables,
                      color = q.value, 
                      size = abs(estimate))) +
   geom_point() +
-  geom_text(aes(label = variable), hjust = -0.2, size = 3) +  # Add variable names to dots
+  geom_text_repel(aes(label = variable), size = 3, max.overlaps = 20, segment.color = "gray")+
   scale_color_gradient(low = "blue", high = "red", name = "q-value") +
+  scale_y_discrete(expand = expansion(mult = c(0.2, 0.2)))+
+  xlim(-3,2.5)+
+  labs(
+    title = "Effect Sizes and Significance for Death Prediction",
+    x = "Effect Size (Log-Odds)",
+    y = NULL,  # Remove the y-axis label
+    size = "Effect Strength"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    legend.position = "right",
+    axis.text.y = element_blank()
+  )
+```
+
+```{r}
+significant_variables_top15 <- significant_variables |> 
+  mutate(abs_estimate = abs(estimate)) |> 
+  arrange(desc(abs_estimate)) |> 
+  slice_head(n = 15) |> 
+  select(-abs_estimate)
+```
+
+### Top 15 plot
+
+```{r}
+ggplot(significant_variables_top15, 
+       mapping = aes(x = estimate, 
+                     y = OR, 
+                     color = q.value, 
+                     size = abs(estimate))) +
+  geom_point() +
+  geom_text_repel(aes(label = variable), size = 3, max.overlaps = 20, segment.color = "gray")+
+  scale_color_gradient(low = "blue", high = "red", name = "q-value") +
+  scale_y_discrete(expand = expansion(mult = c(0.2, 0.2)))+
+  xlim(-3,2.5)+
+  labs(
+    title = "Effect Sizes and Significance for Death Prediction",
+    x = "Effect Size (Log-Odds)",
+    y = NULL,  # Remove the y-axis label
+    size = "Effect Strength"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    legend.position = "right",
+    axis.text.y = element_blank()
+  )
+```
+
+```{r}
+ggplot(significant_variables_top15, 
+       mapping = aes(x = OR, 
+                     y = variable, 
+                     color = q.value, 
+                     size = abs(estimate))) +
+  geom_point() +
+  geom_text_repel(aes(label = variable), size = 3, max.overlaps = 20, segment.color = "gray")+
+  scale_color_gradient(low = "blue", high = "red", name = "q-value") +
+  scale_y_discrete(expand = expansion(mult = c(0.2, 0.2)))+
+  xlim(0,7)+
   labs(
     title = "Effect Sizes and Significance for Death Prediction",
     x = "Effect Size (Log-Odds)",
