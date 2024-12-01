@@ -20,7 +20,7 @@ data <- read_tsv(file = "../data/03_data_augmented.tsv")
 ### Age Ranges
 
 ```{r}
-data |> 
+ages_plot <- data |> 
   group_by(Death, Age_range) |>
   select(Death, Age_range) |>
   summarise(n = n()) |>
@@ -39,12 +39,16 @@ theme_minimal() +
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "top"
   )
+
+ggsave(
+  filename = "../results/05_key_plot_1.png",
+  plot = ages_plot)
 ```
 
 ### Antiviral Drug
 
 ```{r}
-data |> 
+antivir_plot1 <- data |> 
   group_by(Antiviral_Drug, Age_range) |>
   select(Antiviral_Drug, Age_range) |>
   filter(!is.na(Antiviral_Drug)) |>
@@ -64,7 +68,7 @@ theme_minimal() +
     legend.position = "top"
   )
 
-data |> 
+antivir_plot2 <- data |> 
   group_by(Antiviral_Drug, Death) |>
   select(Antiviral_Drug, Death) |>
   filter(!is.na(Antiviral_Drug)) |>
@@ -88,6 +92,13 @@ theme_minimal() +
     legend.position = "top"
   )
 
+ggsave(
+  filename = "../results/05_key_plot_2.png",
+  plot = antivir_plot1)
+
+ggsave(
+  filename = "../results/05_key_plot_3.png",
+  plot = antivir_plot2)
 ```
 
 ### Symptoms
@@ -104,7 +115,7 @@ symptoms <- data |>
   filter(Presence == 1) |>
   select(Age_range, Death, Symptom, Presence) 
 
-ggplot(symptoms, mapping = aes(fill = Death, x = Symptom)) +
+symp_plot <- ggplot(symptoms, mapping = aes(fill = Death, x = Symptom)) +
   geom_bar(alpha = .7, color = "black") +
   scale_fill_manual(
     values = c("1" = "#5995ED", "0" = "#DB3069"),
@@ -132,6 +143,10 @@ ggplot(symptoms, mapping = aes(fill = Death, x = Symptom)) +
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "top"
   )
+
+ggsave(
+  filename = "../results/05_key_plot_4.png",
+  plot = symp_plot)
 ```
 
 ### Diseases
@@ -148,7 +163,7 @@ diseases <- data |>
   filter(Presence == 1) |>
   select(Age_range, Death, Disease, Presence, Antiviral_Drug) 
 
-ggplot(diseases, mapping = aes(fill = Death, x = Disease)) +
+dis_plot <- ggplot(diseases, mapping = aes(fill = Death, x = Disease)) +
   geom_bar(alpha = .7, color = "black") +
   scale_fill_manual(
     values = c("1" = "#5995ED", "0" = "#DB3069"),
@@ -179,6 +194,10 @@ ggplot(diseases, mapping = aes(fill = Death, x = Disease)) +
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "top"
   )
+
+ggsave(
+  filename = "../results/05_key_plot_5.png",
+  plot = dis_plot)
 ```
 
 ### CT Severity Score
@@ -195,7 +214,7 @@ ct_data <- ctprogress |>
   ) |>
   filter(!is.na(CTSS_score) & !is.na(CT_D1_days))
 
-ggplot(ct_data, aes(x = CTSS_score, fill = Death)) +
+ctss_plot <- ggplot(ct_data, aes(x = CTSS_score, fill = Death)) +
   geom_density(alpha = 0.7) +
   scale_fill_manual(
     values = c("1" = "#5995ED", "0" = "#DB3069"),
@@ -213,6 +232,10 @@ ggplot(ct_data, aes(x = CTSS_score, fill = Death)) +
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "top"
   )
+
+ggsave(
+  filename = "../results/05_key_plot_6.png",
+  plot = ctss_plot)
 ```
 
 ### Early Onset Temperature
@@ -222,7 +245,8 @@ data |>
   group_by(Death, `Disease_onset_D1_highest_body_temperature[℃]`) |>
   select(Death, `Disease_onset_D1_highest_body_temperature[℃]`) |>
   filter(!is.na(`Disease_onset_D1_highest_body_temperature[℃]`)) |>
-ggplot(mapping = aes(x = `Disease_onset_D1_highest_body_temperature[℃]`, fill = Death)) +
+
+temp_plot <- ggplot(mapping = aes(x = `Disease_onset_D1_highest_body_temperature[℃]`, fill = Death)) +
   geom_density(alpha = 0.7) +
   scale_fill_manual(
     values = c("1" = "#5995ED", "0" = "#DB3069"),
@@ -240,4 +264,8 @@ ggplot(mapping = aes(x = `Disease_onset_D1_highest_body_temperature[℃]`, fill 
     axis.text.y = element_text(size = 10),
     plot.title = element_text(hjust = 0.5)
   )
+
+ggsave(
+  filename = "../results/05_key_plot_7.png",
+  plot = temp_plot)
 ```
