@@ -4,41 +4,46 @@ format: html
 editor: visual
 ---
 
-### LOAD ALL LIBRARIES
+### Load Libraries
 
 ```{r, warning=FALSE, message=FALSE}
 #Load all libraries
 library(ggplot2)
 library(readxl)
 library(tidyverse)
-library(readxl)
+library(table1)
 library(stringr)
 library(cowplot)
+library(reshape2)
+library(patchwork)
+library(purrr)
+library(broom)
 library(knitr)
 
 ```
 
-### LOAD THE DATA (01_load)
+### Load Data
 
 ```{r}
 knit("01_load.qmd")
 ```
 
-### 02_clean
+### Clean Data
 
 ```{r}
 knit("02_clean.qmd")
 ```
 
-### 03_augment
+### Augment Data
 
 ```{r}
 knit("03_augment.qmd")
 ```
 
-### 0x_PLOTS
+### Description and Analysis
 
 ```{r}
+knit("05_analysis_01.qmd")
 knit("Plots.qmd")
 #xd
 ```
