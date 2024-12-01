@@ -250,6 +250,14 @@ data <- data|>
   )
 ```
 
+### Early Onset Temperature Augmentation
+
+```{r}
+data |>
+  mutate(
+       `Disease_onset_D1_highest_body_temperature[℃]` = as.numeric(`Disease_onset_D1_highest_body_temperature[℃]`))
+```
+
 ### ICU ADMISSION (BINARY)
 
 ```{r}
