@@ -1,24 +1,129 @@
 ---
-title: "COVID-19 Clinical Data"
-format: revealjs
+title: "Clinical data of COVID-19 infected patients"
+format: 
+  revealjs:
+    transition: none # Global default
 editor: visual
+subtite: "A case of study for critically ill patients"
+css: styles.css
 ---
 
-# COVID-19 Clinical Data
+# Introduction {background-image=background.avif}
+(igual aqui habria que poner los nombres o algo supongo)
 
-First point
-Second point
-Third point
+## Introduction
 
+### Covid19
 
-# Slide title 2
+## Introduction
 
----
-gráfico prueba
- 
- ```{r, echo=FALSE, results='asis'}
+### Mortality
+
+## Introduction
+
+### Paxlovid and drugs
+
+```{r, echo=FALSE, results='asis'}
 library (grid)
- 
+
 img <- png::readPNG("../R/prueba.png")
 grid::grid.raster(img)
 ```
+
+esta foto está aqui solo para que tengamos el codigo de como poner fotos
+
+# Dataset
+
+## Dataset
+Quick overview
+fail, no se como exportar las table 1 para ponerlos aqui
+
+```{r, echo=FALSE, results='asis'}
+library (grid)
+
+img <- png::readPNG("../results/table1_describe_01.png")
+grid::grid.raster(img)
+```
+
+
+# Analysis {.transition-fade}
+
+## Analysis {.transition-fade}
+
+
+::: {.incremental} 
+
+- Initial exploration: What factors we think might be related to the outcome?
+- Statistical exploration: What factors are statistically related to the outcome?
+- Paxlovid exploration: Can we get the same result as the main paper with this data?
+
+:::
+
+## Analysis - Initial exploration
+
+::: {.nonincremental}
+
+- Initial exploration: What factors we think might be related to the outcome?
+
+:::
+
+## Analysis - Initial exploration
+
+::: {.nonincremental}
+
+- Initial exploration: What factors we think might be related to the outcome?
+  - Age
+  - symptoms
+  - time in UCI
+  - other disease
+  - extra correlations
+
+:::
+
+## Analysis - Initial exploration
+What factors we think might be related to the outcome?
+
+## Analysis - Statistical exploration
+What factors are statistically related to the outcome?
+
+```{r}
+library(tidyverse)
+#library(knitr)
+
+load("../results/significant_variables.RData")
+significant_variables_direct_corr <- significant_variables |> 
+  arrange(desc(estimate))
+
+significant_variables_inverse_corr <- significant_variables |> 
+  arrange(estimate)
+
+#kable(significant_variables_direct_corr, caption = "Tabla de Estimaciones")
+head(significant_variables_direct_corr, n=10)
+#head(significant_variables_inverse_corr)
+```
+
+## Analysis - Statistical exploration
+What factors are statistically related to the outcome?
+
+```{r}
+library(tidyverse)
+library(knitr)
+
+#kable(significant_variables_direct_corr, caption = "Tabla de Estimaciones")
+head(significant_variables_inverse_corr, n=10)
+#head(significant_variables_inverse_corr)
+```
+
+## Analysis - Statistical exploration
+Variables with direct correlation
+
+## Analysis - Statistical exploration
+Variables with inverse correlation
+
+por aqui tendria pensado poner lo del analisis quitando a la gente con sangradosss, y que nos de pie a explicar todo el tema de la trombosis y tal
+
+
+## Analysis - Paxoliv exploration
+results about paxlovid?
+
+
