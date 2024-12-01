@@ -6,6 +6,63 @@ editor: visual
 ---
 
 ```{r}
+data_lym <- data |>
+  select("D1_lymphocyte_count[10^9/L]","D7_lymphocyte_count[10^9/L]", "Antiviral_drugs_(1_nema_0_no)","Death")
+```
+
+```{r}
+data_lym <- data_lym |>
+  pivot_longer(cols = c(`D1_lymphocyte_count[10^9/L]`, `D7_lymphocyte_count[10^9/L]`), names_to = "Day", values_to = "Lymphocytes") |>
+  mutate(`Antiviral_drugs_(1_nema_0_no)` = factor(
+    `Antiviral_drugs_(1_nema_0_no)`, 
+    levels = c(0,1),
+    labels = c("No", "Yes")))
+```
+
+```{r}
+data_lym |> summarise(mean(Lymphocytes, na.rm = TRUE))
+```
+
+```{r}
+ggplot(data_lym, aes(x=Day, y = Lymphocytes, color = Death, group = `Antiviral_drugs_(1_nema_0_no)`)) +
+  geom_point(size = 3, aes(shape = `Antiviral_drugs_(1_nema_0_no)`), position = position_jitter(width = 0.35)) +
+    labs(
+    title = "Lymphocyte Counts on Day 1 and Day 7",
+    x = "Day",
+    y = "Lymphocyte Count",
+    color = "Death",
+    linetype = "Paxlovid Consumption",
+    shape = "Paxlovid Consumption"
+  ) +
+  scale_y_continuous(limits = c(0, 3)) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    legend.position = "top"
+  )
+```
+
+```{r}
+ggplot(data_lym, aes(x = Day, y = Lymphocytes, color = Death)) +
+  geom_boxplot(aes(fill = Death), alpha = 0.5, outlier.shape = NA) + # Boxplot with transparency
+  geom_jitter(aes(shape = `Antiviral_drugs_(1_nema_0_no)`), size = 2, position = position_jitter(width = 0.2)) + # Jittered points overlaid
+  labs(
+    title = "Lymphocyte Counts on Day 1 and Day 7",
+    x = "Day",
+    y = "Lymphocyte Count",
+    color = "Death",
+    shape = "Paxlovid Consumption",
+    fill = "Death"
+  ) +
+  scale_y_continuous(limits = c(0, 3)) + # Adjust y-axis limits to match data
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    legend.position = "top"
+  )
+```
+
+```{r}
 data_PCA <- data |>
   select("Viral_persistence_time[days]", "Antiviral_Drug", "Medication_days", "Hormones", "Hormone_usage_days", "Immunotherapy", "Antibiotics", "Anticoagulation", "Anticoagulant_days", "Mechanical_ventilation_days", "Vasoactive_drugs", "Mask_Oxygen_therapy", "NonInvasive_Oxygen_therapy", "Invasive_Oxygen_therapy", "HighFlow_Oxygen_therapy", "ECMO", "Death") 
 

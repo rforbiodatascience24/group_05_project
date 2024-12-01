@@ -8,7 +8,8 @@ subtite: "A case of study for critically ill patients"
 css: styles.css
 ---
 
-# Introduction {background-image=background.avif}
+# Introduction {background-image="background.avif"}
+
 (igual aqui habria que poner los nombres o algo supongo)
 
 ## Introduction
@@ -35,55 +36,59 @@ esta foto está aqui solo para que tengamos el codigo de como poner fotos
 # Dataset
 
 ## Dataset
-Quick overview
-fail, no se como exportar las table 1 para ponerlos aqui
+
+Quick overview fail, no se como exportar las table 1 para ponerlos aqui
 
 ```{r, echo=FALSE, results='asis'}
-library (grid)
+#library (grid)
 
-img <- png::readPNG("../results/table1_describe_01.png")
-grid::grid.raster(img)
+#img <- png::readPNG("../results/table1_describe_01.png")
+#grid::grid.raster(img)
 ```
 
+```{r, echo=FALSE, results='asis'}
+library(tidyverse)
+library(knitr)
+
+knit("../R/04_describe.qmd")
+
+
+
+```
 
 # Analysis {.transition-fade}
 
 ## Analysis {.transition-fade}
 
-
-::: {.incremental} 
-
-- Initial exploration: What factors we think might be related to the outcome?
-- Statistical exploration: What factors are statistically related to the outcome?
-- Paxlovid exploration: Can we get the same result as the main paper with this data?
-
+::: incremental
+-   Initial exploration: What factors we think might be related to the outcome?
+-   Statistical exploration: What factors are statistically related to the outcome?
+-   Paxlovid exploration: Can we get the same result as the main paper with this data?
 :::
 
 ## Analysis - Initial exploration
 
-::: {.nonincremental}
-
-- Initial exploration: What factors we think might be related to the outcome?
-
+::: nonincremental
+-   Initial exploration: What factors we think might be related to the outcome?
 :::
 
 ## Analysis - Initial exploration
 
-::: {.nonincremental}
-
-- Initial exploration: What factors we think might be related to the outcome?
-  - Age
-  - symptoms
-  - time in UCI
-  - other disease
-  - extra correlations
-
+::: nonincremental
+-   Initial exploration: What factors we think might be related to the outcome?
+    -   Age
+    -   symptoms
+    -   time in UCI
+    -   other disease
+    -   extra correlations
 :::
 
 ## Analysis - Initial exploration
+
 What factors we think might be related to the outcome?
 
 ## Analysis - Statistical exploration
+
 What factors are statistically related to the outcome?
 
 ```{r}
@@ -103,6 +108,7 @@ head(significant_variables_direct_corr, n=10)
 ```
 
 ## Analysis - Statistical exploration
+
 What factors are statistically related to the outcome?
 
 ```{r}
@@ -115,15 +121,15 @@ head(significant_variables_inverse_corr, n=10)
 ```
 
 ## Analysis - Statistical exploration
+
 Variables with direct correlation
 
 ## Analysis - Statistical exploration
+
 Variables with inverse correlation
 
 por aqui tendria pensado poner lo del analisis quitando a la gente con sangradosss, y que nos de pie a explicar todo el tema de la trombosis y tal
 
-
 ## Analysis - Paxoliv exploration
+
 results about paxlovid?
-
-
