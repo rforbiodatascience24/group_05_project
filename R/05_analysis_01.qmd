@@ -21,6 +21,7 @@ data <- read_tsv(file = "../data/03_data_augmented.tsv")
 
 ```{r}
 ages_plot <- data |> 
+  mutate(Death = factor(Death, levels = c("1", "0"))) |> 
   group_by(Death, Age_range) |>
   select(Death, Age_range) |>
   summarise(n = n()) |>
@@ -69,6 +70,7 @@ theme_minimal() +
   )
 
 antivir_plot2 <- data |> 
+  mutate(Death = factor(Death, levels = c("1", "0"))) |> 
   group_by(Antiviral_Drug, Death) |>
   select(Antiviral_Drug, Death) |>
   filter(!is.na(Antiviral_Drug)) |>
@@ -107,6 +109,7 @@ ggsave(
 symptom_columns <- c("Whole_body_symptoms", "Respiratory_symptoms", "Cardiovascular_symptoms", "Other_symptoms", "Nervous_symptoms", "Gastrointestinal_symptoms")
 
 symptoms <- data |>
+  mutate(Death = factor(Death, levels = c("1", "0"))) |> 
   pivot_longer(
     cols = all_of(symptom_columns),
     names_to = "Symptom",
@@ -155,6 +158,7 @@ ggsave(
 disease_cols <- c("Hypertension_disease", "Diabetes_disease", "CVD_disease", "COPD_disease", "Cerebrovascular_disease", "Chronic_Kidney_disease", "Malignant_tumor_disease", "Immunodeficiency_disease", "Other_disease")
 
 diseases <- data |>
+  mutate(Death = factor(Death, levels = c("1", "0"))) |> 
   pivot_longer(
     cols = all_of(disease_cols),
     names_to = "Disease",
@@ -207,6 +211,7 @@ ctprogress <- data |>
   select(CTSS_score_1, CTSS_score_2, CT_D1_days_1, CT_D1_days_2, Affected_lung_lobes_1, Affected_lung_lobes_2, Death)
   
 ct_data <- ctprogress |>
+  mutate(Death = factor(Death, levels = c("1", "0"))) |> 
   pivot_longer(
     cols = c(CTSS_score_1, CTSS_score_2, Affected_lung_lobes_1, Affected_lung_lobes_2, CT_D1_days_1, CT_D1_days_2),
     names_to = c(".value", "CT_Scan"),
@@ -241,12 +246,13 @@ ggsave(
 ### Early Onset Temperature
 
 ```{r}
-data |>
+temp_data <- data |>
+  mutate(Death = factor(Death, levels = c("1", "0"))) |> 
   group_by(Death, `Disease_onset_D1_highest_body_temperature[℃]`) |>
   select(Death, `Disease_onset_D1_highest_body_temperature[℃]`) |>
-  filter(!is.na(`Disease_onset_D1_highest_body_temperature[℃]`)) |>
+  filter(!is.na(`Disease_onset_D1_highest_body_temperature[℃]`))
 
-temp_plot <- ggplot(mapping = aes(x = `Disease_onset_D1_highest_body_temperature[℃]`, fill = Death)) +
+temp_plot <- ggplot(data = temp_data, mapping = aes(x = `Disease_onset_D1_highest_body_temperature[℃]`, fill = Death)) +
   geom_density(alpha = 0.7) +
   scale_fill_manual(
     values = c("1" = "#5995ED", "0" = "#DB3069"),
