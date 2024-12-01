@@ -52,8 +52,12 @@ library(knitr)
 
 knit("../R/04_describe.qmd")
 
+table_describe
 
+```
 
+```{r}
+table_describe
 ```
 
 # Analysis {.transition-fade}
