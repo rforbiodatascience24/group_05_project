@@ -12,6 +12,21 @@ data <- read_tsv(file = "../data/03_data_augmented.tsv")
 ```
 
 ```{r}
+## TO BE MOVeD TO 03_AUGMENT
+data <- data|>
+  rename(
+    Outcome = 'Death',
+  ) |>
+  mutate(
+    Outcome = case_when(
+      Outcome == 0 ~ 'Survived',
+      Outcome == 1 ~'Deceased')
+  )
+```
+
+### Change from binary to No, Yes and the labels in the tables
+
+```{r}
 tabledat <- data |>
   mutate(
       Hypertension_disease = factor(Hypertension_disease, labels = c("No", "Yes")),
@@ -28,7 +43,11 @@ tabledat <- data |>
     Cardiovascular_symptoms = factor(Cardiovascular_symptoms, labels = c("No", "Yes")),
     Other_symptoms = factor(Other_symptoms, labels = c("No", "Yes")),
     Nervous_symptoms = factor(Nervous_symptoms, labels = c("No", "Yes")),
-    Gastrointestinal_symptoms = factor(Gastrointestinal_symptoms, labels = c("No", "Yes"))
+    Gastrointestinal_symptoms = factor(Gastrointestinal_symptoms, labels = c("No", "Yes")),
+    Mask_Oxygen_therapy = factor(Mask_Oxygen_therapy, labels = c("No", "Yes")),
+    NonInvasive_Oxygen_therapy = factor(NonInvasive_Oxygen_therapy, labels = c("No", "Yes")),
+    Invasive_Oxygen_therapy = factor(Invasive_Oxygen_therapy, labels = c("No", "Yes")),
+    HighFlow_Oxygen_therapy = factor(HighFlow_Oxygen_therapy, labels = c("No", "Yes"))
   )
 
 label(tabledat[["Hypertension_disease"]]) <- "Hypertension"
@@ -51,9 +70,104 @@ label(tabledat[["Hospitalization_days"]]) <- "Hospitalization Time (Days)"
 label(tabledat[["ICU_hospitalization_days"]]) <- "ICU Hospitalization Time (Days)"
 label(tabledat[["Fever_days"]]) <- "Fever Duration (Days)"
 
-table1(
-  x = ~ Age_range + Hospitalization_days + ICU_hospitalization_days +
-      Fever_days +  Hypertension_disease + Diabetes_disease + CVD_disease + COPD_disease + Cerebrovascular_disease + Chronic_Kidney_disease + Malignant_tumor_disease + Immunodeficiency_disease + Other_disease + Whole_body_symptoms + Respiratory_symptoms + Cardiovascular_symptoms + Other_symptoms + Nervous_symptoms + Gastrointestinal_symptoms| Outcome,
+label(tabledat[["Antiviral_Drug"]]) <- "Antiviral Drug"
+label(tabledat[["CTSS_score_1"]]) <- "CTSS score 1"
+label(tabledat[["CTSS_score_2"]]) <- "CTSS score 2"
+label(tabledat[["Charlson_index[score]"]]) <- "Charlson index score"
+label(tabledat[["Mask_Oxygen_therapy"]]) <- "Mask Oxygen Therapy"
+label(tabledat[["NonInvasive_Oxygen_therapy"]]) <- "Non-Invasive Oxygen Therapy"
+label(tabledat[["Invasive_Oxygen_therapy"]]) <- "Invasive Oxygen Therapy"
+label(tabledat[["HighFlow_Oxygen_therapy"]]) <- "High Flow Oxygen Therapy"
+
+
+```
+
+## Exclude NA values from tables
+
+```{r}
+tabledat <- tabledat |> 
+  mutate(
+    Hypertension_disease = factor(Hypertension_disease, exclude = NULL),
+    Diabetes_disease = factor(Diabetes_disease, exclude = NULL),
+    CVD_disease = factor(CVD_disease, exclude = NULL),
+    COPD_disease = factor(COPD_disease, exclude = NULL),
+    Cerebrovascular_disease = factor(Cerebrovascular_disease, exclude = NULL),
+    Malignant_tumor_disease = factor(Malignant_tumor_disease, exclude = NULL),
+    Immunodeficiency_disease = factor(Immunodeficiency_disease, exclude = NULL),
+    Other_disease = factor(Other_disease, exclude = NULL),
+    Whole_body_symptoms = factor(Whole_body_symptoms, exclude = NULL),
+    Respiratory_symptoms = factor(Respiratory_symptoms, exclude = NULL),
+    Cardiovascular_symptoms = factor(Cardiovascular_symptoms, exclude = NULL),
+    Other_symptoms = factor(Other_symptoms, exclude = NULL),
+    Nervous_symptoms = factor(Nervous_symptoms, exclude = NULL),
+    Gastrointestinal_symptoms = factor(Gastrointestinal_symptoms, exclude = NULL),
+    Chronic_Kidney_disease = factor(Chronic_Kidney_disease, exclude = NULL),
+    ICU_hospitalization_days = as.numeric(ICU_hospitalization_days),
+    Antiviral_Drug = factor(Antiviral_Drug, exclude = NULL),
+    CTSS_score_1 = as.numeric(CTSS_score_1, exclude = NULL),
+    CTSS_score_2 = as.numeric(CTSS_score_2, exclude = NULL),
+    Fever_days = as.numeric(Fever_days, exclude = NULL),
+    `Charlson_index[score]` = as.numeric(`Charlson_index[score]`, exclude = NULL),
+    Mask_Oxygen_therapy = factor(Mask_Oxygen_therapy, exclude = NULL),
+    NonInvasive_Oxygen_therapy = factor(NonInvasive_Oxygen_therapy, exclude = NULL),
+    Invasive_Oxygen_therapy = factor(Invasive_Oxygen_therapy, exclude = NULL),
+    HighFlow_Oxygen_therapy = factor(HighFlow_Oxygen_therapy, exclude = NULL)
+  )
+```
+
+### Age group, Hospitalization time and ICU hospitalization days by outcome
+
+```{r}
+table1_describe_01 <- table1(
+  x = ~ Age_range + Hospitalization_days + ICU_hospitalization_days | Outcome,
   data = tabledat
 )
+
+# Guardar el objeto como imagen PNG
+png("table1_describe_01.png", width = 800, height = 600) # Ajusta tamaño según lo necesites
+print(table1_describe_01) # Dibuja la tabla en el dispositivo gráfico
+dev.off() # Cierra el dispositivo gráfico
+```
+
+### Diseases by outcome
+
+```{r}
+table1(
+  x = ~ Hypertension_disease + Diabetes_disease + CVD_disease + COPD_disease + Cerebrovascular_disease + Chronic_Kidney_disease + Malignant_tumor_disease + Immunodeficiency_disease + Other_disease | Outcome, 
+  data = tabledat
+)
+
+```
+
+### Symptoms by outcome
+
+```{r}
+table1(
+  x = ~  Whole_body_symptoms + Respiratory_symptoms + Cardiovascular_symptoms + Other_symptoms + Nervous_symptoms + Gastrointestinal_symptoms| Outcome,
+  data = tabledat
+)
+```
+
+### Antiviral drug, CTSS, Charlson index score, fever days and onset vs outcome
+
+```{r}
+table1(
+  x = ~  Antiviral_Drug + CTSS_score_1 + CTSS_score_2 + Fever_days + `Charlson_index[score]` + onset| Outcome, 
+  data = tabledat
+)
+```
+
+### Age group, Symptoms and Diseases by Antiviral Drug
+
+```{r}
+table1(
+   x = ~ Age_range + Hypertension_disease + Diabetes_disease + CVD_disease + COPD_disease + Cerebrovascular_disease + Chronic_Kidney_disease + Malignant_tumor_disease + Immunodeficiency_disease + Other_disease + Whole_body_symptoms + Respiratory_symptoms + Cardiovascular_symptoms + Other_symptoms + Nervous_symptoms + Gastrointestinal_symptoms| Antiviral_Drug,
+  data = tabledat
+)
+```
+
+### Age group, Symptoms and Diseases by Respiratory support treatments.
+
+```{r}
+# A change in data augment is needed to do it
 ```
