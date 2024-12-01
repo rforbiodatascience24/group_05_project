@@ -164,7 +164,8 @@ data <- data |>
     `Death` == 1 ~ "1",
     `Death` == 2 ~ "0",
     TRUE ~ NA_character_
-  )) |> 
+  )) |>
+  mutate(`Death` = as.factor(`Death`, levels = c("1", "0"))) |> 
   mutate(`Prone_position_ventilation` = case_when(
     `Prone_position_ventilation` == 1 ~ "yes",
     `Prone_position_ventilation` == 0 ~ "no",
