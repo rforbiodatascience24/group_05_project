@@ -60,6 +60,175 @@ table_describe
 table_describe
 ```
 
+---
+
+# Results
+
+---
+
+## Initial Exploration
+
+In this section, we examine [key variables]{.fragment .highlight-red} to identify patterns and trends related to patient outcomes.  
+
+::: {.nonincremental}
+- Age Groups
+- Antiviral Drug Administered
+- Symptoms and Diseases
+- CT Severity Scores
+- Early Onset Temperature
+:::
+---
+
+## Age Groups
+
+:::: {.columns}
+::: {.column width="60%"}
+Mortality increases significantly with age, particularly amongst patients [older than 80]{.fragment .highlight-red}.
+
+\
+
+**Potential Impact**  
+Older patients are at a higher risk, suggesting the importance of early and intensive monitoring for this group.
+:::
+
+::: {.column width="40%"}
+<figure>
+  <img src='results/05_keu_plot_1.png' alt='Age vs. Patient Outcome'>
+</figure>
+:::
+::::
+
+---
+
+### Antiviral Drug Administration and Patient Outcome
+
+:::: {.columns}
+::: {.column width="60%"}
+[Treated patients]{.fragment .highlight-red} show lower mortality rates, indicating their effectiveness in managing severe COVID-19 cases.
+
+\
+
+**Potential Impact**  
+Timely administration of antiviral drugs could be crucial in mitigating severe outcomes, particularly in patients with high-risk profiles.
+:::
+
+::: {.column width="40%"}
+<figure>
+  <img src='results/05_keu_plot_3.png' alt='Antiviral Drug vs Patient Outcome'>
+</figure>
+:::
+::::
+
+---
+
+### Symptoms, Comorbidities, and Mortality
+#### Symptoms
+
+:::: {.columns}
+::: {.column width="60%"}
+The most common symptoms [Respiratory & Whole Body]{.fragment .highlight-red}, display an equal split.
+
+\
+
+Less common symptoms [Gastrointestinal, Nervous & Other]{.fragment .highlight-red}, appear with high negative outcomes.
+:::
+
+::: {.column width="40%"}
+<figure>
+  <img src='results/05_keu_plot_4.png' alt='Symptoms vs. Mortality Rate'>
+</figure>
+:::
+::::
+
+---
+
+### Symptoms, Comorbidities, and Mortality
+#### Diseases
+
+:::: {.columns}
+::: {.column width="60%"}
+Underlying diseases such as [Diabetes, Hypertension, & Cardiovascular disease]{.fragment .highlight-red} are linked to a higher risk of mortality.
+
+\
+
+**Potential Impact**  
+Patients with these comorbidities may require tailored care and closer monitoring to improve outcomes.
+:::
+
+::: {.column width="40%"}
+<figure>
+  <img src='results/05_keu_plot_5.png' alt='Diseases vs. Mortality Rate'>
+</figure>
+:::
+::::
+
+---
+
+### CT Severity Scores and Mortality
+
+::: {.aside}
+CT scans were performed in a progressive manner, to monitor the development of patients' conditions.
+:::
+
+:::: {.columns}
+::: {.column width="60%"}
+
+::: {.nonincremental}
+[Higher CTSS]{.fragment .highlight-red} - indicating extensive lung damage, are associated with increased mortality.
+:::
+
+\
+
+**Potential Impact**  
+CT scans can serve as a critical tool for identifying patients who may need more aggressive treatment and care.
+:::
+
+::: {.column width="40%"}
+<figure>
+  <img src='results/05_keu_plot_6.png' alt='CT Severity Scores vs. Mortality Rate'>
+</figure>
+:::
+::::
+
+---
+
+### Early Onset Temperature and Mortality
+
+:::: {.columns}
+::: {.column width="50%"}
+
+[Elevated EOT]{.fragment .highlight-red} correlate with higher mortality rates, suggesting the need for prompt temperature management.
+
+\
+
+**Potential Impact**  
+Effective fever management could be a key component in improving patient outcomes.
+:::
+
+::: {.column width="50%"}
+<figure>
+  <img src='results/05_keu_plot_7.png' alt='Early Onset Temperature vs. Patient Outcome'>
+</figure>
+:::
+::::
+
+---
+
+### Summary of Initial Findings
+\
+
+:::{.incremental}
+**Overarching Patterns**: 
+
+Demographic vulnerability, significant impact of comorbidities and symptoms, treatment efficacy, and severity scores.
+\
+
+\
+**Strategic Takeaways**: 
+
+Targeted interventions are crucial for specific demographics, early antiviral treatment, and managing patients with severe symptoms or high CT scores.
+:::
+
 # Analysis {.transition-fade}
 
 ## Analysis {.transition-fade}
@@ -70,21 +239,23 @@ table_describe
 -   Paxlovid exploration: Can we get the same result as the main paper with this data?
 :::
 
-## Analysis - Initial exploration
+## Analysis - Initial exploration of the Data
 
 ::: nonincremental
--   Initial exploration: What factors we think might be related to the outcome?
+-   ::: nonincremental
+    In this section, we examine key variables to identify patterns and trends related to patient outcomes.
+    :::
 :::
 
 ## Analysis - Initial exploration
 
 ::: nonincremental
--   Initial exploration: What factors we think might be related to the outcome?
-    -   Age
-    -   symptoms
-    -   time in UCI
-    -   other disease
-    -   extra correlations
+-   In this section, we examine key variables to identify patterns and trends related to patient outcomes.
+    -   Age Range
+    -   Antiviral Drug Administered
+    -   Symptoms and Diseases
+    -   CT Severity Scores
+    -   Early Onset Temperature
 :::
 
 ## Analysis - Initial exploration
