@@ -231,6 +231,25 @@ data <- data |>
 
 ```
 
+### CT Progression and Lung Lobes Augmentation
+
+```{r}
+data <- data|>
+  rename(
+    CT_D1_days_1 = `CT1-D1[days]`,
+    CT_D1_days_2 = `CT2-D1[days]`
+  ) |>
+  mutate(
+    `Charlson_index[score]` = as.numeric(`Charlson_index[score]`),
+    CTSS_score_1 = as.numeric(CTSS_score_1),
+    CTSS_score_2 = as.numeric(CTSS_score_2),
+    CT_D1_days_1 = as.numeric(CT_D1_days_1),
+    CT_D1_days_2 = as.numeric(CT_D1_days_2),
+    Affected_lung_lobes_1 = as.numeric(Affected_lung_lobes_1),
+    Affected_lung_lobes_2 = as.numeric(Affected_lung_lobes_2),
+  )
+```
+
 ### ICU ADMISSION (BINARY)
 
 ```{r}

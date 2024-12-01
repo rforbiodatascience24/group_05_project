@@ -37,7 +37,7 @@ pca_data <- data |>
 
 ```{r}
 pca_data <- pca_data |> 
-  select(-Number, -Age_over_65, -Age_range, -ECMO) |> 
+  select(-Number, -`Age_over_65(1,YES;_2,_NO)`, -Age_range, -ECMO) |> 
   mutate(across(where(is.character), ~ as.numeric(.)))
 
 numeric_scaled_data <- pca_data |> 
