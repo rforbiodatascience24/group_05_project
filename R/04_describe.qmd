@@ -102,12 +102,17 @@ tabledat <- tabledat |>
     Nervous_symptoms = factor(Nervous_symptoms, exclude = NULL),
     Gastrointestinal_symptoms = factor(Gastrointestinal_symptoms, exclude = NULL),
     Chronic_Kidney_disease = factor(Chronic_Kidney_disease, exclude = NULL),
+    ICU_hospitalization_days = factor(ICU_hospitalization_days, exclude = NULL),
     ICU_hospitalization_days = as.numeric(ICU_hospitalization_days),
     Antiviral_Drug = factor(Antiviral_Drug, exclude = NULL),
-    CTSS_score_1 = as.numeric(CTSS_score_1, exclude = NULL),
-    CTSS_score_2 = as.numeric(CTSS_score_2, exclude = NULL),
-    Fever_days = as.numeric(Fever_days, exclude = NULL),
-    `Charlson_index[score]` = as.numeric(`Charlson_index[score]`, exclude = NULL),
+    CTSS_score_1 = factor(CTSS_score_1, exclude = NULL),
+    CTSS_score_1 = as.numeric(CTSS_score_1),
+    CTSS_score_2 = factor(CTSS_score_2, exclude = NULL),
+    CTSS_score_2 = as.numeric(CTSS_score_2),
+    Fever_days = factor(Fever_days, exclude = NULL),
+    Fever_days = as.numeric(Fever_days),
+    `Charlson_index[score]` = factor(`Charlson_index[score]`, exclude = NULL),
+    `Charlson_index[score]` = as.numeric(`Charlson_index[score]`),
     Mask_Oxygen_therapy = factor(Mask_Oxygen_therapy, exclude = NULL),
     NonInvasive_Oxygen_therapy = factor(NonInvasive_Oxygen_therapy, exclude = NULL),
     Invasive_Oxygen_therapy = factor(Invasive_Oxygen_therapy, exclude = NULL),
@@ -164,6 +169,7 @@ table_describe <- table1(
    x = ~ Age_range + Hypertension_disease + Diabetes_disease + CVD_disease + COPD_disease + Cerebrovascular_disease + Chronic_Kidney_disease + Malignant_tumor_disease + Immunodeficiency_disease + Other_disease + Whole_body_symptoms + Respiratory_symptoms + Cardiovascular_symptoms + Other_symptoms + Nervous_symptoms + Gastrointestinal_symptoms| Antiviral_Drug,
   data = tabledat
 )
+table_describe
 ```
 
 ### Age group, Symptoms and Diseases by Respiratory support treatments.
