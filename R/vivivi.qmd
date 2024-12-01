@@ -50,17 +50,38 @@ data |>
   select(Outcome, Age_range) |>
   summarise(n = n()) |>
   ggplot(mapping = aes(fill = Outcome, y = n, x = Age_range)) +
-  geom_bar(stat = "identity", position = "stack") +
-  labs(title = 'Distribution of Age Ranges accross Outcome')
-
+  geom_bar(stat = "identity", position = "stack", alpha = 0.7, color = "black") +
+  scale_fill_manual(
+    values = c("Deceased" = "#5995ED", "Survived" = "#DB3069"),
+  ) +
+theme_minimal() +
+  labs(title = 'Distribution of Age Groups accross Outcome',
+       x = "Age Groups",
+       y = "Number of Patients",
+       fill = "Outcome") +
+    theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "top"
+  )
 data |> 
   group_by(Antiviral_Drug, Age_range) |>
   select(Antiviral_Drug, Age_range) |>
   filter(!is.na(Antiviral_Drug)) |>
   summarise(n = n()) |>
   ggplot(mapping = aes(fill = Antiviral_Drug, y = n, x = Age_range)) +
-  geom_bar(stat = "identity", position = "stack") +
-  labs(title = 'Distribution of Age Ranges across Antiviral Drug Administrations')
+  geom_bar(stat = "identity", position = "stack", alpha = 0.7, color = "black") +
+  scale_fill_manual(
+    values = c("Paxlovid" = "#FF4500", "Azduvine" = "#0CCE6B", "None" = "#FFAD05"),
+  ) +
+theme_minimal() +
+  labs(title = 'Distribution of Age Groups across Antiviral Drug Administrations',
+       x = "Age Groups",
+       y = "Number of Patients",
+       fill = "Antiviral Drug Type") +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "top"
+  )
 
 data |>
   group_by(Antiviral_Drug, Usage_days) |>
@@ -258,9 +279,21 @@ symptoms |>
 
 ggplot(symptoms, mapping = aes(fill = Outcome, x = Symptom)) +
   geom_bar(alpha = .7, color = "black") +
+  scale_fill_manual(
+    values = c("Deceased" = "#5995ED", "Survived" = "#DB3069"),
+  ) +
+  scale_x_discrete(
+    labels = c(
+      "Cardiovascular_symptoms" = "Cardiovascular",
+      "Gastrointestinal_symptoms" = "Gastrointestinal",
+      "Nervous_symptoms" = "Nervous",
+      "Other_symptoms" = "Other",
+      "Respiratory_symptoms" = "Respiratory",
+      "Whole_body_symptoms" = "Whole Body"
+    )) +
   labs(
     title = "Outcome Distribution accross Symptoms",
-    x = "Outcome",
+    x = "Symptom",
     y = "Age Ranges"
   ) +
   theme_minimal() +
@@ -341,7 +374,7 @@ diseases <- data |>
     values_to = "Presence"
   ) |>
   filter(Presence == 1) |>
-  select(Age_range, Outcome, Disease, Presence) 
+  select(Age_range, Outcome, Disease, Presence, Antiviral_Drug) 
 
 # Fix heatmap again as a lot of values are missing
 diseases_heat <- diseases |>
@@ -370,9 +403,24 @@ diseases |>
 
 ggplot(diseases, mapping = aes(fill = Outcome, x = Disease)) +
   geom_bar(alpha = .7, color = "black") +
+  scale_fill_manual(
+    values = c("Deceased" = "#5995ED", "Survived" = "#DB3069"),
+  ) +
+  scale_x_discrete(
+      labels = c(
+      "Cerebrovascular_disease" = "Cerebrovascular",
+      "Chronic_Kidney_disease" = "Chronic Kidney",
+      "COPD_disease" = "COPD",
+      "CVD_disease" = "CVD",
+      "Diabetes_disease" = "Diabetes",
+      "Hypertension_disease" = "Hypertension",
+      "Immunodeficiency_disease" = "Immunodeficiency",
+      "Malignant_tumor_disease" = "Malignant Tumor",
+      "Other_disease" = "Other"
+    )) +
   labs(
     title = "Outcome Distribution by Diseases",
-    x = "Outcome",
+    x = "Disease",
     y = "Age Ranges"
   ) +
   theme_minimal() +
@@ -407,6 +455,17 @@ ggplot(correlation_long, aes(x = Disease1, y = Disease2, fill = Correlation)) +
     axis.text.y = element_text(size = 10),
     plot.title = element_text(hjust = 0.5)
   )
+```
+
+```{r}
+diseases |>
+  filter(!is.na(Antiviral_Drug)) |>
+  summarise(n = n()) |>
+  ggplot(data = diseases |>   filter(!is.na(Antiviral_Drug)) |> filter(Oxygen_Therapy == 'Mask_Oxygen_therapy'), mapping = aes(fill = Antiviral_Drug, y = n, x = Outcome)) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(title = 'Distribution of Age Ranges across Antiviral Drug Administrations')
+
+
 ```
 
 ## CT Progression and Lung Severity
@@ -449,7 +508,10 @@ ggplot(ct_data, aes(x = CT_D1_days, y = CTSS_score, color = Outcome)) +
 
 ```{r}
 ggplot(ct_data, aes(x = CTSS_score, fill = Outcome)) +
-  geom_density(alpha = 0.6) +
+  geom_density(alpha = 0.7) +
+  scale_fill_manual(
+    values = c("Deceased" = "#5995ED", "Survived" = "#DB3069"),
+  ) +
   facet_wrap(~ CT_Scan, labeller = as_labeller(c("1" = "CT1", "2" = "CT2"))) +
   labs(
     title = "CT Severity Score Distribution by Outcome",
@@ -457,7 +519,34 @@ ggplot(ct_data, aes(x = CTSS_score, fill = Outcome)) +
     y = "Density"
   ) +
   theme_minimal()
+
+
+data |>
+  mutate(
+       `Disease_onset_D1_highest_body_temperature[℃]` = as.numeric(`Disease_onset_D1_highest_body_temperature[℃]`),
+  ) |>
+  group_by(Outcome, `Disease_onset_D1_highest_body_temperature[℃]`) |>
+  select(Outcome, `Disease_onset_D1_highest_body_temperature[℃]`) |>
+  filter(!is.na(`Disease_onset_D1_highest_body_temperature[℃]`)) |>
+ggplot(mapping = aes(x = `Disease_onset_D1_highest_body_temperature[℃]`, fill = Outcome)) +
+  geom_density(alpha = 0.7) +
+  scale_fill_manual(
+    values = c("Deceased" = "#5995ED", "Survived" = "#DB3069"),
+  ) +
+  labs(
+    title = "Temperature Distribution by Outcome",
+    x = "Temperature",
+    y = "Density"
+  ) +
+  theme_minimal() +
+    theme(
+    axis.text.x = element_text(hjust = 1),
+    axis.text.y = element_text(size = 10),
+    plot.title = element_text(hjust = 0.5)
+  )
 ```
+
+\+
 
 #### Progression of Lobar Involvement
 
