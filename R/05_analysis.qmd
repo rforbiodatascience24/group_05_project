@@ -10,6 +10,11 @@ library(purrr)
 library(broom)
 ```
 
+# Load Data
+
+```{r}
+data <- read_tsv(file = "../data/03_data_augmented.tsv")
+```
 
 ## PCA
 
@@ -103,6 +108,34 @@ results_tidy <- results |>
 
 ```{r}
 significant_variables <- results_tidy |> 
-  filter(q.value < 0.05)
+  filter(q.value < 0.05) |> 
+  mutate(OR = exp(estimate))
   
+```
+
+### Abreviate variables for plotting
+
+### D
+
+```{r}
+ggplot(significant_variables, 
+       mapping = aes(x = estimate, 
+                     y = variable, 
+                     color = q.value, 
+                     size = abs(estimate))) +
+  geom_point() +
+  geom_text(aes(label = variable), hjust = -0.2, size = 3) +  # Add variable names to dots
+  scale_color_gradient(low = "blue", high = "red", name = "q-value") +
+  labs(
+    title = "Effect Sizes and Significance for Death Prediction",
+    x = "Effect Size (Log-Odds)",
+    y = NULL,  # Remove the y-axis label
+    size = "Effect Strength"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    legend.position = "right",
+    axis.text.y = element_blank()
+  )
 ```
