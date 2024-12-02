@@ -54,13 +54,11 @@ css: styles.css
 **Symptoms**\
 <iframe src="../results/table1_describe_03.html" width="100%" height="150"></iframe>
 :::
-<<<<<<< HEAD
 :::
-=======
 
 ------------------------------------------------------------------------
 
-# Methodology
+## Methodology
 
 ```{r, echo=FALSE, results='asis'}
 library (grid)
@@ -70,10 +68,6 @@ grid::grid.raster(img)
 ```
 
 ------------------------------------------------------------------------
-
-# Results
->>>>>>> dd4cb6f4120753c3063eebaae448aed0da1569b9
-
 
 ## Results: Initial Exploration
 
@@ -226,7 +220,6 @@ Demographic vulnerability, significant impact of comorbidities and symptoms, tre
 
 Targeted interventions are crucial for specific demographics, early antiviral treatment, and managing patients with severe symptoms or high CT scores.
 :::
-
 
 ## Analysis {.transition-fade}
 
