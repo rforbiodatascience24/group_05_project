@@ -54,7 +54,25 @@ css: styles.css
 **Symptoms**\
 <iframe src="../results/table1_describe_03.html" width="100%" height="150"></iframe>
 :::
+<<<<<<< HEAD
 :::
+=======
+
+------------------------------------------------------------------------
+
+# Methodology
+
+```{r, echo=FALSE, results='asis'}
+library (grid)
+
+img <- png::readPNG("messy_dataset.png")
+grid::grid.raster(img)
+```
+
+------------------------------------------------------------------------
+
+# Results
+>>>>>>> dd4cb6f4120753c3063eebaae448aed0da1569b9
 
 
 ## Results: Initial Exploration
