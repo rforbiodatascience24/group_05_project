@@ -7,6 +7,10 @@ editor: visual
 
 ## Statistical analysis of Paxlovid effect on Lymphocytes
 
+```{r}
+data <- read_tsv(file = "../data/03_data_augmented.tsv", show_col_types = FALSE)
+```
+
 ### 1. Check normality
 
 ```{r}
@@ -78,130 +82,147 @@ p2 <- ggplot(data = data |> filter(`D7_lymphocyte_count[10^9/L]` < 15),
 p1+p2
 ```
 
-Paxlovid graphs
+```{r}
+data <- data |>  
+  mutate(`Antiviral_drugs_(1_nema_0_no)` = factor(
+    `Antiviral_drugs_(1_nema_0_no)`, 
+    levels = c(0,1),
+    labels = c("No", "Yes"))) |>
+  mutate(Death = factor(Death, levels = c(0, 1), labels = c("No", "Yes")))
+```
 
 ```{r}
-  #death
-p1 <- ggplot(data_lym, aes(x = Day, y = Lymphocytes, color = Death)) +
-  geom_boxplot(aes(fill = Death), outlier.shape = NA, alpha = 0.8) + 
-  geom_jitter(aes(shape = `Antiviral_drugs_(1_nema_0_no)`), size = 2, alpha = 0.8, position = position_jitter(width = 0.15)) + 
-      scale_fill_manual(
-    values = c("Yes" = "#5995ED", "No" = "#DB3069"), # Match colors from ages_plot
-    labels = c("Yes" = "1", "No" = "0") # Update Death legend labels
-  ) +
+  p1 <- ggplot(data |> filter(Lymphocyte_Test_Day == "D7_lymphocyte_count[10^9/L]"), aes(x = Lymphocyte_Test_Day, y = Lymphocytes, color = `Antiviral_drugs_(1_nema_0_no)`)) +
+  geom_boxplot( alpha = 0.8) + 
   scale_color_manual(
-    values = c("Yes" = "#5995ED", "No" = "#DB3069"), # Match colors from ages_plot
-    labels = c("Yes" = "1", "No" = "0") # Update Death legend labels
+    values = c("Yes" = "#5995ED", "No" = "#DB3069")
   ) +
   labs(
-    title = "Lymphocyte Counts on Day 1 and Day 7",
-    x = "Day",
-    y = "Lymphocyte Count",
-    color = "Death",
-    shape = "Paxlovid Consumption",
-    fill = "Death"
+    title = "Lymphocyte Counts on Day 7",
+    x = "Lymphocyte_Test_Day",
+    y = "Lymphocyte Count [10^9/L]",
+    color = "Paxlovid Consumption",
   ) +
-  #scale_y_continuous(limits = c(0, 3)) + # Adjust y-axis limits to match data
-  scale_x_discrete(labels = c("D1_LC", "D7_LC")) +
+  #scale_y_continuous(limits = c(0, 3)) + 
+  scale_x_discrete(labels = "D7_LC") +
   theme_minimal() +
   theme(
     plot.title = element_text(hjust = 0.5, size = 14),
     axis.text = element_text(size = 10),
     axis.title = element_text(size = 12),
-    legend.position = "top"
-  ) +
-  facet_wrap(~Death, scales = "free")
+    legend.position = "top" 
+)
 
-#sin los outliers
-p2 <- ggplot(data_lym, aes(x = Day, y = Lymphocytes, color = Death)) +
-  geom_boxplot(aes(fill = Death), outlier.shape = NA, alpha = 0.8) + # Solid boxplots
-  #geom_jitter(aes(shape = `Antiviral_drugs_(1_nema_0_no)`), size = 2, alpha = 0.8, position = position_jitter(width = 0.15)) + 
-  stat_summary(fun = median, geom = "text", aes(label = sprintf("%.2f", ..y..)), 
-               position = position_dodge(width = 0.75), vjust = -0.5, color = "black", size = 3) + # Add median values
-      scale_fill_manual(
-    values = c("Yes" = "#5995ED", "No" = "#DB3069"), # Match colors from ages_plot
-    labels = c("Yes" = "1", "No" = "0") # Update Death legend labels
-  ) +
+p2 <- ggplot(data |> filter(Lymphocyte_Test_Day == "D7_lymphocyte_count[10^9/L]"), aes(x = Lymphocyte_Test_Day, y = Lymphocytes, color = `Antiviral_drugs_(1_nema_0_no)`)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.8) + 
   scale_color_manual(
-    values = c("Yes" = "#5995ED", "No" = "#DB3069"), # Match colors from ages_plot
-    labels = c("Yes" = "1", "No" = "0") # Update Death legend labels
+    values = c("Yes" = "#5995ED", "No" = "#DB3069")
   ) +
   labs(
-    title = "Lymphocyte Counts on Day 1 and Day 7",
-    x = "Day",
-    y = "Lymphocyte Count",
-    color = "Death",
-    shape = "Paxlovid Consumption",
-    fill = "Death"
+    title = "Lymphocyte Counts on Day 7",
+    x = "Lymphocyte_Test_Day",
+    y = "Lymphocyte Count [10^9/L]",
+    color = "Paxlovid Consumption",
   ) +
-  scale_y_continuous(limits = c(0, 3)) + # Adjust y-axis limits to match data
-  scale_x_discrete(labels = c("D1_LC", "D7_LC")) +
+  scale_y_continuous(limits = c(0, 3)) + 
+  scale_x_discrete(labels = "D7_LC") +
   theme_minimal() +
   theme(
     plot.title = element_text(hjust = 0.5, size = 14),
     axis.text = element_text(size = 10),
     axis.title = element_text(size = 12),
     legend.position = "top"
-  ) +
-  facet_wrap(~Death, scales = "free")
+  ) 
 
 (p1 + p2)
 ```
 
+Muerte con limfocitos graphs
+
 ```{r}
-  p1 <- ggplot(data_lym |> filter(Day == "D7_lymphocyte_count[10^9/L]"), aes(x = Day, y = Lymphocytes, color = `Antiviral_drugs_(1_nema_0_no)`)) +
-  geom_boxplot(aes(fill = `Antiviral_drugs_(1_nema_0_no)`), alpha = 0.8, show.legend = FALSE) + 
-  scale_fill_manual(
-    values = c("Yes" = "#5995ED", "No" = "#DB3069"), 
-    labels = c("Yes" = "1", "No" = "0") 
-  ) +
-  scale_color_manual(
-    values = c("Yes" = "#5995ED", "No" = "#DB3069"), 
-    labels = c("Yes" = "1", "No" = "0") 
-  ) +
-  labs(
-    title = "Lymphocyte Counts on Day 7",
-    x = "Day",
-    y = "Lymphocyte Count",
-    color = "Paxlovid Consumption",
-  ) +
-  #scale_y_continuous(limits = c(0, 3)) + # Adjust y-axis limits to match data
-  scale_x_discrete(labels = "D7_LC") +
-  theme_minimal() +
-  theme(
-    plot.title = element_text(hjust = 0.5, size = 14),
-    axis.text = element_text(size = 10),
-    axis.title = element_text(size = 12),
-    legend.position = "none" 
+wilcox_res <- wilcox.test(
+  `Lymphocytes` ~ `Death`,
+  data = data
 )
 
-p2 <- ggplot(data_lym |> filter(Day == "D7_lymphocyte_count[10^9/L]"), aes(x = Day, y = Lymphocytes, color = `Antiviral_drugs_(1_nema_0_no)`)) +
-  geom_boxplot(aes(fill = `Antiviral_drugs_(1_nema_0_no)`), outlier.shape = NA, alpha = 0.8, show.legend = FALSE) + 
+print(wilcox_res)
+```
+
+```{r}
+p1 <- ggplot(data, aes(x = Lymphocyte_Test_Day, y = Lymphocytes, color = Death)) +
+  geom_boxplot(aes(fill = Death), alpha = 0.8) + # Boxplots
   scale_fill_manual(
-    values = c("Yes" = "#5995ED", "No" = "#DB3069"), 
-    labels = c("Yes" = "1", "No" = "0") 
+    values = c("Yes" = "#5995ED", "No" = "#DB3069"), # Fill colors for Death
+    labels = c("Yes" = "Deceased", "No" = "Survived") # Update legend labels
   ) +
   scale_color_manual(
-    values = c("Yes" = "#5995ED", "No" = "#DB3069"), 
-    labels = c("Yes" = "1", "No" = "0") 
+    values = c("Yes" = "#5995ED", "No" = "#DB3069"), # Color mapping for Death
+    labels = c("Yes" = "Deceased", "No" = "Survived") # Update legend labels
   ) +
   labs(
-    title = "Lymphocyte Counts on Day 7",
-    x = "Day",
-    y = "Lymphocyte Count",
-    color = "Paxlovid Consumption",
+    title = NULL, # Elimina el título individual
+    x = "Lymphocyte_Test_Day",
+    y = "Lymphocyte Count [10^9/L]",
+    color = "Outcome",
+    fill = "Outcome"
   ) +
-  scale_y_continuous(limits = c(0, 3)) + # Adjust y-axis limits to match data
-  scale_x_discrete(labels = "D7_LC") +
+  scale_x_discrete(labels = c("D1_LC", "D7_LC")) +
   theme_minimal() +
   theme(
-    plot.title = element_text(hjust = 0.5, size = 14),
     axis.text = element_text(size = 10),
     axis.title = element_text(size = 12),
-    legend.position = "none"
-  ) 
+    legend.position = "none", # La leyenda será combinada globalmente
+    strip.text = element_blank(), # Elimina los textos de las facetas ("Yes" y "No")
+    plot.margin = margin(t = 10, b = 20, l = 10, r = 10) # Ajusta el margen
+  ) +
+  facet_wrap(~Death, scales = "free") # Facet by Death status
 
+# Gráfico 2 (p2)
+p2 <- ggplot(data, aes(x = Lymphocyte_Test_Day, y = Lymphocytes, color = Death)) +
+  geom_boxplot(aes(fill = Death), outlier.shape = NA, alpha = 0.8) + # Boxplots
+  scale_fill_manual(
+    values = c("Yes" = "#5995ED", "No" = "#DB3069"), # Fill colors for Death
+    labels = c("Yes" = "Deceased", "No" = "Survived") # Update legend labels
+  ) +
+  scale_color_manual(
+    values = c("Yes" = "#5995ED", "No" = "#DB3069"), # Color mapping for Death
+    labels = c("Yes" = "Deceased", "No" = "Survived") # Update legend labels
+  ) +
+  labs(
+    title = NULL, # Elimina el título individual
+    x = "Lymphocyte_Test_Day",
+    y = "Lymphocyte Count [10^9/L]",
+    color = "Outcome",
+    fill = "Outcome"
+  ) +
+  scale_y_continuous(limits = c(0, 3)) + # Ajusta los límites del eje Y
+  scale_x_discrete(labels = c("D1_LC", "D7_LC")) +
+  theme_minimal() +
+  theme(
+    axis.text = element_text(size = 10),
+    axis.title = element_text(size = 12),
+    legend.position = "none", # La leyenda será combinada globalmente
+    strip.text = element_blank(), # Elimina los textos de las facetas ("Yes" y "No")
+    plot.margin = margin(t = 20, b = 10, l = 10, r = 10) # Ajusta el margen
+  ) +
+  facet_wrap(~Death, scales = "free") # Facet by Death status
+
+# Combinar los gráficos con un título compartido y leyenda debajo del título
 (p1 + p2) +
-   plot_annotation(
-    title = "Lymphocyte Counts on Day 7")
+  plot_layout(guides = "collect") + # Combina las leyendas
+  plot_annotation(
+    title = "Lymphocyte Counts on Day 1 and Day 7", # Título compartido
+    theme = theme(
+      plot.title = element_text(
+        hjust = 0.5, 
+        size = 16, 
+        margin = margin(b = 5) # Reduce el margen inferior del título
+      )
+    )
+  ) &
+  theme(
+    legend.position = "top", # Ubica la leyenda arriba
+    legend.justification = "center", # Centra la leyenda
+    legend.margin = margin(t = 0, b = 5) # Ajusta el margen superior e inferior de la leyenda
+  )
 ```
