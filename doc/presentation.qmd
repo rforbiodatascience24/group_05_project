@@ -204,7 +204,108 @@ Article 2 - PMC\]
 
 ## Analysis
 
+### Statistical analysis and modelling
+
+
+:::columns
+
+::: {.column width="49%"}
+
+To examine the relationship between each variable and the outcome, we fit **logistic regression models** and evaluate the estimates. These estimates indicate the strength and direction of association between each variable and the outcome.
+
+\
+
+```{r, eval=FALSE, echo=TRUE}
+results <- data_numeric |> 
+  select(-Death) |>  
+  # Pivot longer to have one variable per row
+  pivot_longer(cols = everything(), 
+               names_to = "variable", 
+               values_to = "value") |> 
+  group_by(variable) |> 
+  # Fit model
+  summarise(
+    model = list(glm(Death ~ value, 
+                     data = data, family = binomial))
+    )
+    
+```
+:::
+
+::: {.column width="49%"}
+
+<figure>![](../results/05_esimate_size_plot.png)</figure>
+
+:::
+
+:::
+
 ------------------------------------------------------------------------
+
+## Analysis
+
+### Statistical analysis and modelling
+
+
+:::columns
+
+::: {.column width="49%"}
+
+- In the logistic regression model, we found that the **Lymphocytes** count at day 7 is the variable that better determines the outcome.
+
+- Can the treatment with **Paxlovid** modify the Lymphocytes level?
+
+\
+
+```{r, eval = FALSE, echo=TRUE}
+wilcox.test(
+  `D7_lymphocyte_count[10^9/L]` ~ 
+    `Antiviral_drugs_(1_nema_0_no)`,
+  data = data
+)
+```
+:::
+
+::: {.column width="49%"}
+
+<figure>![](../results/05_esimate_size_plot.png)</figure>
+
+:::
+
+:::
+
+
+## Analysis
+
+### Statistical analysis and modelling
+
+
+:::columns
+
+::: {.column width="49%"}
+
+- In the logistic regression model, we found that the **Lymphocytes** count at day 7 is the variable that better determines the outcome.
+
+- Can the treatment with **Paxlovid** modify the Lymphocytes level?
+
+\
+
+```{r, eval = FALSE, echo=TRUE}
+wilcox.test(
+  `D7_lymphocyte_count[10^9/L]` ~ 
+    `Antiviral_drugs_(1_nema_0_no)`,
+  data = data
+)
+```
+:::
+
+::: {.column width="49%"}
+
+<figure>![](../results/05_esimate_size_plot.png)</figure>
+
+:::
+
+:::
 
 ## Analysis
 
