@@ -1,0 +1,73 @@
+---
+title: "05_analysis_03"
+author: "Miguel Blanco"
+format: html
+editor: visual
+---
+
+## Statistical analysis of Paxlovid effect on Lymphocytes 
+
+### 1. Check normality
+
+```{r}
+data |>
+  pull(`D7_lymphocyte_count[10^9/L]`) |> 
+  shapiro.test()
+```
+
+Visualization of distribution
+
+```{r}
+ggplot(data, aes(x = `D7_lymphocyte_count[10^9/L]`)) +
+  geom_histogram(binwidth = 0.5, fill = "skyblue", color = "black") +
+  labs(title = "Distribution of Lymphocyte Levels", x = "Lymphocyte Levels", y = "Count") +
+  theme_minimal()
+```
+
+### 2. Wilcox-test and summary stats
+
+Summary statistics
+
+```{r}
+
+
+lymph_stats <- data |> 
+  group_by(`Antiviral_drugs_(1_nema_0_no)`) |> 
+  summarise(
+    median_lymphocytes_D7 = median(`D7_lymphocyte_count[10^9/L]`, na.rm = TRUE),
+    mean_lymphocytes_D7 = mean(`D7_lymphocyte_count[10^9/L]`, na.rm = TRUE),
+    count = n(),
+    median_lymphocytes_D1 = median(`D1_lymphocyte_count[10^9/L]`, na.rm = TRUE),
+    mean_lymphocytes_D1 = mean(`D1_lymphocyte_count[10^9/L]`, na.rm = TRUE),
+    count = n()
+  )
+```
+
+Wilcox test
+
+```{r}
+wilcox_res <- wilcox.test(
+  `D7_lymphocyte_count[10^9/L]` ~ `Antiviral_drugs_(1_nema_0_no)`,
+  data = data
+)
+
+print(wilcox_res)
+```
+
+```{r}
+p1 <- ggplot(data = data,
+       mapping = aes(x = `Antiviral_drugs_(1_nema_0_no)`,
+                     y = `D1_lymphocyte_count[10^9/L]`)) +
+  geom_boxplot()+
+  ylim(0,2)+
+  theme_minimal()
+
+p2 <- ggplot(data = data |> filter(`D7_lymphocyte_count[10^9/L]` < 15),
+       mapping = aes(x = `Antiviral_drugs_(1_nema_0_no)`,
+                     y = `D7_lymphocyte_count[10^9/L]`)) +
+  ylim(0,2)+
+  geom_boxplot()+
+  theme_minimal()
+
+p1+p2
+```
