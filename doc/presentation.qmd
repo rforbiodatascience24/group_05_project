@@ -182,25 +182,7 @@ Article 2 - PMC\]
 :::
 :::
 
-------------------------------------------------------------------------
-
-## Data Description
-
-::: columns
-::: {.column width="50%"}
-### CT Severity Scores
-
-<figure>![](images/05_key_plot_6-02.png){width="400"}</figure>
-:::
-
-::: {.column width="50%"}
-### Early Onset Temperature
-
-<figure>![](images/05_key_plot_7-02.png){width="350"}</figure>
-:::
-:::
-
-------------------------------------------------------------------------
+---
 
 ## Analysis
 
