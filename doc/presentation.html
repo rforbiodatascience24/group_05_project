@@ -10,7 +10,7 @@
 <link href="presentation_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.4.555">
 
-  <meta name="author" content="Daniel Gil, Luis Martín, Miguel Blanco, Natalia Feced, Xavi Chapatte">
+  <meta name="author" content="Group 05 - Daniel Gil, Luis Martín, Miguel Blanco, Natalia Feced, Xavi Chapatte">
   <title>Clinical data of COVID-19 infected patients</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -332,7 +332,7 @@
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-Daniel Gil, Luis Martín, Miguel Blanco, Natalia Feced, Xavi Chapatte 
+Group 05 - Daniel Gil, Luis Martín, Miguel Blanco, Natalia Feced, Xavi Chapatte 
 </div>
 </div>
 </div>
@@ -345,7 +345,7 @@ Daniel Gil, Luis Martín, Miguel Blanco, Natalia Feced, Xavi Chapatte
 <div style="font-size: 40px;">
 <ul>
 <li>Caused by the <span class="fragment highlight-red"><strong>SARS-CoV-2 virus</strong></span>, with varying severity globally.</li>
-<li><span class="fragment highlight-red"><strong>Symptoms</strong></span> include fever, cough, myalgia, fatigue, and severe respiratory failure in critical cases.</li>
+<li><span class="fragment highlight-red"><strong>Symptoms</strong></span> include: fever, cough, myalgia, fatigue, and severe respiratory failure in critical cases.</li>
 </ul>
 </div>
 <div>
@@ -354,7 +354,7 @@ Daniel Gil, Luis Martín, Miguel Blanco, Natalia Feced, Xavi Chapatte
 <ul>
 <li><span class="fragment highlight-red"><strong>Vaccines</strong></span> have reduced the global burden of COVID-19 significantly.</li>
 <li>Before widespread vaccination, <span class="fragment highlight-red"><strong>antivirals</strong></span> played a key role in severe cases.</li>
-<li><span class="fragment highlight-red"><strong>Paxlovid</strong></span> (SARS-CoV-2 main protease inhibitor) and <span class="fragment highlight-red"><strong>Azduvine</strong></span> emerged as a promising treatment, reducing severe outcomes and mortality.</li>
+<li><span class="fragment highlight-red"><strong>Paxlovid</strong></span> (SARS-CoV-2 main protease inhibitor) and <span class="fragment highlight-red"><strong>Azduvine</strong></span> emerged as a promising treatments, reducing severe outcomes and mortality.</li>
 </ul>
 </div>
 <div class="footer">
@@ -362,8 +362,8 @@ Daniel Gil, Luis Martín, Miguel Blanco, Natalia Feced, Xavi Chapatte
 Article 2 - PMC]</p>
 </div>
 </section>
-<section id="dataset" class="slide level2">
-<h2>Dataset</h2>
+<section id="materials---dataset" class="slide level2">
+<h2>Materials - Dataset</h2>
 <div class="column" style="width:40%;">
 <div style="font-size: 39px; text-align: justify;">
 <p><br>
@@ -392,20 +392,65 @@ Article 2 - PMC]</p>
 </section>
 <section id="methodology" class="slide level2">
 <h2>Methodology</h2>
-<h3 id="data-cleaning-and-augmenting">Data Cleaning and Augmenting</h3>
+<div class="row">
+<div class="column" style="width:49%;">
+<div class="fragment">
+<!-- -->
+<h3 style="font-size: 38px;" id="data-clean">Data Clean</h3>
+<div>
+<div style="font-size: 26px;">
+<p>-⁠ ⁠<em>Unify</em> NA values</p>
+<p>-⁠ ⁠<em>Remove</em> columns with more than 70% NAs</p>
+<p>-⁠ ⁠<em>Modify</em> names</p>
+<p>-⁠ ⁠<em>Column-specific changes</em> (removing non-numerical final characters)</p>
+</div>
+</div>
+</div>
+</div>
+<div class="column" style="width:49%;">
+<div class="fragment">
+<!-- -->
+<h3 style="font-size: 38px;" id="data-augment">Data Augment</h3>
+<div>
+<div style="font-size: 26px;">
 <ul>
-<li>Clean</li>
-<li>Augment</li>
+<li>⁠<em>Change dirty columns</em> to binary-values columns</li>
+<li>⁠<em>Change (some) numeric values to more descriptive values</em></li>
+<li>⁠<em>Polish</em> binary values</li>
+<li>⁠<em>Create new variables</em> (Mean_Age, Early/Late_Onset, Sum_Basic_Diseases …)</li>
 </ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="column" style="width:100%;">
+<figure>
+<img data-src="images/messy_dataset.png">
+</figure>
+</div>
+</div>
 </section>
-<section id="methodology-1" class="slide level2">
-<h2>Methodology</h2>
-<h3 id="analysis">Analysis</h3>
-<ul>
-<li>Data Description</li>
-<li>Statistical Exploration</li>
-<li>Most Significant against Paxlovid</li>
-</ul>
+<section id="analysis-planning" class="slide level2">
+<h2>Analysis Planning</h2>
+<div class="absolute-container" style="position: relative; width: 100%; height: 100%;">
+<div class="fragment">
+<!-- -->
+<h3 style="position: absolute; top: 8%; left: 9%; font-size: 50px;" id="initial-exploration">Initial Exploration</h3>
+<h4 style="position: absolute; top: 15%; left: 1%; font-size: 28px;" id="what-variables-we-think-are-more-related-to-the-outcome">What variables we think are more related to the Outcome?</h4>
+</div>
+<div class="fragment">
+<!-- -->
+<h3 style="position: absolute; top: 33%; left: 59%; font-size: 50px;" id="statistical-exploration">Statistical Exploration</h3>
+<h4 style="position: absolute; top: 40%; left: 50%; font-size: 28px;" id="what-variables-are-statistically-more-related-to-the-outcome">What variables are statistically more related to the Outcome?</h4>
+</div>
+<div class="fragment">
+<!-- -->
+<h3 style="position: absolute; top: 62%; left: 30%; font-size: 50px;" id="paxlovid-exploration">Paxlovid Exploration</h3>
+<h4 style="position: absolute; top: 69%; left: 17%; font-size: 28px;" id="can-we-get-the-same-conclusion-about-the-paxlovid-efficacy-with-this-data">Can we get the same conclusion about the Paxlovid efficacy with this data?</h4>
+</div>
+</div>
 </section>
 <section id="data-description" class="slide level2">
 <h2>Data Description</h2>
@@ -469,12 +514,12 @@ Article 2 - PMC]</p>
 </div>
 </div>
 </section>
-<section id="analysis-1" class="slide level2">
+<section id="analysis" class="slide level2">
 <h2>Analysis</h2>
 </section>
-<section id="analysis-2" class="slide level2">
+<section id="analysis-1" class="slide level2">
 <h2>Analysis</h2>
-<h3 id="paxlovid-exploration">Paxlovid Exploration</h3>
+<h3 id="paxlovid-exploration-1">Paxlovid Exploration</h3>
 <div class="columns">
 <div class="column" style="width:50%;">
 <figure>
@@ -565,7 +610,7 @@ Article 2 - PMC]</p>
         progress: true,
 
         // Display the page number of the current slide
-        slideNumber: false,
+        slideNumber: 'c/t',
 
         // 'all', 'print', or 'speaker'
         showSlideNumber: 'all',
