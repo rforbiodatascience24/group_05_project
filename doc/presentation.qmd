@@ -37,26 +37,26 @@ knit("../R/04_describe.qmd")
 ```
 
 ## Dataset 
+<span style="font-size: 24px;">Dataset with a final number of 123 [variables]{.fragment .highlight-red} and 150 [observations]{.fragment .highlight-red}</span>
+
 
 ::: {.column width="49%"}
 **Table 1**\
-<iframe src="../results/table1_describe_01.html" width="100%" height="400"></iframe>
+<iframe src="../results/table1_describe_01.html" width="100%" height="150"></iframe>
 :::
 
-::: {.column width="%"}
+::: {.column width="49%"}
 **Table 2**\
-<iframe src="../results/table1_describe_04.html" width="100%" height="500"></iframe>
+<iframe src="../results/table1_describe_04.html" width="100%" height="150"></iframe>
 :::
-
-## Dataset 
 ::: {.column width="49%"}
 **Diseases**\
-<iframe src="../results/table1_describe_02.html" width="100%" height="400"></iframe>
+<iframe src="../results/table1_describe_02.html" width="100%" height="150"></iframe>
 :::
 
 ::: {.column width="49%"}
 **Symptoms**\
-<iframe src="../results/table1_describe_03.html" width="100%" height="400"></iframe>
+<iframe src="../results/table1_describe_03.html" width="100%" height="150"></iframe>
 :::
 ------------------------------------------------------------------------
 
