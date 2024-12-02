@@ -23,12 +23,7 @@ data <- read_tsv("../data/01_dat_load.tsv")
 ### Manage nulls
 
 ```{r}
-
-#Notice that na_if function has to work with the same type of values at the time. For example in this df we have both character and numeric values, so we have to do it in 2 times
-
-
-#The function takes the data (data) and the vector of all the values that we want to be considered as NAs (na_vector). This na_vector should be specified as 
-# c("null", "-"...)
+#Create a function to replace different types of 'null values' to one common NA value on the dataset
 NA_values_replace <- function(data, na_vector){
   data |> 
     mutate(across(where(is.character), ~ case_when 
@@ -38,18 +33,25 @@ NA_values_replace <- function(data, na_vector){
 }
 
 data <- NA_values_replace(data = data, 
-                          na_vector = c("[null]", "/", "-"))
+                          na_vector = c("[null]", 
+                                        "/", 
+                                        "-"))
 ```
 
-Proportions of NA in each column
+### Proportions of NA in each column:
+
+Remove all the columns with more 70% of nulls
 
 ```{r}
-
 #The function takes the data as only argument and return the proportion of NA values of each column in the data 
 NA_prop <- function(data) {
   data |> 
-    summarise(across(everything(), ~ mean(is.na(.)), .names = "{col}")) |> 
-    pivot_longer(everything(), values_to = "na_proportion", names_to = "column")
+    summarise(across(everything(), 
+                     ~ mean(is.na(.)), 
+                     .names = "{col}")) |> 
+    pivot_longer(everything(), 
+                 values_to = "na_proportion", 
+                 names_to = "column")
 }
 
 data_NA_proportion <- NA_prop(data)
@@ -62,32 +64,7 @@ data <- data |>
   select(all_of(columns_to_keep))
 ```
 
-```{r}
-# data <- data |> 
-#   select(-"Pulmonary CT condition",
-#          -"D1 blood routine upon admission",
-#          -"D7 blood routine",
-#          -"Liver enzyme D1",
-#          -"Coagulation index D1",
-#          -"Inflammatory indicator D1",
-#          -"Blood gas analysis",
-#          -"Virus nucleic acid test CT value",
-#          -"D3 time division (3 light, 3 medium, 3 heavy, and 4 critical)",
-#          -"Antiviral drugs (1 nema 0 no)", 
-#          -"Hormones (1 Yes 0 No)", 
-#          -"PCT greater than 0.5",
-#          -"PCT greater than 2", 
-#          -"PCT greater than 10", 
-#          -"Azvudine (1 is 0)",
-#          -"D3 time division (3 light, 3 medium, 3 heavy, and 4 critical)",
-#          -"Immunotherapy (1 Yes 0 No)",
-#          -"Use or D1- initial positive longer than 5d",
-#          -"Age over 65(1,YES; 2, NO)")
-```
-
-### Tidy columns
-
-Rename some columns
+### Rename some columns
 
 ```{r}
 data <- data |> 
@@ -123,7 +100,7 @@ data <- data |>
 
 ### Eliminate Spaces
 
-Lot of the columns of our data frame have names separated by spaces " ", than can bring problems when calling them after. To avoid that, we are going to replace all the spaces in the colnames with "\_"
+Most of the columns of our data frame have names separated by spaces " ", than can bring problems when calling them after. To avoid that, we are going to replace all the spaces in the colnames with "\_"
 
 ```{r}
 data <- data |> 
@@ -132,7 +109,7 @@ data <- data |>
   rename_with(~ gsub(" ", "_", .))
 ```
 
-Eliminate comments written after numerical values and round large decimal values
+### Eliminate comments written after numerical values and round large decimal values
 
 ```{r}
 data <- data |>  
@@ -159,15 +136,13 @@ data <- data |>
     Hormone_usage_days == '4 (40mg)+3 (20mg)+4 (10mg)',
     "11",  # Convertir a carácter
     Hormone_usage_days
-  )
-) |> 
+  )) |> 
   mutate(
   Hormone_usage_days = if_else(
     Hormone_usage_days == '6+',
     "6",  # Convertir a carácter
     Hormone_usage_days
-  )
-) |> 
+  )) |> 
   #Unify the annotation of text value that are express long treatment in different ways to one the same 'long treatment' values
     mutate(
     Hormone_usage_days = if_else(
