@@ -288,7 +288,10 @@ data <- data |>
 
 ```{r}
 data <- data |>
-  pivot_longer(cols = c(`D1_lymphocyte_count[10^9/L]`, `D7_lymphocyte_count[10^9/L]`), names_to = "Lymphocyte_Test_Day", values_to = "Lymphocytes") 
+  mutate(
+    `D1_lymphocyte_copy` = `D1_lymphocyte_count[10^9/L]`,
+    `D7_lymphocyte_copy` = `D7_lymphocyte_count[10^9/L]`) |>
+  pivot_longer(cols = c(`D1_lymphocyte_copy`, `D7_lymphocyte_copy`), names_to = "Lymphocyte_Test_Day", values_to = "Lymphocytes") 
 ```
 
 ### Save files

@@ -92,7 +92,7 @@ data <- data |>
 ```
 
 ```{r}
-  p1 <- ggplot(data |> filter(Lymphocyte_Test_Day == "D7_lymphocyte_count[10^9/L]"), aes(x = Lymphocyte_Test_Day, y = Lymphocytes, color = `Antiviral_drugs_(1_nema_0_no)`)) +
+  p1 <- ggplot(data |> filter(Lymphocyte_Test_Day == "D7_lymphocyte_copy"), aes(x = Lymphocyte_Test_Day, y = Lymphocytes, color = `Antiviral_drugs_(1_nema_0_no)`)) +
   geom_boxplot( alpha = 0.8) + 
   scale_color_manual(
     values = c("Yes" = "#5995ED", "No" = "#DB3069")
@@ -113,7 +113,7 @@ data <- data |>
     legend.position = "top" 
 )
 
-p2 <- ggplot(data |> filter(Lymphocyte_Test_Day == "D7_lymphocyte_count[10^9/L]"), aes(x = Lymphocyte_Test_Day, y = Lymphocytes, color = `Antiviral_drugs_(1_nema_0_no)`)) +
+p2 <- ggplot(data |> filter(Lymphocyte_Test_Day == "D7_lymphocyte_copy"), aes(x = Lymphocyte_Test_Day, y = Lymphocytes, color = `Antiviral_drugs_(1_nema_0_no)`)) +
   geom_boxplot(outlier.shape = NA, alpha = 0.8) + 
   scale_color_manual(
     values = c("Yes" = "#5995ED", "No" = "#DB3069")
@@ -140,7 +140,7 @@ p2 <- ggplot(data |> filter(Lymphocyte_Test_Day == "D7_lymphocyte_count[10^9/L]"
 Muerte con limfocitos graphs
 
 ```{r}
-wilcox_res <- wilcox.test(
+wilcox_res_death <- wilcox.test(
   `Lymphocytes` ~ `Death`,
   data = data
 )
