@@ -5,7 +5,7 @@ format: html
 editor: visual
 ---
 
-## Statistical analysis of Paxlovid effect on Lymphocytes 
+## Statistical analysis of Paxlovid effect on Lymphocytes
 
 ### 1. Check normality
 
@@ -18,10 +18,17 @@ data |>
 Visualization of distribution
 
 ```{r}
-ggplot(data, aes(x = `D7_lymphocyte_count[10^9/L]`)) +
+Lymp_dist <- ggplot(data, aes(x = `D7_lymphocyte_count[10^9/L]`)) +
   geom_histogram(binwidth = 0.5, fill = "skyblue", color = "black") +
-  labs(title = "Distribution of Lymphocyte Levels", x = "Lymphocyte Levels", y = "Count") +
-  theme_minimal()
+  labs(title = "Distribution of Day 7 Lymphocyte Levels [10^9/L]", x = "Lymphocyte Levels", y = "Count") +
+  xlim(0,4)+
+  theme_minimal()+
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  )
+
+ggsave("../results/05_Lymp_distribution.png", plot = Lymp_dist, 
+       width = 10, height = 6, dpi = 300)
 ```
 
 ### 2. Wilcox-test and summary stats
