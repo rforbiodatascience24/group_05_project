@@ -239,7 +239,7 @@ wilcox.test(
 :::
 
 ::: {.column width="49%"}
-<figure>![](../results/05_esimate_size_plot.png)</figure>
+<figure>![](../results/05_Lymp_wilcox1_with_pvalue.png)</figure>
 :::
 :::
 
@@ -265,23 +265,15 @@ wilcox.test(
 :::
 
 ::: {.column width="49%"}
-<figure>![](../results/05_esimate_size_plot.png)</figure>
+<figure>![](../results/05_Lymp_wilcox2_with_pvalue.png)</figure>
 :::
 :::
 
-## Analysis
+------------------------------------------------------------------------
 
-### Paxlovid Exploration
+## Patient Outcome and Lymphocyte Exploration
 
-::: columns
-::: {.column width="50%"}
-<figure>![](images/05_key_plot_6-02.png)</figure>
-:::
-
-::: {.column width="50%"}
-<figure>![](images/05_key_plot_6-02.png)</figure>
-:::
-:::
+<figure>![](../results/05_Lymp_death_withp_single.png){width="2100"}</figure>
 
 ------------------------------------------------------------------------
 
