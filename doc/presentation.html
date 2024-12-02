@@ -340,17 +340,7 @@
 </section>
 <section id="introduction-1" class="slide level2">
 <h2>Introduction</h2>
-<h3 id="covid19">Covid19</h3>
-</section>
-<section id="introduction-2" class="slide level2">
-<h2>Introduction</h2>
-<h3 id="mortality">Mortality</h3>
-</section>
-<section id="introduction-3" class="slide level2">
-<h2>Introduction</h2>
 <h3 id="paxlovid-and-drugs">Paxlovid and drugs</h3>
-
-<img data-src="presentation_files/figure-revealjs/unnamed-chunk-1-1.png" width="960" class="r-stretch"><p>esta foto está aqui solo para que tengamos el codigo de como poner fotos</p>
 </section></section>
 <section>
 <section id="dataset" class="title-slide slide level1 center">
@@ -361,16 +351,16 @@
 <h2>Dataset</h2>
 <p>Quick overview fail, no se como exportar las table 1 para ponerlos aqui</p>
 <p>1/20<br>
-2/20 [unnamed-chunk-7] 3/20<br>
-4/20 [unnamed-chunk-8] 5/20<br>
-6/20 [unnamed-chunk-9] 7/20<br>
-8/20 [unnamed-chunk-10] 9/20<br>
-10/20 [unnamed-chunk-11] 11/20<br>
-12/20 [unnamed-chunk-12] 13/20<br>
-14/20 [unnamed-chunk-13] 15/20<br>
-16/20 [unnamed-chunk-14] 17/20<br>
-18/20 [unnamed-chunk-15] 19/20<br>
-20/20 [unnamed-chunk-16] [1] “04_describe.md”</p>
+2/20 [unnamed-chunk-6] 3/20<br>
+4/20 [unnamed-chunk-7] 5/20<br>
+6/20 [unnamed-chunk-8] 7/20<br>
+8/20 [unnamed-chunk-9] 9/20<br>
+10/20 [unnamed-chunk-10] 11/20<br>
+12/20 [unnamed-chunk-11] 13/20<br>
+14/20 [unnamed-chunk-12] 15/20<br>
+16/20 [unnamed-chunk-13] 17/20<br>
+18/20 [unnamed-chunk-14] 19/20<br>
+20/20 [unnamed-chunk-15] [1] “04_describe.md”</p>
 <div class="Rtable1">
 <table class="Rtable1 caption-top" style="width:100%;" data-quarto-postprocess="true">
 <colgroup>
@@ -1251,6 +1241,178 @@
 </div>
 </div>
 </div>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="results" class="title-slide slide level1 center">
+<h1>Results</h1>
+
+</section>
+<section id="initial-exploration" class="slide level2">
+<h2>Initial Exploration</h2>
+<p>In this section, we examine <span class="fragment highlight-red">key variables</span> to identify patterns and trends related to patient outcomes.</p>
+<div>
+<ul>
+<li>Age Groups</li>
+<li>Antiviral Drug Administered</li>
+<li>Symptoms and Diseases</li>
+<li>CT Severity Scores</li>
+<li>Early Onset Temperature</li>
+</ul>
+</div>
+</section>
+<section id="age-groups" class="slide level2">
+<h2>Age Groups</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<p>Mortality increases significantly with age, particularly amongst patients <span class="fragment highlight-red">older than 80</span>.</p>
+<p><br>
+</p>
+<p><strong>Potential Impact</strong><br>
+Older patients are at a higher risk, suggesting the importance of early and intensive monitoring for this group.</p>
+</div><div class="column" style="width:40%;">
+<figure>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/05_key_plot_1.png"></p>
+<figcaption>Age vs.&nbsp;Patient Outcome</figcaption>
+</figure>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="antiviral-drug-administration-and-patient-outcome">Antiviral Drug Administration and Patient Outcome</h3>
+<div class="columns">
+<div class="column" style="width:60%;">
+<p><span class="fragment highlight-red">Treated patients</span> show lower mortality rates, indicating their effectiveness in managing severe COVID-19 cases.</p>
+<p><br>
+</p>
+<p><strong>Potential Impact</strong><br>
+Timely administration of antiviral drugs could be crucial in mitigating severe outcomes, particularly in patients with high-risk profiles.</p>
+</div><div class="column" style="width:40%;">
+<figure>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/05_key_plot_3.png"></p>
+<figcaption>Antiviral Drug vs Patient Outcome</figcaption>
+</figure>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="symptoms-comorbidities-and-mortality">Symptoms, Comorbidities, and Mortality</h3>
+<h4 id="symptoms">Symptoms</h4>
+<div class="columns">
+<div class="column" style="width:60%;">
+<p>The most common symptoms <span class="fragment highlight-red">Respiratory &amp; Whole Body</span>, display an equal split.</p>
+<p><br>
+</p>
+<p>Less common symptoms <span class="fragment highlight-red">Gastrointestinal, Nervous &amp; Other</span>, appear with high negative outcomes.</p>
+</div><div class="column" style="width:40%;">
+<figure>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/05_key_plot_4.png"></p>
+<figcaption>Symptoms vs.&nbsp;Mortality Rate</figcaption>
+</figure>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="symptoms-comorbidities-and-mortality-1">Symptoms, Comorbidities, and Mortality</h3>
+<h4 id="diseases">Diseases</h4>
+<div class="columns">
+<div class="column" style="width:60%;">
+<p>Underlying diseases such as <span class="fragment highlight-red">Diabetes, Hypertension, &amp; Cardiovascular disease</span> are linked to a higher risk of mortality.</p>
+<p><br>
+</p>
+<p><strong>Potential Impact</strong><br>
+Patients with these comorbidities may require tailored care and closer monitoring to improve outcomes.</p>
+</div><div class="column" style="width:40%;">
+<figure>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/05_key_plot_5.png"></p>
+<figcaption>Diseases vs.&nbsp;Mortality Rate</figcaption>
+</figure>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="ct-severity-scores-and-mortality">CT Severity Scores and Mortality</h3>
+
+<div class="columns">
+<div class="column" style="width:60%;">
+<div>
+<p><span class="fragment highlight-red">Higher CTSS</span> - indicating extensive lung damage, are associated with increased mortality.</p>
+</div>
+<p><br>
+</p>
+<p><strong>Potential Impact</strong><br>
+CT scans can serve as a critical tool for identifying patients who may need more aggressive treatment and care.</p>
+</div><div class="column" style="width:40%;">
+<figure>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/05_key_plot_6.png"></p>
+<figcaption>CT Severity Scores vs.&nbsp;Mortality Rate</figcaption>
+</figure>
+</div>
+</figure>
+</div>
+</div>
+<aside><div>
+<p>CT scans were performed in a progressive manner, to monitor the development of patients’ conditions.</p>
+</div></aside></section>
+<section class="slide level2">
+
+<h3 id="early-onset-temperature-and-mortality">Early Onset Temperature and Mortality</h3>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><span class="fragment highlight-red">Elevated EOT</span> correlate with higher mortality rates, suggesting the need for prompt temperature management.</p>
+<p><br>
+</p>
+<p><strong>Potential Impact</strong><br>
+Effective fever management could be a key component in improving patient outcomes.</p>
+</div><div class="column" style="width:50%;">
+<figure>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="results/05_key_plot_7.png"></p>
+<figcaption>Early Onset Temperature vs.&nbsp;Patient Outcome</figcaption>
+</figure>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="summary-of-initial-findings">Summary of Initial Findings</h3>
+<p><br>
+</p>
+<div>
+<p><strong>Overarching Patterns</strong>:</p>
+<p>Demographic vulnerability, significant impact of comorbidities and symptoms, treatment efficacy, and severity scores.<br>
+</p>
+<p><br>
+<strong>Strategic Takeaways</strong>:</p>
+<p>Targeted interventions are crucial for specific demographics, early antiviral treatment, and managing patients with severe symptoms or high CT scores.</p>
+</div>
 </section></section>
 <section>
 <section id="analysis" class="title-slide slide level1 transition-fade center">
@@ -1267,30 +1429,32 @@
 </ul>
 </div>
 </section>
+<section id="analysis---initial-exploration-of-the-data" class="slide level2">
+<h2>Analysis - Initial exploration of the Data</h2>
+<div>
+<ul>
+<li><div>
+<p>In this section, we examine key variables to identify patterns and trends related to patient outcomes.</p>
+</div></li>
+</ul>
+</div>
+</section>
 <section id="analysis---initial-exploration" class="slide level2">
 <h2>Analysis - Initial exploration</h2>
 <div>
 <ul>
-<li>Initial exploration: What factors we think might be related to the outcome?</li>
-</ul>
-</div>
-</section>
-<section id="analysis---initial-exploration-1" class="slide level2">
-<h2>Analysis - Initial exploration</h2>
-<div>
+<li>In this section, we examine key variables to identify patterns and trends related to patient outcomes.
 <ul>
-<li>Initial exploration: What factors we think might be related to the outcome?
-<ul>
-<li>Age</li>
-<li>symptoms</li>
-<li>time in UCI</li>
-<li>other disease</li>
-<li>extra correlations</li>
+<li>Age Range</li>
+<li>Antiviral Drug Administered</li>
+<li>Symptoms and Diseases</li>
+<li>CT Severity Scores</li>
+<li>Early Onset Temperature</li>
 </ul></li>
 </ul>
 </div>
 </section>
-<section id="analysis---initial-exploration-2" class="slide level2">
+<section id="analysis---initial-exploration-1" class="slide level2">
 <h2>Analysis - Initial exploration</h2>
 <p>What factors we think might be related to the outcome?</p>
 </section>
