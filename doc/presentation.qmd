@@ -7,6 +7,8 @@ format:
     width: 1600
     theme: simple
     transition: none
+    slideNumber: true
+
 editor: visual
 subtite: "A case of study for critically ill patients"
 css: styles.css
@@ -18,55 +20,46 @@ css: styles.css
 
 ::: {style="font-size: 40px;"}
 -   Caused by the [**SARS-CoV-2 virus**]{.fragment .highlight-red}, with varying severity globally.
-- [**Symptoms**]{.fragment .highlight-red} include fever, cough, myalgia, fatigue, and severe respiratory failure in     critical cases.
+-   [**Symptoms**]{.fragment .highlight-red} include: fever, cough, myalgia, fatigue, and severe respiratory failure in critical cases.
 :::
 
-
 ::: nonincremental
-
 **Vaccines and Antiviral drugs**\
 
 -   [**Vaccines**]{.fragment .highlight-red} have reduced the global burden of COVID-19 significantly.
 -   Before widespread vaccination, [**antivirals**]{.fragment .highlight-red} played a key role in severe cases.
--   [**Paxlovid**]{.fragment .highlight-red} (SARS-CoV-2 main protease inhibitor) and [**Azduvine**]{.fragment .highlight-red}  emerged as a promising treatment, reducing severe outcomes and mortality.
-
-
+-   [**Paxlovid**]{.fragment .highlight-red} (SARS-CoV-2 main protease inhibitor) and [**Azduvine**]{.fragment .highlight-red} emerged as a promising treatments, reducing severe outcomes and mortality.
 :::
-
 
 ::: footer
 Article 1 - ScienceDirect\
-Article 2 - PMC]
+Article 2 - PMC\]
 :::
 
-## Dataset
+## Materials - Dataset
 
 ::: {.column width="40%"}
-
 ::: {style="font-size: 39px; text-align: justify;"}
-
 \
 
-- [**Clinical data**]{.fragment .highlight-red} from a medical center in China between December 2022 - January 2023.
-- Dataset with a final number of 123 [**variables**]{.fragment .highlight-red} and 150 [**observations**]{.fragment .highlight-red}.
-- Researchers concluded [**Paxlovid**]{.fragment .highlight-red} significantly improved patient outcomes.
-- [**Our aim**]{.fragment .highlight-red}: Test the conclusion on publicly available data
-- Explore parameters contributing to [**survival**]{.fragment .highlight-red} or [**death**]{.fragment .highlight-red}.
+-   [**Clinical data**]{.fragment .highlight-red} from a medical center in China between December 2022 - January 2023.
+-   Dataset with a final number of 123 [**variables**]{.fragment .highlight-red} and 150 [**observations**]{.fragment .highlight-red}.
+-   Researchers concluded [**Paxlovid**]{.fragment .highlight-red} significantly improved patient outcomes.
+-   [**Our aim**]{.fragment .highlight-red}: Test the conclusion on publicly available data
+-   Explore parameters contributing to [**survival**]{.fragment .highlight-red} or [**death**]{.fragment .highlight-red}.
 :::
 :::
 
 ::: {.column width="27%"}
 **Table 1**\
-<iframe src="../results/table1_describe_01.html" width="100%" height="300"></iframe>
-\
+<iframe src="../results/table1_describe_01.html" width="100%" height="300"></iframe>\
 **Diseases**\
 <iframe src="../results/table1_describe_02.html" width="100%" height="300"></iframe>
 :::
 
 ::: {.column width="28%"}
 **Table 2**\
-<iframe src="../results/table1_describe_04.html" width="100%" height="300"></iframe>
-\
+<iframe src="../results/table1_describe_04.html" width="100%" height="300"></iframe>\
 **Symptoms**\
 <iframe src="../results/table1_describe_03.html" width="100%" height="300"></iframe>
 :::
@@ -75,20 +68,71 @@ Article 2 - PMC]
 
 ## Methodology
 
-### Data Cleaning and Augmenting
+::: row
+::: {.column width="49%"}
+::: fragment
+### Data Clean {style="font-size: 38px;"}
 
--   Clean
--   Augment
+::: nonincremental
+::: {style="font-size: 26px;"}
+
+-⁠ ⁠*Unify* NA values
+
+-⁠ ⁠*Remove* columns with more than 70% NAs
+
+-⁠ ⁠*Modify* names
+
+-⁠ ⁠*Column-specific changes* (removing non-numerical final characters)
+:::
+:::
+:::
+:::
+
+::: {.column width="49%"}
+::: fragment
+### Data Augment {style="font-size: 38px;"}
+
+::: nonincremental
+::: {style="font-size: 26px;"}
+-   ⁠*Change dirty columns* to binary-values columns
+-   ⁠*Change (some) numeric values to more descriptive values*
+-   ⁠*Polish* binary values
+-   ⁠*Create new variables* (Mean_Age, Early/Late_Onset, Sum_Basic_Diseases ...)
+:::
+:::
+:::
+:::
+:::
+
+::: row
+::: {.column width="100%"}
+<figure>![](images/messy_dataset.png)</figure>
+:::
+:::
 
 ------------------------------------------------------------------------
 
-## Methodology
+## Analysis Planning
 
-### Analysis
+::: {.absolute-container style="position: relative; width: 100%; height: 100%;"}
+::: fragment
+### Initial Exploration {style="position: absolute; top: 8%; left: 9%; font-size: 50px;"}
 
--   Data Description
--   Statistical Exploration
--   Most Significant against Paxlovid
+#### What variables we think are more related to the Outcome? {style="position: absolute; top: 15%; left: 1%; font-size: 28px;"}
+:::
+
+::: fragment
+### Statistical Exploration {style="position: absolute; top: 33%; left: 59%; font-size: 50px;"}
+
+#### What variables are statistically more related to the Outcome? {style="position: absolute; top: 40%; left: 50%; font-size: 28px;"}
+:::
+
+::: fragment
+### Paxlovid Exploration {style="position: absolute; top: 62%; left: 30%; font-size: 50px;"}
+
+#### Can we get the same conclusion about the Paxlovid efficacy with this data? {style="position: absolute; top: 69%; left: 17%; font-size: 28px;"}
+:::
+:::
 
 ------------------------------------------------------------------------
 
