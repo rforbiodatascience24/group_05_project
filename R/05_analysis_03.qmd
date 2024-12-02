@@ -152,17 +152,16 @@ print(wilcox_res)
 
 ```{r}
 p1 <- ggplot(data, aes(x = Lymphocyte_Test_Day, y = Lymphocytes, color = Death)) +
-  geom_boxplot(aes(fill = Death), alpha = 0.8) + # Boxplots
+  geom_boxplot(aes(fill = Death), alpha = 0.8) +
   scale_fill_manual(
-    values = c("Yes" = "#5995ED", "No" = "#DB3069"), # Fill colors for Death
-    labels = c("Yes" = "Deceased", "No" = "Survived") # Update legend labels
+    values = c("Yes" = "#5995ED", "No" = "#DB3069"),
+    labels = c("Yes" = "Deceased", "No" = "Survived")
   ) +
   scale_color_manual(
-    values = c("Yes" = "#5995ED", "No" = "#DB3069"), # Color mapping for Death
-    labels = c("Yes" = "Deceased", "No" = "Survived") # Update legend labels
+    values = c("Yes" = "#5995ED", "No" = "#DB3069"),
+    labels = c("Yes" = "Deceased", "No" = "Survived")
   ) +
   labs(
-    title = NULL, # Elimina el título individual
     x = "Lymphocyte_Test_Day",
     y = "Lymphocyte Count [10^9/L]",
     color = "Outcome",
@@ -173,62 +172,58 @@ p1 <- ggplot(data, aes(x = Lymphocyte_Test_Day, y = Lymphocytes, color = Death))
   theme(
     axis.text = element_text(size = 10),
     axis.title = element_text(size = 12),
-    legend.position = "none", # La leyenda será combinada globalmente
-    strip.text = element_blank(), # Elimina los textos de las facetas ("Yes" y "No")
-    plot.margin = margin(t = 10, b = 20, l = 10, r = 10) # Ajusta el margen
+    strip.text = element_blank(), # Removes facet titles
+    plot.margin = margin(t = 10, b = 20, l = 10, r = 10)
   ) +
-  facet_wrap(~Death, scales = "free") # Facet by Death status
+  facet_wrap(~Death, scales = "free")
 
-# Gráfico 2 (p2)
 p2 <- ggplot(data, aes(x = Lymphocyte_Test_Day, y = Lymphocytes, color = Death)) +
-  geom_boxplot(aes(fill = Death), outlier.shape = NA, alpha = 0.8) + # Boxplots
+  geom_boxplot(aes(fill = Death), outlier.shape = NA, alpha = 0.8) +
   scale_fill_manual(
-    values = c("Yes" = "#5995ED", "No" = "#DB3069"), # Fill colors for Death
-    labels = c("Yes" = "Deceased", "No" = "Survived") # Update legend labels
+    values = c("Yes" = "#5995ED", "No" = "#DB3069"),
+    labels = c("Yes" = "Deceased", "No" = "Survived")
   ) +
   scale_color_manual(
-    values = c("Yes" = "#5995ED", "No" = "#DB3069"), # Color mapping for Death
-    labels = c("Yes" = "Deceased", "No" = "Survived") # Update legend labels
+    values = c("Yes" = "#5995ED", "No" = "#DB3069"),
+    labels = c("Yes" = "Deceased", "No" = "Survived")
   ) +
   labs(
-    title = NULL, # Elimina el título individual
     x = "Lymphocyte_Test_Day",
     y = "Lymphocyte Count [10^9/L]",
     color = "Outcome",
     fill = "Outcome"
   ) +
-  scale_y_continuous(limits = c(0, 3)) + # Ajusta los límites del eje Y
+  scale_y_continuous(limits = c(0, 3)) +
   scale_x_discrete(labels = c("D1_LC", "D7_LC")) +
   theme_minimal() +
   theme(
     axis.text = element_text(size = 10),
     axis.title = element_text(size = 12),
-    legend.position = "none", # La leyenda será combinada globalmente
-    strip.text = element_blank(), # Elimina los textos de las facetas ("Yes" y "No")
-    plot.margin = margin(t = 20, b = 10, l = 10, r = 10) # Ajusta el margen
+    strip.text = element_blank(),
+    plot.margin = margin(t = 20, b = 10, l = 10, r = 10)
   ) +
-  facet_wrap(~Death, scales = "free") # Facet by Death status
+  facet_wrap(~Death, scales = "free")
 
-# Combinar los gráficos con un título compartido y leyenda debajo del título
+# Combine the plots with a shared legend
 Lymp_death <- (p1 + p2) +
-  plot_layout(guides = "collect") + # Combina las leyendas
+  plot_layout(guides = "collect") +
   plot_annotation(
-    title = "Lymphocyte Counts on Day 1 and Day 7", # Título compartido
+    title = "Lymphocyte Counts on Day 1 and Day 7",
     theme = theme(
       plot.title = element_text(
-        hjust = 0.5, 
-        size = 16, 
-        margin = margin(b = 5) # Reduce el margen inferior del título
+        hjust = 0.5,
+        size = 16,
+        margin = margin(b = 5)
       )
     )
   ) &
   theme(
-    legend.position = "top", # Ubica la leyenda arriba
-    legend.justification = "center", # Centra la leyenda
-    legend.margin = margin(t = 0, b = 5) # Ajusta el margen superior e inferior de la leyenda
+    legend.position = "top",
+    legend.justification = "center",
+    legend.margin = margin(t = 0, b = 5)
   )
 
-Lymp_death <- (p1 + p2)
+# Save the plot
 ggsave("../results/05_Lymp_death.png", plot = Lymp_death, 
        width = 10, height = 6, dpi = 300)
 ```
