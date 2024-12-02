@@ -1,9 +1,12 @@
 ---
 title: "Clinical data of COVID-19 infected patients"
-author: "Daniel Gil, Luis Martín, Miguel Blanco, Natalia Feced, Xavi Chapatte"
+author: "Group 05 - Daniel Gil, Luis Martín, Miguel Blanco, Natalia Feced, Xavi Chapatte"
 format: 
   revealjs:
-    transition: none # Global default
+    height: 900
+    width: 1600
+    theme: simple
+    transition: none
 editor: visual
 subtite: "A case of study for critically ill patients"
 css: styles.css
@@ -11,290 +14,183 @@ css: styles.css
 
 ## Introduction
 
+**Covid-19**\
+
+::: {style="font-size: 40px;"}
+-   Caused by the [**SARS-CoV-2 virus**]{.fragment .highlight-red}, with varying severity globally.
+- [**Symptoms**]{.fragment .highlight-red} include fever, cough, myalgia, fatigue, and severe respiratory failure in     critical cases.
+:::
+
+
 ::: nonincremental
-::: {style="font-size: 28px;"}
--   Typical symptomatology includes fever, cough, myalgia, fatigue among others. In some cases, it led to aggressive and life-threatening complications with severe respiratory failure.
 
-::: {style="font-size: 28px;"}
--   antiviral treatments played a crucial role in managing the disease, particularly for severe cases. Paxlovid (SARS-CoV-2 main protease inhibitor) emerged as a promising antiviral therapy, with later studies demonstrating that it was highly effective in reducing the risk of severe COVID-19 or mortality. \]{style="font-size: 28px;"}
-:::
+**Vaccines and Antiviral drugs**\
+
+-   [**Vaccines**]{.fragment .highlight-red} have reduced the global burden of COVID-19 significantly.
+-   Before widespread vaccination, [**antivirals**]{.fragment .highlight-red} played a key role in severe cases.
+-   [**Paxlovid**]{.fragment .highlight-red} (SARS-CoV-2 main protease inhibitor) and [**Azduvine**]{.fragment .highlight-red}  emerged as a promising treatment, reducing severe outcomes and mortality.
+
+
 :::
 
-::: {style="margin-top: 50px;"}
-:::
 
-[References:\
-1. [Article 1 - ScienceDirect](https://www.sciencedirect.com/science/article/pii/S1876034124003174?via%3Dihub)\
-2. [Article 2 - PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC9214014/)]{style="font-size: 14px;"}
+::: footer
+Article 1 - ScienceDirect\
+Article 2 - PMC]
 :::
 
 ## Dataset
 
-[Dataset with a final number of 123]{style="font-size: 24px;"}[variables]{.fragment .highlight-red} and 150 [observations]{.fragment .highlight-red}
+::: {.column width="40%"}
 
-::: row
-::: {.column width="49%"}
+::: {style="font-size: 39px; text-align: justify;"}
+
+\
+
+- [**Clinical data**]{.fragment .highlight-red} from a medical center in China between December 2022 - January 2023.
+- Dataset with a final number of 123 [**variables**]{.fragment .highlight-red} and 150 [**observations**]{.fragment .highlight-red}.
+- Researchers concluded [**Paxlovid**]{.fragment .highlight-red} significantly improved patient outcomes.
+- [**Our aim**]{.fragment .highlight-red}: Test the conclusion on publicly available data
+- Explore parameters contributing to [**survival**]{.fragment .highlight-red} or [**death**]{.fragment .highlight-red}.
+:::
+:::
+
+::: {.column width="27%"}
 **Table 1**\
-<iframe src="../results/table1_describe_01.html" width="100%" height="150"></iframe>
-:::
-
-::: {.column width="49%"}
-**Table 2**\
-<iframe src="../results/table1_describe_04.html" width="100%" height="150"></iframe>
-:::
-:::
-
-::: row
-::: {.column width="49%"}
+<iframe src="../results/table1_describe_01.html" width="100%" height="300"></iframe>
+\
 **Diseases**\
-<iframe src="../results/table1_describe_02.html" width="100%" height="150"></iframe>
+<iframe src="../results/table1_describe_02.html" width="100%" height="300"></iframe>
 :::
 
-::: {.column width="49%"}
+::: {.column width="28%"}
+**Table 2**\
+<iframe src="../results/table1_describe_04.html" width="100%" height="300"></iframe>
+\
 **Symptoms**\
-<iframe src="../results/table1_describe_03.html" width="100%" height="150"></iframe>
-:::
+<iframe src="../results/table1_describe_03.html" width="100%" height="300"></iframe>
 :::
 
 ------------------------------------------------------------------------
 
 ## Methodology
 
-```{r, echo=FALSE, results='asis'}
-library (grid)
+### Data Cleaning and Augmenting
 
-img <- png::readPNG("messy_dataset.png")
-grid::grid.raster(img)
-```
+-   Clean
+-   Augment
 
 ------------------------------------------------------------------------
 
-## Results: Initial Exploration
+## Methodology
 
-In this section, we examine [key variables]{.fragment .highlight-red} to identify patterns and trends related to patient outcomes.
+### Analysis
 
-::: nonincremental
--   Age Groups
--   Antiviral Drug Administered
--   Symptoms and Diseases
--   CT Severity Scores
--   Early Onset Temperature
-:::
+-   Data Description
+-   Statistical Exploration
+-   Most Significant against Paxlovid
 
 ------------------------------------------------------------------------
 
-## Results: Age Groups
+## Data Description
 
-::: columns
-::: {.column width="60%"}
-Mortality increases significantly with age, particularly amongst patients [older than 80]{.fragment .highlight-red}.
+### Factors Influencing Mortality: Overview
 
 \
 
-**Potential Impact**\
-Older patients are at a higher risk, suggesting the importance of early and intensive monitoring for this group.
+::: rows
+::: columns
+::: {.column width="33%"}
+<figure>![](images/05_key_plot_1-02.png){width="800"}</figure>
 :::
 
-::: {.column width="40%"}
-![](images/05_key_plot_1.png)
+::: {.column width="33%"}
+<figure>![](images/05_key_plot_3-02.png){width="800"}</figure>
+:::
+
+::: {.column width="33%"}
+<figure>![](images/05_key_plot_7-02.png){width="800"}</figure>
+:::
 :::
 :::
 
 ------------------------------------------------------------------------
 
-### Results: Antiviral Drug Administration and Patient Outcome
+## Data Description
 
-::: columns
-::: {.column width="60%"}
-[Treated patients]{.fragment .highlight-red} show lower mortality rates, indicating their effectiveness in managing severe COVID-19 cases.
+### Factors Influencing Mortality: Overview
 
 \
 
-**Potential Impact**\
-Timely administration of antiviral drugs could be crucial in mitigating severe outcomes, particularly in patients with high-risk profiles.
-:::
-
-::: {.column width="40%"}
-![](images/05_key_plot_3.png)
-:::
-:::
-
-------------------------------------------------------------------------
-
-### Results: Symptoms, Comorbidities, and Mortality
-
-#### Symptoms
-
+::: rows
 ::: columns
-::: {.column width="60%"}
-The most common symptoms [Respiratory & Whole Body]{.fragment .highlight-red}, display an equal split.
-
-\
-
-Less common symptoms [Gastrointestinal, Nervous & Other]{.fragment .highlight-red}, appear with high negative outcomes.
+::: {.column width="33%"}
+<figure>![](images/05_key_plot_4-02.png){width="800"}</figure>
 :::
 
-::: {.column width="40%"}
-![](images/05_key_plot_4.png)
-:::
-:::
-
-------------------------------------------------------------------------
-
-### Results: Symptoms, Comorbidities, and Mortality
-
-#### Diseases
-
-::: columns
-::: {.column width="60%"}
-Underlying diseases such as [Diabetes, Hypertension, & Cardiovascular disease]{.fragment .highlight-red} are linked to a higher risk of mortality.
-
-\
-
-**Potential Impact**\
-Patients with these comorbidities may require tailored care and closer monitoring to improve outcomes.
+::: {.column width="33%"}
+<figure>![](images/05_key_plot_5-02.png){width="800"}</figure>
 :::
 
-::: {.column width="40%"}
-![](images/05_key_plot_5.png)
+::: {.column width="33%"}
+<figure>![](images/05_key_plot_6-02.png){width="800"}</figure>
+:::
 :::
 :::
 
 ------------------------------------------------------------------------
 
-### Results: CT Severity Scores and Mortality
-
-::: aside
-CT scans were performed in a progressive manner, to monitor the development of patients' conditions.
-:::
-
-::: columns
-::: {.column width="60%"}
-::: nonincremental
-[Higher CTSS]{.fragment .highlight-red} - indicating extensive lung damage, are associated with increased mortality.
-:::
-
-\
-
-**Potential Impact**\
-CT scans can serve as a critical tool for identifying patients who may need more aggressive treatment and care.
-:::
-
-::: {.column width="40%"}
-![](images/05_key_plot_6.png)
-:::
-:::
-
-------------------------------------------------------------------------
-
-### Results: Early Onset Temperature and Mortality
+## Data Description
 
 ::: columns
 ::: {.column width="50%"}
-[Elevated EOT]{.fragment .highlight-red} correlate with higher mortality rates, suggesting the need for prompt temperature management.
+### CT Severity Scores
 
-\
-
-**Potential Impact**\
-Effective fever management could be a key component in improving patient outcomes.
+<figure>![](images/05_key_plot_6-02.png){width="400"}</figure>
 :::
 
 ::: {.column width="50%"}
-![](images/05_key_plot_7.png)
+### Early Onset Temperature
+
+<figure>![](images/05_key_plot_7-02.png){width="350"}</figure>
 :::
 :::
 
 ------------------------------------------------------------------------
 
-### Summary of Initial Findings
+## Analysis
+
+------------------------------------------------------------------------
+
+## Analysis
+
+### Paxlovid Exploration
+
+::: columns
+::: {.column width="50%"}
+<figure>![](images/05_key_plot_6-02.png)</figure>
+:::
+
+::: {.column width="50%"}
+<figure>![](images/05_key_plot_6-02.png)</figure>
+:::
+:::
+
+------------------------------------------------------------------------
+
+### Discussion and Conclusion
+
+::: {style="margin-top: 100px;"}
+:::
+
+::: nonincremental
+-   In the dataset no difference can be seen in the outcome regarding the antiviral treatment.
 
 \
 
-::: incremental
-**Overarching Patterns**:
-
-Demographic vulnerability, significant impact of comorbidities and symptoms, treatment efficacy, and severity scores.\
+-   The lymphocyte count in day 7 is the factor that mostly improves survival in the dataset.
 
 \
-**Strategic Takeaways**:
 
-Targeted interventions are crucial for specific demographics, early antiviral treatment, and managing patients with severe symptoms or high CT scores.
+-   The biological problem has to be thought as complex and interconnected, so no easy conclusion can be obtained and more studies may be needed.
 :::
-
-## Analysis {.transition-fade}
-
-::: incremental
--   Initial exploration: What factors we think might be related to the outcome?
--   Statistical exploration: What factors are statistically related to the outcome?
--   Paxlovid exploration: Can we get the same result as the main paper with this data?
-:::
-
-## Analysis - Initial exploration of the Data
-
-::: nonincremental
--   ::: nonincremental
-    In this section, we examine key variables to identify patterns and trends related to patient outcomes.
-    :::
-:::
-
-## Analysis - Initial exploration
-
-::: nonincremental
--   In this section, we examine key variables to identify patterns and trends related to patient outcomes.
-    -   Age Range
-    -   Antiviral Drug Administered
-    -   Symptoms and Diseases
-    -   CT Severity Scores
-    -   Early Onset Temperature
-:::
-
-## Analysis - Initial exploration
-
-What factors we think might be related to the outcome?
-
-## Analysis - Statistical exploration
-
-What factors are statistically related to the outcome?
-
-```{r}
-library(tidyverse)
-#library(knitr)
-
-load("../results/significant_variables.RData")
-significant_variables_direct_corr <- significant_variables |> 
-  arrange(desc(estimate))
-
-significant_variables_inverse_corr <- significant_variables |> 
-  arrange(estimate)
-
-#kable(significant_variables_direct_corr, caption = "Tabla de Estimaciones")
-head(significant_variables_direct_corr, n=10)
-#head(significant_variables_inverse_corr)
-```
-
-## Analysis - Statistical exploration
-
-What factors are statistically related to the outcome?
-
-```{r}
-library(tidyverse)
-library(knitr)
-
-#kable(significant_variables_direct_corr, caption = "Tabla de Estimaciones")
-head(significant_variables_inverse_corr, n=10)
-#head(significant_variables_inverse_corr)
-```
-
-## Analysis - Statistical exploration
-
-Variables with direct correlation
-
-## Analysis - Statistical exploration
-
-Variables with inverse correlation
-
-por aqui tendria pensado poner lo del analisis quitando a la gente con sangradosss, y que nos de pie a explicar todo el tema de la trombosis y tal
-
-## Analysis - Paxoliv exploration
-
-results about paxlovid?

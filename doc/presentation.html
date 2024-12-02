@@ -340,268 +340,174 @@ Daniel Gil, Luis Martín, Miguel Blanco, Natalia Feced, Xavi Chapatte
 </section>
 <section id="introduction" class="slide level2">
 <h2>Introduction</h2>
+<p><strong>Covid-19</strong><br>
+</p>
+<div style="font-size: 40px;">
+<ul>
+<li>Caused by the <span class="fragment highlight-red"><strong>SARS-CoV-2 virus</strong></span>, with varying severity globally.</li>
+<li><span class="fragment highlight-red"><strong>Symptoms</strong></span> include fever, cough, myalgia, fatigue, and severe respiratory failure in critical cases.</li>
+</ul>
+</div>
 <div>
-<div style="font-size: 28px;">
+<p><strong>Vaccines and Antiviral drugs</strong><br>
+</p>
 <ul>
-<li>Typical symptomatology includes fever, cough, myalgia, fatigue among others. In some cases, it led to aggressive and life-threatening complications with severe respiratory failure.</li>
-</ul>
-<div style="font-size: 28px;">
-<ul>
-<li>antiviral treatments played a crucial role in managing the disease, particularly for severe cases. Paxlovid (SARS-CoV-2 main protease inhibitor) emerged as a promising antiviral therapy, with later studies demonstrating that it was highly effective in reducing the risk of severe COVID-19 or mortality. ]{style=“font-size: 28px;”}</li>
+<li><span class="fragment highlight-red"><strong>Vaccines</strong></span> have reduced the global burden of COVID-19 significantly.</li>
+<li>Before widespread vaccination, <span class="fragment highlight-red"><strong>antivirals</strong></span> played a key role in severe cases.</li>
+<li><span class="fragment highlight-red"><strong>Paxlovid</strong></span> (SARS-CoV-2 main protease inhibitor) and <span class="fragment highlight-red"><strong>Azduvine</strong></span> emerged as a promising treatment, reducing severe outcomes and mortality.</li>
 </ul>
 </div>
-</div>
-<div style="margin-top: 50px;">
-
-</div>
-<p><span style="font-size: 14px;">References:<br>
-1. <a href="https://www.sciencedirect.com/science/article/pii/S1876034124003174?via%3Dihub">Article 1 - ScienceDirect</a><br>
-2. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9214014/">Article 2 - PMC</a></span></p>
+<div class="footer">
+<p>Article 1 - ScienceDirect<br>
+Article 2 - PMC]</p>
 </div>
 </section>
 <section id="dataset" class="slide level2">
 <h2>Dataset</h2>
-<p><span style="font-size: 24px;">Dataset with a final number of 123</span><span class="fragment highlight-red">variables</span> and 150 <span class="fragment highlight-red">observations</span></p>
-<div class="row">
-<div class="column" style="width:49%;">
+<div class="column" style="width:40%;">
+<div style="font-size: 39px; text-align: justify;">
+<p><br>
+</p>
+<ul>
+<li><span class="fragment highlight-red"><strong>Clinical data</strong></span> from a medical center in China between December 2022 - January 2023.</li>
+<li>Dataset with a final number of 123 <span class="fragment highlight-red"><strong>variables</strong></span> and 150 <span class="fragment highlight-red"><strong>observations</strong></span>.</li>
+<li>Researchers concluded <span class="fragment highlight-red"><strong>Paxlovid</strong></span> significantly improved patient outcomes.</li>
+<li><span class="fragment highlight-red"><strong>Our aim</strong></span>: Test the conclusion on publicly available data</li>
+<li>Explore parameters contributing to <span class="fragment highlight-red"><strong>survival</strong></span> or <span class="fragment highlight-red"><strong>death</strong></span>.</li>
+</ul>
+</div>
+</div>
+<div class="column" style="width:27%;">
 <p><strong>Table 1</strong><br>
-<iframe src="../results/table1_describe_01.html" width="100%" height="150"></iframe></p>
+<iframe src="../results/table1_describe_01.html" width="100%" height="300"></iframe><br>
+<strong>Diseases</strong><br>
+<iframe src="../results/table1_describe_02.html" width="100%" height="300"></iframe></p>
 </div>
-<div class="column" style="width:49%;">
+<div class="column" style="width:28%;">
 <p><strong>Table 2</strong><br>
-<iframe src="../results/table1_describe_04.html" width="100%" height="150"></iframe></p>
-</div>
-</div>
-<div class="row">
-<div class="column" style="width:49%;">
-<p><strong>Diseases</strong><br>
-<iframe src="../results/table1_describe_02.html" width="100%" height="150"></iframe></p>
-</div>
-<div class="column" style="width:49%;">
-<p><strong>Symptoms</strong><br>
-<iframe src="../results/table1_describe_03.html" width="100%" height="150"></iframe></p>
-</div>
+<iframe src="../results/table1_describe_04.html" width="100%" height="300"></iframe><br>
+<strong>Symptoms</strong><br>
+<iframe src="../results/table1_describe_03.html" width="100%" height="300"></iframe></p>
 </div>
 </section>
 <section id="methodology" class="slide level2">
 <h2>Methodology</h2>
-
-<img data-src="presentation_files/figure-revealjs/unnamed-chunk-1-1.png" width="960" class="r-stretch"></section>
-<section id="results-initial-exploration" class="slide level2">
-<h2>Results: Initial Exploration</h2>
-<p>In this section, we examine <span class="fragment highlight-red">key variables</span> to identify patterns and trends related to patient outcomes.</p>
-<div>
+<h3 id="data-cleaning-and-augmenting">Data Cleaning and Augmenting</h3>
 <ul>
-<li>Age Groups</li>
-<li>Antiviral Drug Administered</li>
-<li>Symptoms and Diseases</li>
-<li>CT Severity Scores</li>
-<li>Early Onset Temperature</li>
+<li>Clean</li>
+<li>Augment</li>
 </ul>
-</div>
 </section>
-<section id="results-age-groups" class="slide level2">
-<h2>Results: Age Groups</h2>
-<div class="columns">
-<div class="column" style="width:60%;">
-<p>Mortality increases significantly with age, particularly amongst patients <span class="fragment highlight-red">older than 80</span>.</p>
+<section id="methodology-1" class="slide level2">
+<h2>Methodology</h2>
+<h3 id="analysis">Analysis</h3>
+<ul>
+<li>Data Description</li>
+<li>Statistical Exploration</li>
+<li>Most Significant against Paxlovid</li>
+</ul>
+</section>
+<section id="data-description" class="slide level2">
+<h2>Data Description</h2>
+<h3 id="factors-influencing-mortality-overview">Factors Influencing Mortality: Overview</h3>
 <p><br>
 </p>
-<p><strong>Potential Impact</strong><br>
-Older patients are at a higher risk, suggesting the importance of early and intensive monitoring for this group.</p>
-</div><div class="column" style="width:40%;">
-<p><img data-src="images/05_key_plot_1.png"></p>
-</div>
-</div>
-</section>
-<section class="slide level2">
-
-<h3 id="results-antiviral-drug-administration-and-patient-outcome">Results: Antiviral Drug Administration and Patient Outcome</h3>
+<div class="rows">
 <div class="columns">
-<div class="column" style="width:60%;">
-<p><span class="fragment highlight-red">Treated patients</span> show lower mortality rates, indicating their effectiveness in managing severe COVID-19 cases.</p>
-<p><br>
-</p>
-<p><strong>Potential Impact</strong><br>
-Timely administration of antiviral drugs could be crucial in mitigating severe outcomes, particularly in patients with high-risk profiles.</p>
-</div><div class="column" style="width:40%;">
-<p><img data-src="images/05_key_plot_3.png"></p>
+<div class="column" style="width:33%;">
+<figure>
+<img data-src="images/05_key_plot_1-02.png" width="800">
+</figure>
+</div><div class="column" style="width:33%;">
+<figure>
+<img data-src="images/05_key_plot_3-02.png" width="800">
+</figure>
+</div><div class="column" style="width:33%;">
+<figure>
+<img data-src="images/05_key_plot_7-02.png" width="800">
+</figure>
 </div>
-</div>
-</section>
-<section class="slide level2">
-
-<h3 id="results-symptoms-comorbidities-and-mortality">Results: Symptoms, Comorbidities, and Mortality</h3>
-<h4 id="symptoms">Symptoms</h4>
-<div class="columns">
-<div class="column" style="width:60%;">
-<p>The most common symptoms <span class="fragment highlight-red">Respiratory &amp; Whole Body</span>, display an equal split.</p>
-<p><br>
-</p>
-<p>Less common symptoms <span class="fragment highlight-red">Gastrointestinal, Nervous &amp; Other</span>, appear with high negative outcomes.</p>
-</div><div class="column" style="width:40%;">
-<p><img data-src="images/05_key_plot_4.png"></p>
 </div>
 </div>
 </section>
-<section class="slide level2">
-
-<h3 id="results-symptoms-comorbidities-and-mortality-1">Results: Symptoms, Comorbidities, and Mortality</h3>
-<h4 id="diseases">Diseases</h4>
-<div class="columns">
-<div class="column" style="width:60%;">
-<p>Underlying diseases such as <span class="fragment highlight-red">Diabetes, Hypertension, &amp; Cardiovascular disease</span> are linked to a higher risk of mortality.</p>
+<section id="data-description-1" class="slide level2">
+<h2>Data Description</h2>
+<h3 id="factors-influencing-mortality-overview-1">Factors Influencing Mortality: Overview</h3>
 <p><br>
 </p>
-<p><strong>Potential Impact</strong><br>
-Patients with these comorbidities may require tailored care and closer monitoring to improve outcomes.</p>
-</div><div class="column" style="width:40%;">
-<p><img data-src="images/05_key_plot_5.png"></p>
+<div class="rows">
+<div class="columns">
+<div class="column" style="width:33%;">
+<figure>
+<img data-src="images/05_key_plot_4-02.png" width="800">
+</figure>
+</div><div class="column" style="width:33%;">
+<figure>
+<img data-src="images/05_key_plot_5-02.png" width="800">
+</figure>
+</div><div class="column" style="width:33%;">
+<figure>
+<img data-src="images/05_key_plot_6-02.png" width="800">
+</figure>
+</div>
 </div>
 </div>
 </section>
-<section class="slide level2">
-
-<h3 id="results-ct-severity-scores-and-mortality">Results: CT Severity Scores and Mortality</h3>
-
-<div class="columns">
-<div class="column" style="width:60%;">
-<div>
-<p><span class="fragment highlight-red">Higher CTSS</span> - indicating extensive lung damage, are associated with increased mortality.</p>
-</div>
-<p><br>
-</p>
-<p><strong>Potential Impact</strong><br>
-CT scans can serve as a critical tool for identifying patients who may need more aggressive treatment and care.</p>
-</div><div class="column" style="width:40%;">
-<p><img data-src="images/05_key_plot_6.png"></p>
-</div>
-</div>
-<aside><div>
-<p>CT scans were performed in a progressive manner, to monitor the development of patients’ conditions.</p>
-</div></aside></section>
-<section class="slide level2">
-
-<h3 id="results-early-onset-temperature-and-mortality">Results: Early Onset Temperature and Mortality</h3>
+<section id="data-description-2" class="slide level2">
+<h2>Data Description</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<p><span class="fragment highlight-red">Elevated EOT</span> correlate with higher mortality rates, suggesting the need for prompt temperature management.</p>
-<p><br>
-</p>
-<p><strong>Potential Impact</strong><br>
-Effective fever management could be a key component in improving patient outcomes.</p>
+<h3 id="ct-severity-scores">CT Severity Scores</h3>
+<figure>
+<img data-src="images/05_key_plot_6-02.png" width="400">
+</figure>
 </div><div class="column" style="width:50%;">
-<p><img data-src="images/05_key_plot_7.png"></p>
+<h3 id="early-onset-temperature">Early Onset Temperature</h3>
+<figure>
+<img data-src="images/05_key_plot_7-02.png" width="350">
+</figure>
+</div>
+</div>
+</section>
+<section id="analysis-1" class="slide level2">
+<h2>Analysis</h2>
+</section>
+<section id="analysis-2" class="slide level2">
+<h2>Analysis</h2>
+<h3 id="paxlovid-exploration">Paxlovid Exploration</h3>
+<div class="columns">
+<div class="column" style="width:50%;">
+<figure>
+<img data-src="images/05_key_plot_6-02.png">
+</figure>
+</div><div class="column" style="width:50%;">
+<figure>
+<img data-src="images/05_key_plot_6-02.png">
+</figure>
 </div>
 </div>
 </section>
 <section class="slide level2">
 
-<h3 id="summary-of-initial-findings">Summary of Initial Findings</h3>
+<h3 id="discussion-and-conclusion">Discussion and Conclusion</h3>
+<div style="margin-top: 100px;">
+
+</div>
+<div>
+<ul>
+<li>In the dataset no difference can be seen in the outcome regarding the antiviral treatment.</li>
+</ul>
 <p><br>
 </p>
-<div>
-<p><strong>Overarching Patterns</strong>:</p>
-<p>Demographic vulnerability, significant impact of comorbidities and symptoms, treatment efficacy, and severity scores.<br>
-</p>
+<ul>
+<li>The lymphocyte count in day 7 is the factor that mostly improves survival in the dataset.</li>
+</ul>
 <p><br>
-<strong>Strategic Takeaways</strong>:</p>
-<p>Targeted interventions are crucial for specific demographics, early antiviral treatment, and managing patients with severe symptoms or high CT scores.</p>
-</div>
-</section>
-<section id="analysis" class="slide level2 transition-fade">
-<h2>Analysis</h2>
-<div>
+</p>
 <ul>
-<li class="fragment">Initial exploration: What factors we think might be related to the outcome?</li>
-<li class="fragment">Statistical exploration: What factors are statistically related to the outcome?</li>
-<li class="fragment">Paxlovid exploration: Can we get the same result as the main paper with this data?</li>
+<li>The biological problem has to be thought as complex and interconnected, so no easy conclusion can be obtained and more studies may be needed.</li>
 </ul>
 </div>
-</section>
-<section id="analysis---initial-exploration-of-the-data" class="slide level2">
-<h2>Analysis - Initial exploration of the Data</h2>
-<div>
-<ul>
-<li><div>
-<p>In this section, we examine key variables to identify patterns and trends related to patient outcomes.</p>
-</div></li>
-</ul>
-</div>
-</section>
-<section id="analysis---initial-exploration" class="slide level2">
-<h2>Analysis - Initial exploration</h2>
-<div>
-<ul>
-<li>In this section, we examine key variables to identify patterns and trends related to patient outcomes.
-<ul>
-<li>Age Range</li>
-<li>Antiviral Drug Administered</li>
-<li>Symptoms and Diseases</li>
-<li>CT Severity Scores</li>
-<li>Early Onset Temperature</li>
-</ul></li>
-</ul>
-</div>
-</section>
-<section id="analysis---initial-exploration-1" class="slide level2">
-<h2>Analysis - Initial exploration</h2>
-<p>What factors we think might be related to the outcome?</p>
-</section>
-<section id="analysis---statistical-exploration" class="slide level2">
-<h2>Analysis - Statistical exploration</h2>
-<p>What factors are statistically related to the outcome?</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 10 × 6
-   variable                        p.value estimate conf.low conf.high  q.value
-   &lt;chr&gt;                             &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
- 1 PT[sec]                        2.19e- 4    1.80     0.920      2.83 1.67e- 3
- 2 Vasoactive_drugs               4.49e-14    1.64     1.23       2.09 4.45e-12
- 3 D3_anticoagulant_dosage_(ml)/d 1.19e- 3    1.19     0.514      1.95 6.95e- 3
- 4 Mechanical_ventilation_days    2.41e- 5    1.15     0.664      1.74 3.41e- 4
- 5 D-Dimer[ng/mL]                 4.37e- 4    0.946    0.480      1.55 2.88e- 3
- 6 Affected_lung_lobes_2          1.14e- 2    0.919    0.315      1.77 3.14e- 2
- 7 CK[U/L]                        7.51e- 3    0.914    0.347      1.69 2.78e- 2
- 8 PCT[ng/mL]                     1.14e- 2    0.893    0.324      1.71 3.14e- 2
- 9 Fever_days                     1.32e- 4    0.884    0.453      1.37 1.19e- 3
-10 ICU_admission                  7.20e- 7    0.870    0.533      1.22 2.37e- 5</code></pre>
-</div>
-</div>
-</section>
-<section id="analysis---statistical-exploration-1" class="slide level2">
-<h2>Analysis - Statistical exploration</h2>
-<p>What factors are statistically related to the outcome?</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 10 × 6
-   variable                          p.value estimate conf.low conf.high q.value
-   &lt;chr&gt;                               &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
- 1 D7_lymphocyte_count[10^9/L]       1.60e-4   -2.99    -4.66    -1.55   1.32e-3
- 2 D7plt[10^9/L]                     2.31e-8   -1.59    -2.19    -1.07   1.15e-6
- 3 BE_D1[mmol/L]                     1.36e-2   -1.23    -2.27    -0.298  3.65e-2
- 4 CT_D1_days_2                      6.37e-6   -1.22    -1.84    -0.747  1.58e-4
- 5 Oxygenation_index_D1[mmHg]        9.08e-5   -1.03    -1.58    -0.543  8.99e-4
- 6 Mask_Oxygen_therapy               8.05e-6   -0.784   -1.14    -0.448  1.59e-4
- 7 Usage_days                        6.12e-3   -0.741   -1.32    -0.257  2.55e-2
- 8 D1_eosinophil_count[10^9/L]       1.12e-2   -0.682   -1.30    -0.233  3.14e-2
- 9 D1plt[10^9/L]                     9.37e-3   -0.442   -0.787   -0.117  2.90e-2
-10 Use_or_D1_initial_positive_time[… 1.92e-2   -0.397   -0.742   -0.0731 4.76e-2</code></pre>
-</div>
-</div>
-</section>
-<section id="analysis---statistical-exploration-2" class="slide level2">
-<h2>Analysis - Statistical exploration</h2>
-<p>Variables with direct correlation</p>
-</section>
-<section id="analysis---statistical-exploration-3" class="slide level2">
-<h2>Analysis - Statistical exploration</h2>
-<p>Variables with inverse correlation</p>
-<p>por aqui tendria pensado poner lo del analisis quitando a la gente con sangradosss, y que nos de pie a explicar todo el tema de la trombosis y tal</p>
-</section>
-<section id="analysis---paxoliv-exploration" class="slide level2">
-<h2>Analysis - Paxoliv exploration</h2>
-<p>results about paxlovid?</p>
 <div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
@@ -784,9 +690,9 @@ Effective fever management could be a key component in improving patient outcome
         // The "normal" size of the presentation, aspect ratio will be preserved
         // when the presentation is scaled to fit different resolutions. Can be
         // specified using percentage units.
-        width: 1050,
+        width: 1600,
 
-        height: 700,
+        height: 900,
 
         // Factor of the display size that should remain empty around the content
         margin: 0.1,
@@ -818,44 +724,6 @@ Effective fever management could be a key component in improving patient outcome
         ]
       });
     </script>
-    
-    <script>
-      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
-      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
-      // slide changes (different for each slide format).
-      (function () {
-        // dispatch for htmlwidgets
-        function fireSlideEnter() {
-          const event = window.document.createEvent("Event");
-          event.initEvent("slideenter", true, true);
-          window.document.dispatchEvent(event);
-        }
-
-        function fireSlideChanged(previousSlide, currentSlide) {
-          fireSlideEnter();
-
-          // dispatch for shiny
-          if (window.jQuery) {
-            if (previousSlide) {
-              window.jQuery(previousSlide).trigger("hidden");
-            }
-            if (currentSlide) {
-              window.jQuery(currentSlide).trigger("shown");
-            }
-          }
-        }
-
-        // hookup for slidy
-        if (window.w3c_slidy) {
-          window.w3c_slidy.add_observer(function (slide_num) {
-            // slide_num starts at position 1
-            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
-          });
-        }
-
-      })();
-    </script>
-
     <script id="quarto-html-after-body" type="application/javascript">
     window.document.addEventListener("DOMContentLoaded", function (event) {
       const toggleBodyColorMode = (bsSheetEl) => {
