@@ -125,55 +125,66 @@ tabledat <- tabledat |>
 ```{r}
 table1_describe_01 <- table1(
   x = ~ Age_range + Hospitalization_days + ICU_hospitalization_days | Outcome,
-  data = tabledat
+  data = tabledat,
+  overall = FALSE
 )
 
-# Guardar el objeto como imagen PNG
-png("table1_describe_01.png", width = 800, height = 600) # Ajusta tamaño según lo necesites
-print(table1_describe_01) # Dibuja la tabla en el dispositivo gráfico
-dev.off() # Cierra el dispositivo gráfico
+output_dir <- "../results"  # Define the relative path to the results folder
+output_file <- file.path(output_dir, "table1_describe_01.html")  # Construct the full file path
+writeLines(as.character(table1_describe_01), output_file)  # Save the table1 object as HTML
+
+
 ```
 
 ### Diseases by outcome
 
 ```{r}
-table1(
+table1_describe_02 <- table1(
   x = ~ Hypertension_disease + Diabetes_disease + CVD_disease + COPD_disease + Cerebrovascular_disease + Chronic_Kidney_disease + Malignant_tumor_disease + Immunodeficiency_disease + Other_disease | Outcome, 
-  data = tabledat
+  data = tabledat,
+  overall = FALSE
 )
+
+output_dir <- "../results"  
+output_file <- file.path(output_dir, "table1_describe_02.html")  
+writeLines(as.character(table1_describe_02), output_file)  
 
 ```
 
 ### Symptoms by outcome
 
 ```{r}
-table1(
+table1_describe_03 <- table1(
   x = ~  Whole_body_symptoms + Respiratory_symptoms + Cardiovascular_symptoms + Other_symptoms + Nervous_symptoms + Gastrointestinal_symptoms| Outcome,
-  data = tabledat
+  data = tabledat,
+  overall = FALSE
 )
+
+output_dir <- "../results"  
+output_file <- file.path(output_dir, "table1_describe_03.html")  
+writeLines(as.character(table1_describe_03), output_file)  
 ```
 
 ### Antiviral drug, CTSS, Charlson index score, fever days and onset vs outcome
 
 ```{r}
-table1(
+table1_describe_04 <- table1(
   x = ~  Antiviral_Drug + CTSS_score_1 + CTSS_score_2 + Fever_days + `Charlson_index[score]` + onset| Outcome, 
-  data = tabledat
+  data = tabledat,
+  overall = FALSE
 )
+
+output_dir <- "../results"  
+output_file <- file.path(output_dir, "table1_describe_04.html")  
+writeLines(as.character(table1_describe_04), output_file)  
 ```
 
 ### Age group, Symptoms and Diseases by Antiviral Drug
 
 ```{r}
-table_describe <- table1(
+table1(
    x = ~ Age_range + Hypertension_disease + Diabetes_disease + CVD_disease + COPD_disease + Cerebrovascular_disease + Chronic_Kidney_disease + Malignant_tumor_disease + Immunodeficiency_disease + Other_disease + Whole_body_symptoms + Respiratory_symptoms + Cardiovascular_symptoms + Other_symptoms + Nervous_symptoms + Gastrointestinal_symptoms| Antiviral_Drug,
   data = tabledat
 )
-table_describe
-```
 
-### Age group, Symptoms and Diseases by Respiratory support treatments.
-
-```{r}
-# A change in data augment is needed to do it
 ```
