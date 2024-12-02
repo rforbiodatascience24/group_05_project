@@ -58,6 +58,18 @@ knit("../R/04_describe.qmd")
 **Symptoms**\
 <iframe src="../results/table1_describe_03.html" width="100%" height="150"></iframe>
 :::
+
+------------------------------------------------------------------------
+
+# Methodology
+
+```{r, echo=FALSE, results='asis'}
+library (grid)
+
+img <- png::readPNG("messy_dataset.png")
+grid::grid.raster(img)
+```
+
 ------------------------------------------------------------------------
 
 # Results
