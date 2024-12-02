@@ -4,14 +4,16 @@ format: html
 editor: visual
 ---
 
-## Load augmented data
+### Load augmented data
 
 ```{r}
 library(table1)
 data <- read_tsv(file = "../data/03_data_augmented.tsv")
 ```
 
-Rename the Death variable to Outcome and Survived/Deceased value for better visulization of the tables
+### Rename column
+
+Rename the Death variable to Outcome and Survived/Deceased value for better visualization of the tables
 
 ```{r}
 data <- data|>
@@ -81,7 +83,7 @@ label(tabledat[["Invasive_Oxygen_therapy"]]) <- "Invasive Oxygen Therapy"
 label(tabledat[["HighFlow_Oxygen_therapy"]]) <- "High Flow Oxygen Therapy"
 ```
 
-## Exclude NA values from tables
+### Exclude NA values from tables
 
 ```{r}
 tabledat <- tabledat |> 
