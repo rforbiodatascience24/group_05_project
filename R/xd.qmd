@@ -78,6 +78,14 @@ ggplot(data_lym, aes(x = Day, y = Lymphocytes, color = Death)) +
     shape = "Paxlovid Consumption",
     fill = "Death"
   ) +
+    scale_fill_manual(
+    values = c("1" = "#5995ED", "0" = "#DB3069"), # Match colors from ages_plot
+    labels = c("1" = "Yes", "0" = "No") # Update Death legend labels
+  ) +
+  scale_color_manual(
+    values = c("1" = "#5995ED", "0" = "#DB3069"), # Match jitter point colors to boxplot fills
+    labels = c("1" = "Yes", "0" = "No") # Update Death legend labels
+  ) +
   scale_y_continuous(limits = c(0, 3)) + # Adjust y-axis limits to match data
   scale_x_discrete(labels = c("D1_LC", "D7_LC")) +
   theme_minimal() +
@@ -87,7 +95,78 @@ ggplot(data_lym, aes(x = Day, y = Lymphocytes, color = Death)) +
     axis.title = element_text(size = 12),
     legend.position = "top"
   ) +
+  facet_wrap(~Death, scales = "free") 
+```
+
+```{r}
+ggplot(data_lym, aes(x = Day, y = Lymphocytes)) +
+  geom_boxplot(aes(fill = as.factor(Death)), outlier.shape = NA, alpha = 0.8) + # Boxplot with colors
+  geom_jitter(aes(color = as.factor(Death), shape = as.factor(`Antiviral_drugs_(1_nema_0_no)`)), 
+              size = 2, alpha = 0.8, position = position_jitter(width = 0.15)) + 
+  stat_summary(fun = median, geom = "text", aes(label = sprintf("%.2f", ..y..)), 
+               position = position_dodge(width = 0.75), vjust = -0.5, color = "black", size = 3) + # Add median values
+  labs(
+    title = "Lymphocyte Counts on Day 1 and Day 7",
+    x = "Day",
+    y = "Lymphocyte Count",
+    color = "Death",
+    shape = "Paxlovid Consumption",
+    fill = "Death"
+  ) +
+  scale_fill_manual(
+    values = c("1" = "#5995ED", "0" = "#DB3069"), # Custom colors for boxplot
+    labels = c("1" = "Yes", "0" = "No") # Custom legend labels
+  ) +
+  scale_color_manual(
+    values = c("1" = "#5995ED", "0" = "#DB3069"), # Custom colors for jitter points
+    labels = c("1" = "Yes", "0" = "No") # Custom legend labels
+  ) +
+  scale_y_continuous(limits = c(0, 3)) + # Adjust y-axis limits
+  scale_x_discrete(labels = c("D1_LC", "D7_LC")) + # Update x-axis labels
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 14),
+    axis.text = element_text(size = 10),
+    axis.title = element_text(size = 12),
+    legend.position = "top"
+  ) +
   facet_wrap(~Death, scales = "free") # Facet by Death status
+
+```
+
+```{r}
+ggplot(data_lym, aes(x = Day, y = Lymphocytes, fill = Death)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.8, color = "black") + # Add black border to boxplots
+  geom_jitter(aes(shape = `Antiviral_drugs_(1_nema_0_no)`), size = 2, alpha = 0.8, position = position_jitter(width = 0.15)) + 
+  stat_summary(fun = median, geom = "text", aes(label = sprintf("%.2f", ..y..)), 
+               position = position_dodge(width = 0.75), vjust = -0.5, color = "black", size = 3) + # Add median values
+  scale_fill_manual(
+    values = c("1" = "#5995ED", "0" = "#DB3069"), # Match colors from ages_plot
+    labels = c("1" = "Deceased", "0" = "Survived") # Update Death legend labels
+  ) +
+  scale_color_manual(
+    values = c("1" = "#5995ED", "0" = "#DB3069"), # Match jitter point colors to boxplot fills
+    labels = c("1" = "Deceased", "0" = "Survived") # Update Death legend labels
+  ) +
+  scale_y_continuous(limits = c(0, 3)) + # Adjust y-axis limits
+  scale_x_discrete(labels = c("D1_LC", "D7_LC")) + # Update x-axis labels
+  labs(
+    title = "Lymphocyte Counts on Day 1 and Day 7",
+    x = "Day",
+    y = "Lymphocyte Count",
+    fill = "Outcome", # Update legend title to match ages_plot
+    color = "Outcome", # Match jitter points legend title to boxplot
+    shape = "Paxlovid Consumption"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 14),
+    axis.text.x = element_text(angle = 45, hjust = 1), # Angle x-axis labels to match ages_plot
+    axis.text = element_text(size = 10),
+    axis.title = element_text(size = 12),
+    legend.position = "top" # Move legend to the top
+  ) +
+  facet_wrap(~Death, scales = "free") # Facet the plot by Death status
 
 ```
 
