@@ -75,8 +75,7 @@ Article 2 - PMC\]
 
 ::: nonincremental
 ::: {style="font-size: 26px;"}
-
--⁠ ⁠*Unify* NA values
+-⁠ ⁠*Unify* missing values notation (NA values)
 
 -⁠ ⁠*Remove* columns with more than 70% NAs
 
@@ -182,17 +181,14 @@ Article 2 - PMC\]
 :::
 :::
 
----
+------------------------------------------------------------------------
 
 ## Analysis
 
 ### Statistical analysis and modelling
 
-
-:::columns
-
+::: columns
 ::: {.column width="49%"}
-
 To examine the relationship between each variable and the outcome, we fit **logistic regression models** and evaluate the estimates. These estimates indicate the strength and direction of association between each variable and the outcome.
 
 \
@@ -215,11 +211,8 @@ results <- data_numeric |>
 :::
 
 ::: {.column width="49%"}
-
 <figure>![](../results/05_esimate_size_plot.png)</figure>
-
 :::
-
 :::
 
 ------------------------------------------------------------------------
@@ -228,14 +221,11 @@ results <- data_numeric |>
 
 ### Statistical analysis and modelling
 
-
-:::columns
-
+::: columns
 ::: {.column width="49%"}
+-   In the logistic regression model, we found that the **Lymphocytes** count at day 7 is the variable that better determines the outcome.
 
-- In the logistic regression model, we found that the **Lymphocytes** count at day 7 is the variable that better determines the outcome.
-
-- Can the treatment with **Paxlovid** modify the Lymphocytes level?
+-   Can the treatment with **Paxlovid** modify the Lymphocytes level?
 
 \
 
@@ -249,26 +239,19 @@ wilcox.test(
 :::
 
 ::: {.column width="49%"}
-
 <figure>![](../results/05_esimate_size_plot.png)</figure>
-
 :::
-
 :::
-
 
 ## Analysis
 
 ### Statistical analysis and modelling
 
-
-:::columns
-
+::: columns
 ::: {.column width="49%"}
+-   In the logistic regression model, we found that the **Lymphocytes** count at day 7 is the variable that better determines the outcome.
 
-- In the logistic regression model, we found that the **Lymphocytes** count at day 7 is the variable that better determines the outcome.
-
-- Can the treatment with **Paxlovid** modify the Lymphocytes level?
+-   Can the treatment with **Paxlovid** modify the Lymphocytes level?
 
 \
 
@@ -282,11 +265,8 @@ wilcox.test(
 :::
 
 ::: {.column width="49%"}
-
 <figure>![](../results/05_esimate_size_plot.png)</figure>
-
 :::
-
 :::
 
 ## Analysis
