@@ -106,9 +106,7 @@ Most of the columns of our data frame have names separated by spaces " ", than c
 data <- data |> 
   #rename_with renames the colnames, use gsub to substitute " " with "_" in all 
   #the columns (.)
-  rename_with(~ gsub(" ", 
-                     "_", 
-                     .))
+  rename_with(~ gsub(" ", "_", .))
 ```
 
 Eliminate comments written after numerical values and round large decimal values
