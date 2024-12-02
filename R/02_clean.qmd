@@ -38,7 +38,9 @@ data <- NA_values_replace(data = data,
                                         "-"))
 ```
 
-Proportions of NA in each column: remove all the columns with more 70% of nulls
+### Proportions of NA in each column:
+
+Remove all the columns with more 70% of nulls
 
 ```{r}
 #The function takes the data as only argument and return the proportion of NA values of each column in the data 
@@ -62,9 +64,7 @@ data <- data |>
   select(all_of(columns_to_keep))
 ```
 
-### Tidy columns
-
-Rename some columns
+### Rename some columns
 
 ```{r}
 data <- data |> 
@@ -100,7 +100,7 @@ data <- data |>
 
 ### Eliminate Spaces
 
-Most of the columns of our data frame have names separated by spaces " ", than can bring problems when calling them after. To avoid that, we are going to replace all the spaces in the colnames with "_"
+Most of the columns of our data frame have names separated by spaces " ", than can bring problems when calling them after. To avoid that, we are going to replace all the spaces in the colnames with "\_"
 
 ```{r}
 data <- data |> 
@@ -109,7 +109,7 @@ data <- data |>
   rename_with(~ gsub(" ", "_", .))
 ```
 
-Eliminate comments written after numerical values and round large decimal values
+### Eliminate comments written after numerical values and round large decimal values
 
 ```{r}
 data <- data |>  
