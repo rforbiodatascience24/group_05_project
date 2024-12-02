@@ -36,7 +36,6 @@ download.file(url,
 library(readxl)
 
 # Read the Excel file
-#No me fio de que funcione siempre pero me ha ido xd
 xlsx_file <- "../_raw/raw_data.xlsx" 
 
 data_tsv <- read_excel(xlsx_file)
@@ -52,7 +51,7 @@ if (!dir.exists(clean_dir)) {
              recursive = TRUE) 
 }
 
-#write tsv data
+# write tsv data
 write.table(data_tsv, 
             file = tsv_file, 
             sep = "\t", 
