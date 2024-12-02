@@ -4,11 +4,15 @@ format: html
 editor: visual
 ---
 
-## Load augmented data
+### Load augmented data
 
 ::: {.cell}
 
 :::
+
+### Rename column
+
+Rename the Death variable to Outcome and Survived/Deceased value for better visualization of the tables
 
 ::: {.cell}
 
@@ -20,7 +24,7 @@ editor: visual
 
 :::
 
-## Exclude NA values from tables
+### Exclude NA values from tables
 
 ::: {.cell}
 
