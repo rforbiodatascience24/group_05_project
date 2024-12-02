@@ -11,8 +11,9 @@ library(table1)
 data <- read_tsv(file = "../data/03_data_augmented.tsv")
 ```
 
+Rename the Death variable to Outcome and Survived/Deceased value for better visulization of the tables
+
 ```{r}
-## TO BE MOVeD TO 03_AUGMENT
 data <- data|>
   rename(
     Outcome = 'Death',
@@ -78,8 +79,6 @@ label(tabledat[["Mask_Oxygen_therapy"]]) <- "Mask Oxygen Therapy"
 label(tabledat[["NonInvasive_Oxygen_therapy"]]) <- "Non-Invasive Oxygen Therapy"
 label(tabledat[["Invasive_Oxygen_therapy"]]) <- "Invasive Oxygen Therapy"
 label(tabledat[["HighFlow_Oxygen_therapy"]]) <- "High Flow Oxygen Therapy"
-
-
 ```
 
 ## Exclude NA values from tables
@@ -132,8 +131,6 @@ table1_describe_01 <- table1(
 output_dir <- "../results"  # Define the relative path to the results folder
 output_file <- file.path(output_dir, "table1_describe_01.html")  # Construct the full file path
 writeLines(as.character(table1_describe_01), output_file)  # Save the table1 object as HTML
-
-
 ```
 
 ### Diseases by outcome
@@ -148,7 +145,6 @@ table1_describe_02 <- table1(
 output_dir <- "../results"  
 output_file <- file.path(output_dir, "table1_describe_02.html")  
 writeLines(as.character(table1_describe_02), output_file)  
-
 ```
 
 ### Symptoms by outcome
@@ -186,5 +182,4 @@ table1(
    x = ~ Age_range + Hypertension_disease + Diabetes_disease + CVD_disease + COPD_disease + Cerebrovascular_disease + Chronic_Kidney_disease + Malignant_tumor_disease + Immunodeficiency_disease + Other_disease + Whole_body_symptoms + Respiratory_symptoms + Cardiovascular_symptoms + Other_symptoms + Nervous_symptoms + Gastrointestinal_symptoms| Antiviral_Drug,
   data = tabledat
 )
-
 ```
