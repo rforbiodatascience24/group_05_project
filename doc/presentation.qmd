@@ -75,13 +75,13 @@ Article 2 - PMC\]
 
 ::: nonincremental
 ::: {style="font-size: 26px;"}
--⁠ ⁠*Unify* missing values notation (NA values)
+-⁠ ⁠**Unify** missing values notation (NA values)
 
--⁠ ⁠*Remove* columns with more than 70% NAs
+-⁠ ⁠**Remove** columns with more than 70% NAs
 
--⁠ ⁠*Modify* names
+-⁠ ⁠**Adjust** variables names
 
--⁠ ⁠*Column-specific changes* (removing non-numerical final characters)
+-⁠ ⁠**Column-specific changes** (removing non-numerical final characters)
 :::
 :::
 :::
