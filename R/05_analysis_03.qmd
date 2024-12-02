@@ -117,7 +117,7 @@ Lymp_wilcox1 <- ggplot(data |> filter(Lymphocyte_Test_Day == "D7_lymphocyte_copy
     "text",
     x = 1, # Ajusta la posición en el eje x
     y = max(data$Lymphocytes, na.rm = TRUE) * 0.95, # Colocar cerca del límite superior del eje y
-    label = paste("Wilcoxon p =", p_value),
+    label = paste("p-value =", p_value),
     size = 5,
     hjust = 0.5,
     color = "black"
@@ -149,7 +149,7 @@ Lymp_wilcox2 <- ggplot(data |> filter(Lymphocyte_Test_Day == "D7_lymphocyte_copy
     "text",
     x = 1, # Ajusta la posición en el eje x
     y = 2.8, # Ajusta la posición en el eje y dentro de los límites establecidos
-    label = paste("Wilcoxon p =", p_value),
+    label = paste("p-value =", p_value),
     size = 5,
     hjust = 0.5,
     color = "black"
@@ -235,7 +235,7 @@ Lymp_death <- (p1 + p2) +
   plot_layout(guides = "collect") +
   plot_annotation(
     title = "Lymphocyte Counts on Day 1 and Day 7",
-    caption = paste("Wilcox p-value =", p_value_death), # Agregar p-valor como subtítulo
+    caption = paste("p-value =", p_value_death), # Agregar p-valor como subtítulo
     theme = theme(
       plot.title = element_text(
         hjust = 0.5,
