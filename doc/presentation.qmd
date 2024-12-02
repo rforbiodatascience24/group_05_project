@@ -38,11 +38,26 @@ knit("../R/04_describe.qmd")
 
 ## Dataset 
 
-::: {.column width="40%"}
+::: {.column width="49%"}
+**Table 1**\
 <iframe src="../results/table1_describe_01.html" width="100%" height="400"></iframe>
 :::
 
+::: {.column width="%"}
+**Table 2**\
+<iframe src="../results/table1_describe_04.html" width="100%" height="500"></iframe>
+:::
 
+## Dataset 
+::: {.column width="49%"}
+**Diseases**\
+<iframe src="../results/table1_describe_02.html" width="100%" height="400"></iframe>
+:::
+
+::: {.column width="49%"}
+**Symptoms**\
+<iframe src="../results/table1_describe_03.html" width="100%" height="400"></iframe>
+:::
 ------------------------------------------------------------------------
 
 # Results
