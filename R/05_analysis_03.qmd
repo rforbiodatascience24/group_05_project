@@ -134,7 +134,9 @@ p2 <- ggplot(data |> filter(Lymphocyte_Test_Day == "D7_lymphocyte_copy"), aes(x 
     legend.position = "top"
   ) 
 
-(p1 + p2)
+Lymp_wilcox <- (p1 + p2)
+ggsave("../results/05_Lymp_wilcox.png", plot = Lymp_wilcox, 
+       width = 10, height = 6, dpi = 300)
 ```
 
 Muerte con limfocitos graphs
@@ -208,7 +210,7 @@ p2 <- ggplot(data, aes(x = Lymphocyte_Test_Day, y = Lymphocytes, color = Death))
   facet_wrap(~Death, scales = "free") # Facet by Death status
 
 # Combinar los gráficos con un título compartido y leyenda debajo del título
-(p1 + p2) +
+Lymp_death <- (p1 + p2) +
   plot_layout(guides = "collect") + # Combina las leyendas
   plot_annotation(
     title = "Lymphocyte Counts on Day 1 and Day 7", # Título compartido
@@ -225,4 +227,8 @@ p2 <- ggplot(data, aes(x = Lymphocyte_Test_Day, y = Lymphocytes, color = Death))
     legend.justification = "center", # Centra la leyenda
     legend.margin = margin(t = 0, b = 5) # Ajusta el margen superior e inferior de la leyenda
   )
+
+Lymp_death <- (p1 + p2)
+ggsave("../results/05_Lymp_wilcox.png", plot = Lymp_death, 
+       width = 10, height = 6, dpi = 300)
 ```
