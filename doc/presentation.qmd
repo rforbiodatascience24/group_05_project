@@ -34,15 +34,30 @@ library(tidyverse)
 library(knitr)
 
 knit("../R/04_describe.qmd")
-
-table_describe
-
 ```
 
-```{r}
-table_describe
-```
+## Dataset 
+<span style="font-size: 24px;">Dataset with a final number of 123 [variables]{.fragment .highlight-red} and 150 [observations]{.fragment .highlight-red}</span>
 
+
+::: {.column width="49%"}
+**Table 1**\
+<iframe src="../results/table1_describe_01.html" width="100%" height="150"></iframe>
+:::
+
+::: {.column width="49%"}
+**Table 2**\
+<iframe src="../results/table1_describe_04.html" width="100%" height="150"></iframe>
+:::
+::: {.column width="49%"}
+**Diseases**\
+<iframe src="../results/table1_describe_02.html" width="100%" height="150"></iframe>
+:::
+
+::: {.column width="49%"}
+**Symptoms**\
+<iframe src="../results/table1_describe_03.html" width="100%" height="150"></iframe>
+:::
 ------------------------------------------------------------------------
 
 # Results
@@ -76,7 +91,15 @@ Older patients are at a higher risk, suggesting the importance of early and inte
 :::
 
 ::: {.column width="40%"}
+<<<<<<< HEAD
+<figure>
+
+![Age vs. Patient Outcome](images/05_key_plot_1.png)
+
+</figure>
+=======
 ![](images/05_key_plot_1.png)
+>>>>>>> 37c1859c0533031f8727e8ee1d92e6ceb4876fc0
 :::
 :::
 
@@ -95,7 +118,15 @@ Timely administration of antiviral drugs could be crucial in mitigating severe o
 :::
 
 ::: {.column width="40%"}
+<<<<<<< HEAD
+<figure>
+
+![Antiviral Drug vs Patient Outcome](images/05_key_plot_3.png)
+
+</figure>
+=======
 ![](images/05_key_plot_3.png)
+>>>>>>> 37c1859c0533031f8727e8ee1d92e6ceb4876fc0
 :::
 :::
 
@@ -115,7 +146,15 @@ Less common symptoms [Gastrointestinal, Nervous & Other]{.fragment .highlight-re
 :::
 
 ::: {.column width="40%"}
+<<<<<<< HEAD
+<figure>
+
+![Symptoms vs. Mortality Rate](images/05_key_plot_4.png)
+
+</figure>
+=======
 ![](images/05_key_plot_4.png)
+>>>>>>> 37c1859c0533031f8727e8ee1d92e6ceb4876fc0
 :::
 :::
 
@@ -136,7 +175,15 @@ Patients with these comorbidities may require tailored care and closer monitorin
 :::
 
 ::: {.column width="40%"}
+<<<<<<< HEAD
+<figure>
+
+![Diseases vs. Mortality Rate](images/05_key_plot_5.png)
+
+</figure>
+=======
 ![](images/05_key_plot_5.png)
+>>>>>>> 37c1859c0533031f8727e8ee1d92e6ceb4876fc0
 :::
 :::
 
@@ -161,7 +208,15 @@ CT scans can serve as a critical tool for identifying patients who may need more
 :::
 
 ::: {.column width="40%"}
+<<<<<<< HEAD
+<figure>
+
+![CT Severity Scores vs. Mortality Rate](images/05_key_plot_6.png)
+
+</figure>
+=======
 ![](images/05_key_plot_6.png)
+>>>>>>> 37c1859c0533031f8727e8ee1d92e6ceb4876fc0
 :::
 :::
 
@@ -180,7 +235,19 @@ Effective fever management could be a key component in improving patient outcome
 :::
 
 ::: {.column width="50%"}
+<<<<<<< HEAD
 ![](images/05_key_plot_7-01.png)
+=======
+<<<<<<< HEAD
+<figure>
+
+![Early Onset Temperature vs. Patient Outcome](results/05_key_plot_7.png)
+
+</figure>
+=======
+![](images/05_key_plot_7.png)
+>>>>>>> 37c1859c0533031f8727e8ee1d92e6ceb4876fc0
+>>>>>>> 283d5b002cc4b473c9fbf90184b1164b839e9754
 :::
 :::
 
