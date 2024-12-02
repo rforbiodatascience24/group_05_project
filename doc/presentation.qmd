@@ -180,7 +180,7 @@ Effective fever management could be a key component in improving patient outcome
 :::
 
 ::: {.column width="50%"}
-![](images/05_key_plot_7.png)
+![](images/05_key_plot_7-01.png)
 :::
 :::
 
