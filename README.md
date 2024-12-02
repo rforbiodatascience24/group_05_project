@@ -18,7 +18,7 @@ s243284, mblanco387
 
 Click the following link to access the presentation:
 
-[Presentation](https://raw.githack.com/rforbiodatascience24/group_07_project/main/doc/presentation.html)
+[Presentation](https://raw.githack.com/rforbiodatascience24/group_05_project/main/doc/presentation.html#/title-slide)
 
 # Data Retrieval
 
