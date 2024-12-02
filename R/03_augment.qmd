@@ -7,7 +7,7 @@ editor: visual
 ## Load clean data
 
 ```{r}
-data <- read_tsv(file = "../data/02_dat_clean.tsv")
+data <- read_tsv(file = "../data/02_dat_clean.tsv", show_col_types = FALSE)
 ```
 
 ### Change the ages ranges from 5-years to 10-years
@@ -277,6 +277,13 @@ data <- data |>
   relocate(ICU_admission, .after = ICU_hospitalization_days)
 ```
 
+### Set death as a Categorical variable
+
+```{r}
+data <- data |> 
+  mutate(Death = as.factor(Death))
+```
+
 ### Save files
 
 ```{r}
@@ -291,3 +298,5 @@ if (!dir.exists(clean_dir)) {
 #write tsv data
 write.table(data, file = tsv_file, sep = "\t", row.names = FALSE)
 ```
+
+### 

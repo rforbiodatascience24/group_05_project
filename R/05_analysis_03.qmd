@@ -30,7 +30,6 @@ Summary statistics
 
 ```{r}
 
-
 lymph_stats <- data |> 
   group_by(`Antiviral_drugs_(1_nema_0_no)`) |> 
   summarise(
