@@ -39,34 +39,34 @@ process_dirty_cols <- function(data, column, rename_map) {
     mutate(
       !!column_sym := str_replace_all(!!column_sym, "([^a-zA-Z()]*).*", "\\1")
     ) |>  
-    # Crear varias filas para cada valor en la columna separada por comas o signos +
+    # create rows for each diferent value in the column separated by the sig ',' or '+'
     separate_rows({{ column }}, sep = "[,+]") |> 
-    # Asegurarse de que los valores sean numéricos, asignando 0 si no lo son
+    # make sure values are numerical, asigning 0 if not
     mutate({{ column }} := as.numeric({{ column }})) |> 
-    # Expandir las filas a columnas con indicadores binarios
+    # expand the rows to columns with binary indicators
     pivot_wider(
       names_from = {{ column }}, 
-      names_prefix = "temp_prefix_",
+      names_prefix = "temp_prefix_", #temporal prefix to identify the new created columns
       values_from = {{ column }}, 
       values_fn = ~1, 
       values_fill = 0
     )
   
-  # Si la columna 'temp_prefix_NA' existe, filtrar sus valores
+  # if 'temp_prefix_NA', write NA values on the all the columns for that row
   if ("temp_prefix_NA" %in% names(data_processed)) {
     data_processed <- data_processed |> 
       mutate(across(starts_with("temp_prefix_"), ~if_else(temp_prefix_NA == 1, NA, .))) |> 
       select(-any_of(c("temp_prefix_NA", "temp_prefix_0")))
   } else {
-    # Si no existe, simplemente eliminamos la columna 'temp_prefix_0' (si está presente)
+    # if 'temp_prefix_NA' doesn't exist, remove 'temp_prefix_0'
     data_processed <- data_processed |> 
       select(-any_of(c("temp_prefix_0")))
   }
   
-  # Renombrar columnas según el mapa proporcionado
+  # Renname the columns with the rename map
   data_processed <- data_processed |> 
     rename_with(
-      ~gsub(paste0("^", "temp_prefix_"), "", .),  # Elimina el prefijo "temp_prefix_" si está presente
+      ~gsub(paste0("^", "temp_prefix_"), "", .),  # take out the temporal prefix 'temp_prefix'
       starts_with("temp_prefix_")
     ) |> 
     rename_with(~ case_when(
@@ -78,7 +78,7 @@ process_dirty_cols <- function(data, column, rename_map) {
 }
 ```
 
-Change the dirty columns
+Change the dirty columns with the previous function
 
 ```{r}
 #Basic_disease column
@@ -93,6 +93,7 @@ rename_map <- c(
   "8" = "Other_disease",
   "9" = "Chronic_Kidney_disease"
 )
+
 data <- process_dirty_cols(data, Basic_diseases, rename_map)
 
 #Symptoms column
@@ -104,6 +105,7 @@ rename_map <- c(
   "5" = "Gastrointestinal_symptoms",
   "6" = "Other_symptoms"
 )
+
 data <- process_dirty_cols(data, Symptoms, rename_map)
 
 #D1_oxygen_therapy_mode
@@ -114,6 +116,7 @@ rename_map <- c(
   "4" = "Invasive_Oxygen_therapy",
   "5" = "ECMO"
 )
+
 data <- process_dirty_cols(data, D1_oxygen_therapy_mode, rename_map)
 
 #Bleeding_events
@@ -122,7 +125,9 @@ rename_map <- c(
   "1" = "Digestive_track",
   "2" = "Bleeding_event_Respiratory_track",
   "3" = "Bleeding_event_Skin",
-  "4" = "Bleeding_event_Other")
+  "4" = "Bleeding_event_Other"
+  )
+
 data <- process_dirty_cols(data, Bleeding_events, rename_map)
 ```
 
@@ -206,6 +211,8 @@ data <- data |>
 ```
 
 ### Age mean column
+
+Create a new column called 'Age_mean' with the mean values for every range of age group, so this numeric number can be used for later analysis
 
 ```{r}
 data <- data |> 
