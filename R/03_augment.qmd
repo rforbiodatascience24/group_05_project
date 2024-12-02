@@ -284,6 +284,16 @@ data <- data |>
   mutate(Death = as.factor(Death))
 ```
 
+```{r}
+data_lym <- data_lym |>
+  pivot_longer(cols = c(`D1_lymphocyte_count[10^9/L]`, `D7_lymphocyte_count[10^9/L]`), names_to = "Day", values_to = "Lymphocytes") |>
+  mutate(`Antiviral_drugs_(1_nema_0_no)` = factor(
+    `Antiviral_drugs_(1_nema_0_no)`, 
+    levels = c(0,1),
+    labels = c("No", "Yes"))) |>
+  mutate(Death = factor(Death, levels = c(0, 1), labels = c("No", "Yes")))
+```
+
 ### Save files
 
 ```{r}
