@@ -7,21 +7,32 @@ editor: visual
 
 ## Statistical analysis of Paxlovid effect on Lymphocytes
 
-```{r}
+
+```r
 data <- read_tsv(file = "../data/03_data_augmented.tsv", show_col_types = FALSE)
 ```
 
 ### 1. Check normality
 
-```{r}
+
+```r
 data |>
   pull(`D7_lymphocyte_count[10^9/L]`) |> 
   shapiro.test()
 ```
 
+```
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  pull(data, `D7_lymphocyte_count[10^9/L]`)
+## W = 0.27212, p-value < 2.2e-16
+```
+
 Visualization of distribution
 
-```{r}
+
+```r
 Lymp_dist <- ggplot(data, aes(x = `D7_lymphocyte_count[10^9/L]`)) +
   geom_histogram(binwidth = 0.5, fill = "skyblue", color = "black") +
   labs(title = "Distribution of Day 7 Lymphocyte Levels [10^9/L]", x = "Lymphocyte Levels", y = "Count") +
@@ -35,12 +46,20 @@ ggsave("../results/05_Lymp_distribution.png", plot = Lymp_dist,
        width = 10, height = 6, dpi = 300)
 ```
 
+```
+## Warning: Removed 24 rows containing non-finite outside the scale range (`stat_bin()`).
+```
+
+```
+## Warning: Removed 2 rows containing missing values or values outside the scale range (`geom_bar()`).
+```
+
 ### 2. Wilcox-test and summary stats
 
 Summary statistics
 
-```{r}
 
+```r
 lymph_stats <- data |> 
   group_by(`Antiviral_drugs_(1_nema_0_no)`) |> 
   summarise(
@@ -55,7 +74,8 @@ lymph_stats <- data |>
 
 Wilcox test
 
-```{r}
+
+```r
 wilcox_res <- wilcox.test(
   `D7_lymphocyte_count[10^9/L]` ~ `Antiviral_drugs_(1_nema_0_no)`,
   data = data
@@ -64,7 +84,17 @@ wilcox_res <- wilcox.test(
 print(wilcox_res)
 ```
 
-```{r}
+```
+## 
+## 	Wilcoxon rank sum test with continuity correction
+## 
+## data:  D7_lymphocyte_count[10^9/L] by Antiviral_drugs_(1_nema_0_no)
+## W = 13406, p-value = 8.082e-06
+## alternative hypothesis: true location shift is not equal to 0
+```
+
+
+```r
 p1 <- ggplot(data = data,
        mapping = aes(x = `Antiviral_drugs_(1_nema_0_no)`,
                      y = `D1_lymphocyte_count[10^9/L]`)) +
@@ -82,7 +112,28 @@ p2 <- ggplot(data = data |> filter(`D7_lymphocyte_count[10^9/L]` < 15),
 p1+p2
 ```
 
-```{r}
+```
+## Warning: Continuous x aesthetic
+## ℹ did you forget `aes(group = ...)`?
+```
+
+```
+## Warning: Removed 8 rows containing non-finite outside the scale range (`stat_boxplot()`).
+```
+
+```
+## Warning: Continuous x aesthetic
+## ℹ did you forget `aes(group = ...)`?
+```
+
+```
+## Warning: Removed 10 rows containing non-finite outside the scale range (`stat_boxplot()`).
+```
+
+![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png)
+
+
+```r
 data <- data |>  
   mutate(`Antiviral_drugs_(1_nema_0_no)` = factor(
     `Antiviral_drugs_(1_nema_0_no)`, 
@@ -91,7 +142,8 @@ data <- data |>
   mutate(Death = factor(Death, levels = c(0, 1), labels = c("No", "Yes")))
 ```
 
-```{r}
+
+```r
   p1 <- ggplot(data |> filter(Lymphocyte_Test_Day == "D7_lymphocyte_copy"), aes(x = Lymphocyte_Test_Day, y = Lymphocytes, color = `Antiviral_drugs_(1_nema_0_no)`)) +
   geom_boxplot( alpha = 0.8) + 
   scale_color_manual(
@@ -139,9 +191,18 @@ ggsave("../results/05_Lymp_wilcox.png", plot = Lymp_wilcox,
        width = 10, height = 6, dpi = 300)
 ```
 
+```
+## Warning: Removed 10 rows containing non-finite outside the scale range (`stat_boxplot()`).
+```
+
+```
+## Warning: Removed 13 rows containing non-finite outside the scale range (`stat_boxplot()`).
+```
+
 Muerte con limfocitos graphs
 
-```{r}
+
+```r
 wilcox_res_death <- wilcox.test(
   `Lymphocytes` ~ `Death`,
   data = data
@@ -150,7 +211,17 @@ wilcox_res_death <- wilcox.test(
 print(wilcox_res)
 ```
 
-```{r}
+```
+## 
+## 	Wilcoxon rank sum test with continuity correction
+## 
+## data:  D7_lymphocyte_count[10^9/L] by Antiviral_drugs_(1_nema_0_no)
+## W = 13406, p-value = 8.082e-06
+## alternative hypothesis: true location shift is not equal to 0
+```
+
+
+```r
 p1 <- ggplot(data, aes(x = Lymphocyte_Test_Day, y = Lymphocytes, color = Death)) +
   geom_boxplot(aes(fill = Death), alpha = 0.8) + # Boxplots
   scale_fill_manual(
@@ -229,6 +300,14 @@ Lymp_death <- (p1 + p2) +
   )
 
 Lymp_death <- (p1 + p2)
-ggsave("../results/05_Lymp_death.png", plot = Lymp_death, 
+ggsave("../results/05_Lymp_wilcox.png", plot = Lymp_death, 
        width = 10, height = 6, dpi = 300)
+```
+
+```
+## Warning: Removed 10 rows containing non-finite outside the scale range (`stat_boxplot()`).
+```
+
+```
+## Warning: Removed 14 rows containing non-finite outside the scale range (`stat_boxplot()`).
 ```

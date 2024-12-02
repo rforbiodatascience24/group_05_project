@@ -43,7 +43,17 @@ knit("03_augment.qmd")
 ### Description and Analysis
 
 ```{r}
+knit("04_describe.qmd")
+```
+
+```{r}
 knit("05_analysis_01.qmd")
-knit("Plots.qmd")
-#xd
+```
+
+```{r}
+knit("05_analysis_02.qmd")
+```
+
+```{r}
+knit("05_analysis_03.qmd")
 ```
