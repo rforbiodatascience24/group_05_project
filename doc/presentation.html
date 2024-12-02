@@ -10,6 +10,7 @@
 <link href="presentation_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.4.555">
 
+  <meta name="author" content="Daniel Gil, Luis Martín, Miguel Blanco, Natalia Feced, Xavi Chapatte">
   <title>Clinical data of COVID-19 infected patients</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -320,7 +321,6 @@
       margin-right: 0; 
     }
   </style>
-  <link href="presentation_files/libs/table1-1.0/table1_defaults.css" rel="stylesheet">
 </head>
 <body class="quarto-light">
   <div class="reveal">
@@ -330,40 +330,39 @@
   <h1 class="title">Clinical data of COVID-19 infected patients</h1>
 
 <div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Daniel Gil, Luis Martín, Miguel Blanco, Natalia Feced, Xavi Chapatte 
+</div>
+</div>
 </div>
 
 </section>
-<section>
-<section id="introduction" class="title-slide slide level1 center" data-background-image="background.avif">
-<h1>Introduction</h1>
-<p>(igual aqui habria que poner los nombres o algo supongo)</p>
-</section>
-<section id="introduction-1" class="slide level2">
+<section id="introduction" class="slide level2">
 <h2>Introduction</h2>
-<h3 id="paxlovid-and-drugs">Paxlovid and drugs</h3>
-</section></section>
-<section>
-<section id="dataset" class="title-slide slide level1 center">
-<h1>Dataset</h1>
+<div>
+<div style="font-size: 28px;">
+<ul>
+<li>Typical symptomatology includes fever, cough, myalgia, fatigue among others. In some cases, it led to aggressive and life-threatening complications with severe respiratory failure.</li>
+</ul>
+<div style="font-size: 28px;">
+<ul>
+<li>antiviral treatments played a crucial role in managing the disease, particularly for severe cases. Paxlovid (SARS-CoV-2 main protease inhibitor) emerged as a promising antiviral therapy, with later studies demonstrating that it was highly effective in reducing the risk of severe COVID-19 or mortality. ]{style=“font-size: 28px;”}</li>
+</ul>
+</div>
+</div>
+<div style="margin-top: 50px;">
 
+</div>
+<p><span style="font-size: 14px;">References:<br>
+1. <a href="https://www.sciencedirect.com/science/article/pii/S1876034124003174?via%3Dihub">Article 1 - ScienceDirect</a><br>
+2. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9214014/">Article 2 - PMC</a></span></p>
+</div>
 </section>
-<section id="dataset-1" class="slide level2">
+<section id="dataset" class="slide level2">
 <h2>Dataset</h2>
-<p>Quick overview fail, no se como exportar las table 1 para ponerlos aqui</p>
-<p>1/18<br>
-2/18 [unnamed-chunk-5] 3/18<br>
-4/18 [unnamed-chunk-6] 5/18<br>
-6/18 [unnamed-chunk-7] 7/18<br>
-8/18 [unnamed-chunk-8] 9/18<br>
-10/18 [unnamed-chunk-9] 11/18<br>
-12/18 [unnamed-chunk-10] 13/18<br>
-14/18 [unnamed-chunk-11] 15/18<br>
-16/18 [unnamed-chunk-12] 17/18<br>
-18/18 [unnamed-chunk-13] [1] “04_describe.md”</p>
-</section>
-<section id="dataset-2" class="slide level2">
-<h2>Dataset</h2>
-<p><span style="font-size: 24px;">Dataset with a final number of 123 <span class="fragment highlight-red">variables</span> and 150 <span class="fragment highlight-red">observations</span></span></p>
+<p><span style="font-size: 24px;">Dataset with a final number of 123</span><span class="fragment highlight-red">variables</span> and 150 <span class="fragment highlight-red">observations</span></p>
+<div class="row">
 <div class="column" style="width:49%;">
 <p><strong>Table 1</strong><br>
 <iframe src="../results/table1_describe_01.html" width="100%" height="150"></iframe></p>
@@ -372,6 +371,8 @@
 <p><strong>Table 2</strong><br>
 <iframe src="../results/table1_describe_04.html" width="100%" height="150"></iframe></p>
 </div>
+</div>
+<div class="row">
 <div class="column" style="width:49%;">
 <p><strong>Diseases</strong><br>
 <iframe src="../results/table1_describe_02.html" width="100%" height="150"></iframe></p>
@@ -380,17 +381,10 @@
 <p><strong>Symptoms</strong><br>
 <iframe src="../results/table1_describe_03.html" width="100%" height="150"></iframe></p>
 </div>
+</div>
 </section>
-<section class="slide level2">
-
-</section></section>
-<section>
-<section id="results" class="title-slide slide level1 center">
-<h1>Results</h1>
-
-</section>
-<section id="initial-exploration" class="slide level2">
-<h2>Initial Exploration</h2>
+<section id="results-initial-exploration" class="slide level2">
+<h2>Results: Initial Exploration</h2>
 <p>In this section, we examine <span class="fragment highlight-red">key variables</span> to identify patterns and trends related to patient outcomes.</p>
 <div>
 <ul>
@@ -402,8 +396,8 @@
 </ul>
 </div>
 </section>
-<section id="age-groups" class="slide level2">
-<h2>Age Groups</h2>
+<section id="results-age-groups" class="slide level2">
+<h2>Results: Age Groups</h2>
 <div class="columns">
 <div class="column" style="width:60%;">
 <p>Mortality increases significantly with age, particularly amongst patients <span class="fragment highlight-red">older than 80</span>.</p>
@@ -412,22 +406,13 @@
 <p><strong>Potential Impact</strong><br>
 Older patients are at a higher risk, suggesting the importance of early and intensive monitoring for this group.</p>
 </div><div class="column" style="width:40%;">
-&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
-<figure>
-<div class="quarto-figure quarto-figure-center">
-<figure>
 <p><img data-src="images/05_key_plot_1.png"></p>
-<figcaption>Age vs.&nbsp;Patient Outcome</figcaption>
-</figure>
-</div>
-</figure>
-<p>======= <img data-src="images/05_key_plot_1.png"> &gt;&gt;&gt;&gt;&gt;&gt;&gt; 37c1859c0533031f8727e8ee1d92e6ceb4876fc0</p>
 </div>
 </div>
 </section>
 <section class="slide level2">
 
-<h3 id="antiviral-drug-administration-and-patient-outcome">Antiviral Drug Administration and Patient Outcome</h3>
+<h3 id="results-antiviral-drug-administration-and-patient-outcome">Results: Antiviral Drug Administration and Patient Outcome</h3>
 <div class="columns">
 <div class="column" style="width:60%;">
 <p><span class="fragment highlight-red">Treated patients</span> show lower mortality rates, indicating their effectiveness in managing severe COVID-19 cases.</p>
@@ -436,22 +421,13 @@ Older patients are at a higher risk, suggesting the importance of early and inte
 <p><strong>Potential Impact</strong><br>
 Timely administration of antiviral drugs could be crucial in mitigating severe outcomes, particularly in patients with high-risk profiles.</p>
 </div><div class="column" style="width:40%;">
-&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
-<figure>
-<div class="quarto-figure quarto-figure-center">
-<figure>
 <p><img data-src="images/05_key_plot_3.png"></p>
-<figcaption>Antiviral Drug vs Patient Outcome</figcaption>
-</figure>
-</div>
-</figure>
-<p>======= <img data-src="images/05_key_plot_3.png"> &gt;&gt;&gt;&gt;&gt;&gt;&gt; 37c1859c0533031f8727e8ee1d92e6ceb4876fc0</p>
 </div>
 </div>
 </section>
 <section class="slide level2">
 
-<h3 id="symptoms-comorbidities-and-mortality">Symptoms, Comorbidities, and Mortality</h3>
+<h3 id="results-symptoms-comorbidities-and-mortality">Results: Symptoms, Comorbidities, and Mortality</h3>
 <h4 id="symptoms">Symptoms</h4>
 <div class="columns">
 <div class="column" style="width:60%;">
@@ -460,22 +436,13 @@ Timely administration of antiviral drugs could be crucial in mitigating severe o
 </p>
 <p>Less common symptoms <span class="fragment highlight-red">Gastrointestinal, Nervous &amp; Other</span>, appear with high negative outcomes.</p>
 </div><div class="column" style="width:40%;">
-&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
-<figure>
-<div class="quarto-figure quarto-figure-center">
-<figure>
 <p><img data-src="images/05_key_plot_4.png"></p>
-<figcaption>Symptoms vs.&nbsp;Mortality Rate</figcaption>
-</figure>
-</div>
-</figure>
-<p>======= <img data-src="images/05_key_plot_4.png"> &gt;&gt;&gt;&gt;&gt;&gt;&gt; 37c1859c0533031f8727e8ee1d92e6ceb4876fc0</p>
 </div>
 </div>
 </section>
 <section class="slide level2">
 
-<h3 id="symptoms-comorbidities-and-mortality-1">Symptoms, Comorbidities, and Mortality</h3>
+<h3 id="results-symptoms-comorbidities-and-mortality-1">Results: Symptoms, Comorbidities, and Mortality</h3>
 <h4 id="diseases">Diseases</h4>
 <div class="columns">
 <div class="column" style="width:60%;">
@@ -485,22 +452,13 @@ Timely administration of antiviral drugs could be crucial in mitigating severe o
 <p><strong>Potential Impact</strong><br>
 Patients with these comorbidities may require tailored care and closer monitoring to improve outcomes.</p>
 </div><div class="column" style="width:40%;">
-&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
-<figure>
-<div class="quarto-figure quarto-figure-center">
-<figure>
 <p><img data-src="images/05_key_plot_5.png"></p>
-<figcaption>Diseases vs.&nbsp;Mortality Rate</figcaption>
-</figure>
-</div>
-</figure>
-<p>======= <img data-src="images/05_key_plot_5.png"> &gt;&gt;&gt;&gt;&gt;&gt;&gt; 37c1859c0533031f8727e8ee1d92e6ceb4876fc0</p>
 </div>
 </div>
 </section>
 <section class="slide level2">
 
-<h3 id="ct-severity-scores-and-mortality">CT Severity Scores and Mortality</h3>
+<h3 id="results-ct-severity-scores-and-mortality">Results: CT Severity Scores and Mortality</h3>
 
 <div class="columns">
 <div class="column" style="width:60%;">
@@ -512,16 +470,7 @@ Patients with these comorbidities may require tailored care and closer monitorin
 <p><strong>Potential Impact</strong><br>
 CT scans can serve as a critical tool for identifying patients who may need more aggressive treatment and care.</p>
 </div><div class="column" style="width:40%;">
-&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
-<figure>
-<div class="quarto-figure quarto-figure-center">
-<figure>
 <p><img data-src="images/05_key_plot_6.png"></p>
-<figcaption>CT Severity Scores vs.&nbsp;Mortality Rate</figcaption>
-</figure>
-</div>
-</figure>
-<p>======= <img data-src="images/05_key_plot_6.png"> &gt;&gt;&gt;&gt;&gt;&gt;&gt; 37c1859c0533031f8727e8ee1d92e6ceb4876fc0</p>
 </div>
 </div>
 <aside><div>
@@ -529,7 +478,7 @@ CT scans can serve as a critical tool for identifying patients who may need more
 </div></aside></section>
 <section class="slide level2">
 
-<h3 id="early-onset-temperature-and-mortality">Early Onset Temperature and Mortality</h3>
+<h3 id="results-early-onset-temperature-and-mortality">Results: Early Onset Temperature and Mortality</h3>
 <div class="columns">
 <div class="column" style="width:50%;">
 <p><span class="fragment highlight-red">Elevated EOT</span> correlate with higher mortality rates, suggesting the need for prompt temperature management.</p>
@@ -538,16 +487,7 @@ CT scans can serve as a critical tool for identifying patients who may need more
 <p><strong>Potential Impact</strong><br>
 Effective fever management could be a key component in improving patient outcomes.</p>
 </div><div class="column" style="width:50%;">
-&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD <img data-src="images/05_key_plot_7-01.png"> ======= &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
-<figure>
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="results/05_key_plot_7.png"></p>
-<figcaption>Early Onset Temperature vs.&nbsp;Patient Outcome</figcaption>
-</figure>
-</div>
-</figure>
-<p>======= <img data-src="images/05_key_plot_7.png"> &gt;&gt;&gt;&gt;&gt;&gt;&gt; 37c1859c0533031f8727e8ee1d92e6ceb4876fc0 &gt;&gt;&gt;&gt;&gt;&gt;&gt; 283d5b002cc4b473c9fbf90184b1164b839e9754</p>
+<p><img data-src="images/05_key_plot_7.png"></p>
 </div>
 </div>
 </section>
@@ -564,13 +504,8 @@ Effective fever management could be a key component in improving patient outcome
 <strong>Strategic Takeaways</strong>:</p>
 <p>Targeted interventions are crucial for specific demographics, early antiviral treatment, and managing patients with severe symptoms or high CT scores.</p>
 </div>
-</section></section>
-<section>
-<section id="analysis" class="title-slide slide level1 transition-fade center">
-<h1>Analysis</h1>
-
 </section>
-<section id="analysis-1" class="slide level2 transition-fade">
+<section id="analysis" class="slide level2 transition-fade">
 <h2>Analysis</h2>
 <div>
 <ul>
@@ -668,7 +603,7 @@ Effective fever management could be a key component in improving patient outcome
 
 </div>
 </div>
-</section></section>
+</section>
     </div>
   </div>
 

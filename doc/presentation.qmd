@@ -1,5 +1,6 @@
 ---
 title: "Clinical data of COVID-19 infected patients"
+author: "Daniel Gil, Luis Martín, Miguel Blanco, Natalia Feced, Xavi Chapatte"
 format: 
   revealjs:
     transition: none # Global default
@@ -8,38 +9,30 @@ subtite: "A case of study for critically ill patients"
 css: styles.css
 ---
 
-# Introduction {background-image="background.avif"}
-
-(igual aqui habria que poner los nombres o algo supongo)
-
 ## Introduction
 
-### Paxlovid and drugs
+::: nonincremental
+::: {style="font-size: 28px;"}
+-   Typical symptomatology includes fever, cough, myalgia, fatigue among others. In some cases, it led to aggressive and life-threatening complications with severe respiratory failure.
 
-# Dataset
+::: {style="font-size: 28px;"}
+-   antiviral treatments played a crucial role in managing the disease, particularly for severe cases. Paxlovid (SARS-CoV-2 main protease inhibitor) emerged as a promising antiviral therapy, with later studies demonstrating that it was highly effective in reducing the risk of severe COVID-19 or mortality. \]{style="font-size: 28px;"}
+:::
+:::
+
+::: {style="margin-top: 50px;"}
+:::
+
+[References:\
+1. [Article 1 - ScienceDirect](https://www.sciencedirect.com/science/article/pii/S1876034124003174?via%3Dihub)\
+2. [Article 2 - PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC9214014/)]{style="font-size: 14px;"}
+:::
 
 ## Dataset
 
-Quick overview fail, no se como exportar las table 1 para ponerlos aqui
+[Dataset with a final number of 123]{style="font-size: 24px;"}[variables]{.fragment .highlight-red} and 150 [observations]{.fragment .highlight-red}
 
-```{r, echo=FALSE, results='asis'}
-#library (grid)
-
-#img <- png::readPNG("../results/table1_describe_01.png")
-#grid::grid.raster(img)
-```
-
-```{r, echo=FALSE, results='asis'}
-library(tidyverse)
-library(knitr)
-
-knit("../R/04_describe.qmd")
-```
-
-## Dataset 
-<span style="font-size: 24px;">Dataset with a final number of 123 [variables]{.fragment .highlight-red} and 150 [observations]{.fragment .highlight-red}</span>
-
-
+::: row
 ::: {.column width="49%"}
 **Table 1**\
 <iframe src="../results/table1_describe_01.html" width="100%" height="150"></iframe>
@@ -49,6 +42,9 @@ knit("../R/04_describe.qmd")
 **Table 2**\
 <iframe src="../results/table1_describe_04.html" width="100%" height="150"></iframe>
 :::
+:::
+
+::: row
 ::: {.column width="49%"}
 **Diseases**\
 <iframe src="../results/table1_describe_02.html" width="100%" height="150"></iframe>
@@ -58,13 +54,10 @@ knit("../R/04_describe.qmd")
 **Symptoms**\
 <iframe src="../results/table1_describe_03.html" width="100%" height="150"></iframe>
 :::
-------------------------------------------------------------------------
+:::
 
-# Results
 
-------------------------------------------------------------------------
-
-## Initial Exploration
+## Results: Initial Exploration
 
 In this section, we examine [key variables]{.fragment .highlight-red} to identify patterns and trends related to patient outcomes.
 
@@ -78,7 +71,7 @@ In this section, we examine [key variables]{.fragment .highlight-red} to identif
 
 ------------------------------------------------------------------------
 
-## Age Groups
+## Results: Age Groups
 
 ::: columns
 ::: {.column width="60%"}
@@ -97,7 +90,7 @@ Older patients are at a higher risk, suggesting the importance of early and inte
 
 ------------------------------------------------------------------------
 
-### Antiviral Drug Administration and Patient Outcome
+### Results: Antiviral Drug Administration and Patient Outcome
 
 ::: columns
 ::: {.column width="60%"}
@@ -110,15 +103,13 @@ Timely administration of antiviral drugs could be crucial in mitigating severe o
 :::
 
 ::: {.column width="40%"}
-
 ![](images/05_key_plot_3.png)
-
 :::
 :::
 
 ------------------------------------------------------------------------
 
-### Symptoms, Comorbidities, and Mortality
+### Results: Symptoms, Comorbidities, and Mortality
 
 #### Symptoms
 
@@ -132,15 +123,13 @@ Less common symptoms [Gastrointestinal, Nervous & Other]{.fragment .highlight-re
 :::
 
 ::: {.column width="40%"}
-
 ![](images/05_key_plot_4.png)
-
 :::
 :::
 
 ------------------------------------------------------------------------
 
-### Symptoms, Comorbidities, and Mortality
+### Results: Symptoms, Comorbidities, and Mortality
 
 #### Diseases
 
@@ -155,15 +144,13 @@ Patients with these comorbidities may require tailored care and closer monitorin
 :::
 
 ::: {.column width="40%"}
-
 ![](images/05_key_plot_5.png)
-
 :::
 :::
 
 ------------------------------------------------------------------------
 
-### CT Severity Scores and Mortality
+### Results: CT Severity Scores and Mortality
 
 ::: aside
 CT scans were performed in a progressive manner, to monitor the development of patients' conditions.
@@ -182,15 +169,13 @@ CT scans can serve as a critical tool for identifying patients who may need more
 :::
 
 ::: {.column width="40%"}
-
 ![](images/05_key_plot_6.png)
-
 :::
 :::
 
 ------------------------------------------------------------------------
 
-### Early Onset Temperature and Mortality
+### Results: Early Onset Temperature and Mortality
 
 ::: columns
 ::: {.column width="50%"}
@@ -203,9 +188,7 @@ Effective fever management could be a key component in improving patient outcome
 :::
 
 ::: {.column width="50%"}
-
 ![](images/05_key_plot_7.png)
-
 :::
 :::
 
@@ -226,7 +209,6 @@ Demographic vulnerability, significant impact of comorbidities and symptoms, tre
 Targeted interventions are crucial for specific demographics, early antiviral treatment, and managing patients with severe symptoms or high CT scores.
 :::
 
-# Analysis {.transition-fade}
 
 ## Analysis {.transition-fade}
 
