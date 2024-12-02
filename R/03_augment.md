@@ -8,24 +8,16 @@ editor: visual
 
 
 ```r
-data <- read_tsv(file = "../data/02_dat_clean.tsv")
+data <- read_tsv(file = "../data/02_dat_clean.tsv", show_col_types = FALSE)
 ```
 
-```
-## Rows: 158 Columns: 99
-## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────
-## Delimiter: "\t"
-## chr (30): Age_range, Basic_diseases, Symptoms, Fever_days, IL-6[pg/mL], Oxygenation_index_D1[mmHg], Lactic_acid_...
-## dbl (69): Number, Age_over_65(1,YES;_2,_NO), Charlson_index[score], Disease_onset_D1_highest_body_temperature[℃]...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-```
-
-Change the ages ranges from 5-years to 10-years
+### Change the ages ranges from 5-years to 10-years
 
 
 ```r
+data <- data |> 
+  mutate(Age_mean = Age_range)
+
 data <- data |> 
     mutate(`Age_range` = case_when(
     str_detect(`Age_range`, "^[0-5][0-9]-") ~ "<60",
@@ -38,7 +30,7 @@ data <- data |>
   mutate(`Age_range` = fct_relevel(`Age_range`, "<60", "60-70", "70-80", "80-90", ">90"))
 ```
 
-Create function to change dirty columns with multiple values to clean binary columns
+### Create function to change dirty columns with multiple values to clean binary columns
 
 
 ```r
@@ -49,34 +41,34 @@ process_dirty_cols <- function(data, column, rename_map) {
     mutate(
       !!column_sym := str_replace_all(!!column_sym, "([^a-zA-Z()]*).*", "\\1")
     ) |>  
-    # Crear varias filas para cada valor en la columna separada por comas o signos +
+    # create rows for each diferent value in the column separated by the sig ',' or '+'
     separate_rows({{ column }}, sep = "[,+]") |> 
-    # Asegurarse de que los valores sean numéricos, asignando 0 si no lo son
+    # make sure values are numerical, asigning 0 if not
     mutate({{ column }} := as.numeric({{ column }})) |> 
-    # Expandir las filas a columnas con indicadores binarios
+    # expand the rows to columns with binary indicators
     pivot_wider(
       names_from = {{ column }}, 
-      names_prefix = "temp_prefix_",
+      names_prefix = "temp_prefix_", #temporal prefix to identify the new created columns
       values_from = {{ column }}, 
       values_fn = ~1, 
       values_fill = 0
     )
   
-  # Si la columna 'temp_prefix_NA' existe, filtrar sus valores
+  # if 'temp_prefix_NA', write NA values on the all the columns for that row
   if ("temp_prefix_NA" %in% names(data_processed)) {
     data_processed <- data_processed |> 
       mutate(across(starts_with("temp_prefix_"), ~if_else(temp_prefix_NA == 1, NA, .))) |> 
       select(-any_of(c("temp_prefix_NA", "temp_prefix_0")))
   } else {
-    # Si no existe, simplemente eliminamos la columna 'temp_prefix_0' (si está presente)
+    # if 'temp_prefix_NA' doesn't exist, remove 'temp_prefix_0'
     data_processed <- data_processed |> 
       select(-any_of(c("temp_prefix_0")))
   }
   
-  # Renombrar columnas según el mapa proporcionado
+  # Renname the columns with the rename map
   data_processed <- data_processed |> 
     rename_with(
-      ~gsub(paste0("^", "temp_prefix_"), "", .),  # Elimina el prefijo "temp_prefix_" si está presente
+      ~gsub(paste0("^", "temp_prefix_"), "", .),  # take out the temporal prefix 'temp_prefix'
       starts_with("temp_prefix_")
     ) |> 
     rename_with(~ case_when(
@@ -88,7 +80,7 @@ process_dirty_cols <- function(data, column, rename_map) {
 }
 ```
 
-Change the dirty columns
+### Change the dirty columns with the previous function
 
 
 ```r
@@ -104,6 +96,7 @@ rename_map <- c(
   "8" = "Other_disease",
   "9" = "Chronic_Kidney_disease"
 )
+
 data <- process_dirty_cols(data, Basic_diseases, rename_map)
 
 #Symptoms column
@@ -115,6 +108,7 @@ rename_map <- c(
   "5" = "Gastrointestinal_symptoms",
   "6" = "Other_symptoms"
 )
+
 data <- process_dirty_cols(data, Symptoms, rename_map)
 
 #D1_oxygen_therapy_mode
@@ -125,6 +119,7 @@ rename_map <- c(
   "4" = "Invasive_Oxygen_therapy",
   "5" = "ECMO"
 )
+
 data <- process_dirty_cols(data, D1_oxygen_therapy_mode, rename_map)
 
 #Bleeding_events
@@ -133,11 +128,13 @@ rename_map <- c(
   "1" = "Digestive_track",
   "2" = "Bleeding_event_Respiratory_track",
   "3" = "Bleeding_event_Skin",
-  "4" = "Bleeding_event_Other")
+  "4" = "Bleeding_event_Other"
+  )
+
 data <- process_dirty_cols(data, Bleeding_events, rename_map)
 ```
 
-Change numeric values for words values
+### Change numeric values for words values
 
 
 ```r
@@ -168,7 +165,7 @@ data <- data |>
   ))
 ```
 
-Pulishing binary values (0-1, 1-2 and yes-no)
+### Pulishing binary values (0-1, 1-2 and yes-no)
 
 
 ```r
@@ -177,7 +174,8 @@ data <- data |>
     `Death` == 1 ~ "1",
     `Death` == 2 ~ "0",
     TRUE ~ NA_character_
-  )) |> 
+  )) |>
+  #mutate(`Death` = as.factor(`Death`, levels = c("1", "0"))) |> 
   mutate(`Prone_position_ventilation` = case_when(
     `Prone_position_ventilation` == 1 ~ "yes",
     `Prone_position_ventilation` == 0 ~ "no",
@@ -219,6 +217,95 @@ data <- data |>
   mutate(Comorbidities_sum = rowSums(select(data, Hypertension_disease : Other_disease)))
 ```
 
+### Age mean column
+
+Create a new column called 'Age_mean' with the mean values for every range of age group, so this numeric number can be used for later analysis
+
+
+```r
+data <- data |> 
+  mutate(Age_mean = case_when(
+    str_detect(Age_mean, "^20") ~ "22.5",
+    str_detect(Age_mean, "^25") ~ "27.5",
+    str_detect(Age_mean, "^30") ~ "32.5",
+    str_detect(Age_mean, "^35") ~ "37.5",
+    str_detect(Age_mean, "^40") ~ "42.5",
+    str_detect(Age_mean, "^45") ~ "47.5",
+    str_detect(Age_mean, "^50") ~ "52.5",
+    str_detect(Age_mean, "^55") ~ "57.5",
+    str_detect(Age_mean, "^60") ~ "62.5",
+    str_detect(Age_mean, "^65") ~ "67.5",
+    str_detect(Age_mean, "^70") ~ "72.5",
+    str_detect(Age_mean, "^75") ~ "77.5",
+    str_detect(Age_mean, "^80") ~ "82.5",
+    str_detect(Age_mean, "^85") ~ "87.5",
+    str_detect(Age_mean, "^90") ~ "92.5",
+    str_detect(Age_mean, "^95") ~ "97.5",
+    str_detect(Age_mean, "^100") ~ "102.5"
+  )) |> 
+  relocate(Age_mean, .after = Age_range)
+```
+
+### CT Progression and Lung Lobes Augmentation
+
+
+```r
+data <- data|>
+  rename(
+    CT_D1_days_1 = `CT1-D1[days]`,
+    CT_D1_days_2 = `CT2-D1[days]`
+  ) |>
+  mutate(
+    `Charlson_index[score]` = as.numeric(`Charlson_index[score]`),
+    CTSS_score_1 = as.numeric(CTSS_score_1),
+    CTSS_score_2 = as.numeric(CTSS_score_2),
+    CT_D1_days_1 = as.numeric(CT_D1_days_1),
+    CT_D1_days_2 = as.numeric(CT_D1_days_2),
+    Affected_lung_lobes_1 = as.numeric(Affected_lung_lobes_1),
+    Affected_lung_lobes_2 = as.numeric(Affected_lung_lobes_2),
+  )
+```
+
+### Early Onset Temperature Augmentation
+
+
+```r
+data |>
+  mutate(
+       `Disease_onset_D1_highest_body_temperature[℃]` = as.numeric(`Disease_onset_D1_highest_body_temperature[℃]`))
+```
+
+### ICU ADMISSION (BINARY)
+
+
+```r
+data <- data |> 
+  mutate(ICU_admission = case_when(
+    ICU_hospitalization_days == 0 ~ "0",
+    TRUE ~ "1"
+  )) |> 
+  relocate(ICU_admission, .after = ICU_hospitalization_days)
+```
+
+### Set death as a Categorical variable
+
+
+```r
+data <- data |> 
+  mutate(Death = as.factor(Death))
+```
+
+### Creating variable Lymphocyte_Test_Day y Lymphocyte
+
+
+```r
+data <- data |>
+  mutate(
+    `D1_lymphocyte_copy` = `D1_lymphocyte_count[10^9/L]`,
+    `D7_lymphocyte_copy` = `D7_lymphocyte_count[10^9/L]`) |>
+  pivot_longer(cols = c(`D1_lymphocyte_copy`, `D7_lymphocyte_copy`), names_to = "Lymphocyte_Test_Day", values_to = "Lymphocytes") 
+```
+
 ### Save files
 
 
@@ -234,3 +321,5 @@ if (!dir.exists(clean_dir)) {
 #write tsv data
 write.table(data, file = tsv_file, sep = "\t", row.names = FALSE)
 ```
+
+### 
